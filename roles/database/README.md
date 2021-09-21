@@ -1,0 +1,134 @@
+# Database role
+
+This role is intended for one-time bootstrapping of IBM Informix server instances and is responsible for creating Informix configuration files (`onconfig` and `sqlhosts`) as well as initialising the root dbspace and preparing additional dbspaces and chunks.
+
+:warning: If the target host(s) include _existing_ dbspaces or chunks then there may be a **risk of data loss** when using this role. See [Provisioning hosts with existing dbspaces](#provisioning-hosts-with-existing-dbspaces) for more information if this role needs to be applied to hosts that contain existing data.
+
+## Table of contents
+
+* [Assumptions]()
+* [Informix database configuration]()
+  * [Server connections configuration]()
+    * [Default server connections configuration]()
+  * [DBSpaces configuration]()
+  * [Chunk configuration]()
+  * [Example  configuration]()
+* [Provisioning hosts with existing dbspaces]()
+
+## Assumptions
+
+The following assumptions are made:
+
+* The target host(s) have **not** been previously provisioned by this role and **no** dbspaces or chunks exist
+* There are **no** active `oninit` processes on the target host(s) when this role is executed
+* Each database server instance will run under a separate
+
+## Informix database configuration
+
+The `informix_service_config` variable controls the configuration of Informix databases, dbspaces, chunks and server connections. Project defaults that cater for the the initial cloud migration of on-premise Informix servers to AWS have been specified in `defaults/main.yml`.
+
+The`informix_service_config` variable should be defined as a dictionary of dictionaries, whose keys represent unique server instances of Informix (these keys are referred to as `server_name` through the remainder of this document):
+
+```yaml
+informix_service_config:
+  server1:
+    ...
+  server2:
+    ...
+```
+
+:notebook: All configuration parameters that follow are required unless marked _optional_.
+
+Each dictionary representing a server (e.g. `server1` or `server2` in the above example) requires the following parameters:
+
+| Name                 | Default | Description                                            |
+|----------------------|---------|--------------------------------------------------------|
+| `server_id`          |         | A unique numeric identifier for this server instance   |
+| `server_port`        |         | _Optional_. The port number this server instance will bind to for TCP/IP connections if using the default `server_connetions` (this value is not required if `server_connections` is explicitly provided for this server) |
+| `server_connections` | See [Server connections][1] for defaults | A list of dictionaries representing client/server connections for this server (i.e. the `sqlhosts` file configuration) |
+| `dbspaces`           |         | A dictionary of uniquely named dbspaces. Must include at least a `root` dbspace. See [Dbspaces configuration][2] for more details.
+
+[1]: #server-connections-configuration
+[2]: #dbspaces-configuration
+
+For example, to define a single server named `myserver` with two dbspaces—one `root` dbspace and an additional `data` dbspace—each of which comprise a single _initial_ chunk of 1GiB in size:
+
+### Server connections configuration
+
+The _optional_ `server_connections` parameter must comprise a list of dictionaries. See [Default server connections configuration](#default-server-connections-configuration) for information regarding default connections. Each dictionary may specify the following options:
+
+| Name                 | Default |                         | Field name (`sqlhosts` file) |
+|----------------------|---------|-------------------------|-----------------|
+| `server_name`        |         | A unique database server name for this connection. | `dbservername` |
+| `connection_type`    |         | The connection type to use (e.g. `onipcshm` for shared memory segment or `onsoctcp` for TCP/IP connection) | `nettype` |
+| `host`               |         | The host computer for the database server. | `hostname` |
+| `service_or_port`    |         | The service name or port number dependent upon `connection_type`. | `servicename` |
+
+#### Default server connections configuration
+
+In the absence of an explicit `server_connections` parameter, the default value comprises two connections for the server:
+
+1. A _shared memory_ connection — the `server_name` value for this connection will be set using the parent dictionary key that represents the server instance that the connection belongs to in `informix_service_config` (e.g. `server1` using the example given in the introductory section of [Informix database configuration][3])
+2. A socket connection for TCP/IP protocol connections from client applications — the `server_name` value for this connection will be set using the parent dictionary key that represents the server instance that the connection belongs to in `informix_service_config` followed by a `tcp` suffix (e.g. `server1tcp` using the example given in the introductory section of [Informix database configuration][3])
+
+[3]: #informix-database-configuration
+
+### DBSpaces configuration
+
+The `dbspaces` parameter must be a dictionary of dictionaries whose keys represent uniquely named dbspaces for the server that it belongs to. A `root` key must be defined for each dbspace, and each dbspace dictionary may specify the following options:
+
+| Name                 | Default |                          |
+|----------------------|---------|-------------------------|
+| `initial_chunk`      |         | A dictionary representing the initial chunk for the root dbspace. See [Chunk configuration][4] for more details.          |
+| `additional_chunks`  |         | _Optional_. A list of dictionaries representing additional chunks to be added to the dbspace. |
+
+[4]: #chunk-configuration
+
+### Chunk configuration
+
+The `initial_chunk` and `additional_chunks` parameters both represent chunks belonging to a dbspace. The former takes the for of a dictionary, while the later must be a list of one or more dictionaries. In either case, the following options are supported:
+
+| Name           | Default |                                                              |
+|----------------|---------|--------------------------------------------------------------|
+| `path`         |         | The path to the block device or file on disk for this chunk. |
+| `offset_in_kb` |         | The offset in KiB for this chunk.                            |
+| `size_in_kb`   |         | The size in KiB for this chunk.                              |
+
+:notebook: Chunks are assumed to be 'cooked' disks where the `path` does not represent an existing block device, for which a suitable file will be created with default `informix:informix` ownership and `0660` permissions.
+
+:notebook: Chunks that belong to different raw or cooked disks should use an offset value of `0`. Chunks that belong to the same raw or cooked disk as other chunks should typically use an `offset_in_kb` value equal the sum of the `offset_in_kb + size_in_kb` of the previous chunk with the same path.
+
+### Example  configuration
+
+The example that follows shows how to define the configuration for a single server instance named `server1` that meets the following criteria:
+
+* One server instance named `server1`
+* A `root` Dbspaces with one initial 'cooked' disk chunk of size 1GiB
+* An additional `data` Dbspace with initial 'cooked' disk chunk size of 1GiB and an additional chunk of 2GiB (both using the same filesystem file)
+* The two []default connection types[(#default-server-connections-configuration) (i.e. a shared memory segment and TCP/IP connection respectively) using port `1234` for TCP/IP connectivity
+
+```yaml
+informix_service_config:
+  server1:
+    server_id: 1
+    server_port: 1234
+    dbspaces:
+      root:
+        initial_chunk:
+          path: "/informixchunks/rootdbs"
+          offset_in_kb: 0
+          size_in_kb: 1048576
+      data:
+        initial_chunk:
+          path: "/informixchunks/datadbs"
+          offset_in_kb: 0
+          size_in_kb: 1048576
+        additional_chunks:
+          - path: "/informixchunks/datadbs"
+            offset_in_kb: 1048576
+            size_in_kb: 1048576
+```
+
+## Provisioning hosts with existing dbspaces
+
+**TODO**

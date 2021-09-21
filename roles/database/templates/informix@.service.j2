@@ -1,0 +1,16 @@
+[Unit]
+Description=Informix server
+
+Wants=basic.target
+After=basic.target network.target
+
+[Service]
+Type=forking
+User=informix
+ExecStart=/bin/bash -c 'source {{ informix_install_path }}/etc/environment.%i && {{ informix_install_path }}/bin/oninit'
+ExecStop=/bin/bash -c 'source {{ informix_install_path }}/etc/environment.%i && {{ informix_install_path }}/bin/onmode -kuy'
+TimeoutStartSec=1000
+TimeoutStopSec=1000
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,86 @@
+---
+
+tuxedo_service_users:
+  - ef
+  - prod
+  - scud
+
+informix_chunk_store_path: /data/informix/chunks
+informix_server_id_increment: 1
+informix_server_id_start: 0
+informix_server_port_increment: 10
+informix_server_port_start: 1500
+
+informix_service_config:
+  ef:
+    server_id: "{{ informix_server_id_start + (0 * informix_server_id_increment) | int }}"
+    server_port: "{{ informix_server_port_start + (0 * informix_server_port_increment) | int }}"
+    dbspaces:
+      root:
+        initial_chunk:
+          path: "{{ informix_chunk_store_path }}/ef/ef_root_dbs_1"
+          offset_in_kb: 0
+          size_in_kb: 2147483648
+      ef_data_dbs:
+        initial_chunk:
+          path: "{{ informix_chunk_store_path }}/ef/ef_data_dbs_1"
+          offset_in_kb: 0
+          size_in_kb: 8589934592
+        additional_chunks:
+          - path: "{{ informix_chunk_store_path }}/ef/ef_data_dbs_2"
+            offset_in_kb: 0
+            size_in_kb: 8589934592
+          - path: "{{ informix_chunk_store_path }}/ef/ef_data_dbs_3"
+            offset_in_kb: 0
+            size_in_kb: 8589934592
+      ef_log_dbs:
+        initial_chunk:
+          path: "{{ informix_chunk_store_path }}/ef/ef_log_dbs_1"
+          offset_in_kb: 0
+          size_in_kb: 8589934592
+  prod:
+    server_id: "{{ informix_server_id_start + (0 * informix_server_id_increment) | int }}"
+    server_port: "{{ informix_server_port_start + (0 * informix_server_port_increment) | int }}"
+    dbspaces:
+      root:
+        initial_chunk:
+          path: "{{ informix_chunk_store_path }}/prod/prod_root_dbs_1"
+          offset_in_kb: 0
+          size_in_kb: 2147483648
+      prod_data_dbs:
+        initial_chunk:
+          path: "{{ informix_chunk_store_path }}/prod/prod_data_dbs_1"
+          offset_in_kb: 0
+          size_in_kb: 4294967296
+        additional_chunks:
+          - path: "{{ informix_chunk_store_path }}/prod/prod_data_dbs_2"
+            offset_in_kb: 0
+            size_in_kb: 4294967296
+      prod_log_dbs:
+        initial_chunk:
+          path: "{{ informix_chunk_store_path }}/prod/prod_log_dbs_1"
+          offset_in_kb: 0
+          size_in_kb: 2147483648
+  scud:
+    server_id: "{{ informix_server_id_start + (0 * informix_server_id_increment) | int }}"
+    server_port: "{{ informix_server_port_start + (0 * informix_server_port_increment) | int }}"
+    dbspaces:
+      root:
+        initial_chunk:
+          path: "{{ informix_chunk_store_path }}/prod/scud_root_dbs_1"
+          offset_in_kb: 0
+          size_in_kb: 2147483648
+      scud_data_dbs:
+        initial_chunk:
+          path: "{{ informix_chunk_store_path }}/prod/scud_data_dbs_1"
+          offset_in_kb: 0
+          size_in_kb: 4294967296
+        additional_chunks:
+          - path: "{{ informix_chunk_store_path }}/prod/scud_data_dbs_2"
+            offset_in_kb: 0
+            size_in_kb: 4294967296
+      scud_log_dbs:
+        initial_chunk:
+          path: "{{ informix_chunk_store_path }}/prod/scud_log_dbs_1"
+          offset_in_kb: 0
+          size_in_kb: 2147483648

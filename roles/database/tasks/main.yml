@@ -1,0 +1,15 @@
+---
+
+- name: Set EC2 metadata facts
+  amazon.aws.ec2_metadata_facts:
+
+- name: Check required variables are set
+  assert:
+    that:
+      - tuxedo_service_users is defined and tuxedo_service_users | length > 0
+    msg: "Required variable(s) empty or undefined"
+
+- include_tasks: users.yml
+  loop: "{{ tuxedo_service_users }}"
+  loop_control:
+    loop_var: informix_server_name
