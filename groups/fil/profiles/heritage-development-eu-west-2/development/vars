@@ -5,3 +5,5 @@ ssh_master_public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDe5fHuRY3BWi5jfKO
 
 instance_count = 1
 instance_type = "m5.large"
+
+root_volume_size = 60
