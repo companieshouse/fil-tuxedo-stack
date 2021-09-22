@@ -45,7 +45,7 @@ Each dictionary representing a server (e.g. `server1` or `server2` in the above 
 |----------------------|---------|--------------------------------------------------------|
 | `server_id`          |         | A unique numeric identifier for this server instance   |
 | `server_port`        |         | _Optional_. The port number this server instance will bind to for TCP/IP connections when using the default `server_connections` value. If a value has been provided for `server_connections` then `server_port` should be ommited, and instead a port number (if required) should be specified in the relevant connection item of the `server_connections` list. |
-| `server_connections` | See [Server connections][1] for defaults. | A list of dictionaries representing client/server connections for this server (i.e. the `sqlhosts` file configuration) |
+| `server_connections` | See [Server connections][1] for defaults. | A list of dictionaries representing client/server connections for this server (i.e. the `sqlhosts` file configuration). See [Server connections][1] for more details. |
 | `dbspaces`           |         | A dictionary of uniquely named dbspaces. Must include at least a `root` dbspace. See [Dbspaces configuration][2] for more details.
 
 [1]: #server-connections-configuration
@@ -58,7 +58,7 @@ For example, to define a single server named `myserver` with two dbspaces—one 
 The _optional_ `server_connections` parameter must comprise a list of dictionaries. See [Default server connections configuration](#default-server-connections-configuration) for information regarding default connections. Each dictionary may specify the following options:
 
 | Name                 | Default |                         | Field name (`sqlhosts` file) |
-|----------------------|---------|-------------------------|-----------------|
+|----------------------|---------|-------------------------|------------------------------|
 | `server_name`        |         | A unique database server name for this connection. | `dbservername` |
 | `connection_type`    |         | The connection type to use (e.g. `onipcshm` for shared memory segment or `onsoctcp` for TCP/IP connection) | `nettype` |
 | `host`               |         | The host computer for the database server. | `hostname` |
@@ -75,12 +75,12 @@ In the absence of an explicit `server_connections` parameter, the default value 
 
 ### DBSpaces configuration
 
-The `dbspaces` parameter must be a dictionary of dictionaries whose keys represent uniquely named dbspaces for the server that it belongs to. A `root` key must be defined for each dbspace, and each dbspace dictionary may specify the following options:
+The `dbspaces` parameter must be a dictionary of dictionaries whose keys represent uniquely named dbspaces for the server that they belong to. A `root` key must be defined for each dbspace—representing the root dbspace—and each dbspace dictionary may specify the following options:
 
-| Name                 | Default |                          |
-|----------------------|---------|-------------------------|
-| `initial_chunk`      |         | A dictionary representing the initial chunk for the root dbspace. See [Chunk configuration][4] for more details.          |
-| `additional_chunks`  |         | _Optional_. A list of dictionaries representing additional chunks to be added to the dbspace. |
+| Name                 | Default |                                             |
+|----------------------|---------|---------------------------------------------|
+| `initial_chunk`      |         | A dictionary representing the initial chunk for the root dbspace. See [Chunk configuration][4] for more details. |
+| `additional_chunks`  |         | _Optional_. A list of one or more dictionaries representing additional chunks to be added to the dbspace. See [Chunk configuration][4] for more details. |
 
 [4]: #chunk-configuration
 
