@@ -44,8 +44,8 @@ Each dictionary representing a server (e.g. `server1` or `server2` in the above 
 | Name                 | Default | Description                                            |
 |----------------------|---------|--------------------------------------------------------|
 | `server_id`          |         | A unique numeric identifier for this server instance   |
-| `server_port`        |         | _Optional_. The port number this server instance will bind to for TCP/IP connections if using the default `server_connetions` (this value is not required if `server_connections` is explicitly provided for this server) |
-| `server_connections` | See [Server connections][1] for defaults | A list of dictionaries representing client/server connections for this server (i.e. the `sqlhosts` file configuration) |
+| `server_port`        |         | _Optional_. The port number this server instance will bind to for TCP/IP connections when using the default `server_connections` value. If a value has been provided for `server_connections` then `server_port` should be ommited, and instead a port number (if required) should be specified in the relevant connection item of the `server_connections` list. |
+| `server_connections` | See [Server connections][1] for defaults. | A list of dictionaries representing client/server connections for this server (i.e. the `sqlhosts` file configuration) |
 | `dbspaces`           |         | A dictionary of uniquely named dbspaces. Must include at least a `root` dbspace. See [Dbspaces configuration][2] for more details.
 
 [1]: #server-connections-configuration
