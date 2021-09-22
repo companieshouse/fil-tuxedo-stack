@@ -103,9 +103,9 @@ The `initial_chunk` and `additional_chunks` parameters both represent chunks bel
 The example that follows shows how to define the configuration for a single server instance named `server1` that meets the following criteria:
 
 * One Informix server instance `server1` with server identifier `1`
-* A `root` Dbspaces with one initial cooked disk chunk of size 1GiB
-* An additional `data` Dbspace with initial cooked disk chunk size of 1GiB and an additional chunk of 2GiB (both belonging to the same filesystem object)
-* The two [default connection types][4] (i.e. a shared memory segment and TCP/IP connection respectively) using port `1234` for TCP/IP connectivity
+* A `root` dbspace composed of one initial cooked disk chunk of size 1GiB
+* An additional `data` dbspace with initial cooked disk chunk of size 1GiB and an additional chunk of size 2GiB (both belonging to the same filesystem object)
+* The two [default connection types][4] (i.e. a shared memory segment and TCP/IP connection respectively) with port `1234` used for TCP/IP connectivity
 
 ```yaml
 informix_service_config:
@@ -131,11 +131,11 @@ informix_service_config:
 
 ## Provisioning hosts with existing dbspaces
 
-This role is _not_ idempotent and there is a **risk of data loss** if the role is executed against hosts that contain existing dbspaces and chunks. A lock file is used to provide a basic level of protection against by distinguishing hosts that were previously provisioned with this role and failing early if the role is executed again.
+:warning: This role is _not_ idempotent and there is a **risk of data loss** if the role is executed against hosts that contain existing dbspaces and chunks. A lock file is used to provide a basic level of protection against this by distinguishing hosts that were previously provisioned with this role and failing early if the role is executed again.
 
-If there is a need to run this role a second time against a host, the following steps are necessary:
+The following steps are necessary if there is a need to run this role a second time against a given host:
 
 * Confirm that there are no dbpsaces or chunks present on the host (i.e. check all `path` references in the `informix_service_config` variable on the host) and that it it safe to proceed
 * Remove the lock file from `/etc/fil-tuxedo-stack-database-role` on the host
 * Stop any active `oninit` processes on the host
-* Remove any shared memory segements that were used by the `oninit` processes
+* Remove any shared memory segements that were created by the `oninit` processes
