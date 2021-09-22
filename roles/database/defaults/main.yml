@@ -1,5 +1,7 @@
 ---
 
+role_lock_file: /etc/fil-tuxedo-stack-database-role
+
 informix_service_users:
   - ef
   - prod

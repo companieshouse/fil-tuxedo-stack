@@ -6,14 +6,23 @@ This role is intended for one-time bootstrapping of IBM Informix server instance
 
 ## Table of contents
 
-* [Assumptions]()
-* [Informix database configuration]()
-  * [Server connections configuration]()
-    * [Default server connections configuration]()
-  * [DBSpaces configuration]()
-  * [Chunk configuration]()
-  * [Example  configuration]()
-* [Provisioning hosts with existing dbspaces]()
+* [Assumptions][1]
+* [Informix database configuration][2]
+  * [Server connections configuration][3]
+    * [Default server connections configuration][4]
+  * [DBSpaces configuration][5]
+  * [Chunk configuration][6]
+  * [Example configuration][7]
+* [Provisioning hosts with existing dbspaces][8]
+
+[1]: #assumptions
+[2]: #informix-database-configuration
+[3]: #server-connections-configuration
+[4]: #default-server-connections-configuration
+[5]: #dbspaces-configuration
+[6]: #chunk-configuration
+[7]: #example-configuration
+[7]: #provisioning-hosts-with-existing-dbspaces
 
 ## Assumptions
 
@@ -39,7 +48,7 @@ informix_service_config:
 
 :notebook: All configuration parameters that follow are required unless marked _optional_.
 
-Each dictionary representing a server (e.g. `server1` or `server2` in the above example) requires the following parameters:
+Each dictionary representing a server (e.g. `server1` and `server2` in the above example) requires the following parameters:
 
 | Name                 | Default | Description                                            |
 |----------------------|---------|--------------------------------------------------------|
@@ -48,14 +57,9 @@ Each dictionary representing a server (e.g. `server1` or `server2` in the above 
 | `server_connections` | See [Server connections][1] for defaults. | A list of dictionaries representing client/server connections for this server (i.e. the `sqlhosts` file configuration). See [Server connections][1] for more details. |
 | `dbspaces`           |         | A dictionary of uniquely named dbspaces. Must include at least a `root` dbspace. See [Dbspaces configuration][2] for more details.
 
-[1]: #server-connections-configuration
-[2]: #dbspaces-configuration
-
-For example, to define a single server named `myserver` with two dbspaces—one `root` dbspace and an additional `data` dbspace—each of which comprise a single _initial_ chunk of 1GiB in size:
-
 ### Server connections configuration
 
-The _optional_ `server_connections` parameter must comprise a list of dictionaries. See [Default server connections configuration](#default-server-connections-configuration) for information regarding default connections. Each dictionary may specify the following options:
+The _optional_ `server_connections` parameter must comprise a list of dictionaries. See [Default server connections configuration][4] for information regarding default connections. Each dictionary may specify the following options:
 
 | Name                 | Default |                         | Field name (`sqlhosts` file) |
 |----------------------|---------|-------------------------|------------------------------|
@@ -68,10 +72,8 @@ The _optional_ `server_connections` parameter must comprise a list of dictionari
 
 In the absence of an explicit `server_connections` parameter, the default value comprises two connections for the server:
 
-1. A _shared memory_ connection — the `server_name` value for this connection will be set using the parent dictionary key that represents the server instance that the connection belongs to in `informix_service_config` (e.g. `server1` using the example given in the introductory section of [Informix database configuration][3])
-2. A socket connection for TCP/IP protocol connections from client applications — the `server_name` value for this connection will be set using the parent dictionary key that represents the server instance that the connection belongs to in `informix_service_config` followed by a `tcp` suffix (e.g. `server1tcp` using the example given in the introductory section of [Informix database configuration][3])
-
-[3]: #informix-database-configuration
+1. A _shared memory_ connection — the `server_name` value for this connection will be set using the parent dictionary key that represents the server instance that the connection belongs to in `informix_service_config` (e.g. `server1` using the example given in the introductory section of [Informix database configuration][2])
+2. A socket connection for TCP/IP protocol connections from client applications — the `server_name` value for this connection will be set using the parent dictionary key that represents the server instance that the connection belongs to in `informix_service_config` followed by a `tcp` suffix (e.g. `server1tcp` using the example given in the introductory section of [Informix database configuration][2])
 
 ### DBSpaces configuration
 
@@ -79,10 +81,8 @@ The `dbspaces` parameter must be a dictionary of dictionaries whose keys represe
 
 | Name                 | Default |                                             |
 |----------------------|---------|---------------------------------------------|
-| `initial_chunk`      |         | A dictionary representing the initial chunk for the root dbspace. See [Chunk configuration][4] for more details. |
-| `additional_chunks`  |         | _Optional_. A list of one or more dictionaries representing additional chunks to be added to the dbspace. See [Chunk configuration][4] for more details. |
-
-[4]: #chunk-configuration
+| `initial_chunk`      |         | A dictionary representing the initial chunk for the root dbspace. See [Chunk configuration][6] for more details. |
+| `additional_chunks`  |         | _Optional_. A list of one or more dictionaries representing additional chunks to be added to the dbspace. See [Chunk configuration][6] for more details. |
 
 ### Chunk configuration
 
@@ -94,18 +94,18 @@ The `initial_chunk` and `additional_chunks` parameters both represent chunks bel
 | `offset_in_kb` |         | The offset in KiB for this chunk.                            |
 | `size_in_kb`   |         | The size in KiB for this chunk.                              |
 
-:notebook: Chunks are assumed to be 'cooked' disks where the `path` does not represent an existing block device, for which a suitable file will be created with default `informix:informix` ownership and `0660` permissions.
+:notebook: Chunks are assumed to be 'cooked' disks if the `path` does not refer to a block device and a suitable file will be created at the specified path using `informix:informix` ownership and `0660` permissions before adding the chunk to a dbspace.
 
 :notebook: Chunks that belong to different raw or cooked disks should use an offset value of `0`. Chunks that belong to the same raw or cooked disk as other chunks should typically use an `offset_in_kb` value equal the sum of the `offset_in_kb + size_in_kb` of the previous chunk with the same path.
 
-### Example  configuration
+### Example configuration
 
 The example that follows shows how to define the configuration for a single server instance named `server1` that meets the following criteria:
 
 * One server instance named `server1`
 * A `root` Dbspaces with one initial 'cooked' disk chunk of size 1GiB
 * An additional `data` Dbspace with initial 'cooked' disk chunk size of 1GiB and an additional chunk of 2GiB (both using the same filesystem file)
-* The two []default connection types[(#default-server-connections-configuration) (i.e. a shared memory segment and TCP/IP connection respectively) using port `1234` for TCP/IP connectivity
+* The two [default connection types][4] (i.e. a shared memory segment and TCP/IP connection respectively) using port `1234` for TCP/IP connectivity
 
 ```yaml
 informix_service_config:
