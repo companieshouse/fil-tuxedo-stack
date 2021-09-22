@@ -30,7 +30,7 @@ The following assumptions are made:
 
 * The target host(s) have **not** been previously provisioned by this role and **no** dbspaces or chunks exist
 * There are **no** active `oninit` processes on the target host(s) when this role is executed
-* Each database server instance has a corresponding user account of the same name for administering that server instance (active `oninit` proceesses will be owned by `root` as many Informix binaries make use of the `setuid` and `setgid` flags)
+* Each database server instance has a corresponding user account of the same name for administering that server instance (n.b. active `oninit` proceesses will be owned by `root` as many Informix binaries make use of the `setuid` and `setgid` flags)
 
 ## Informix database configuration
 
