@@ -1,6 +1,6 @@
 ---
 
-tuxedo_service_users:
+informix_service_users:
   - ef
   - prod
   - scud
@@ -78,7 +78,7 @@ informix_service_config:
         additional_chunks:
           - path: "{{ informix_chunk_store_path }}/prod/scud_data_dbs_2"
             offset_in_kb: 0
-            size_in_kb: 4294967296
+            size_in_kb: 4194304
       scud_log_dbs:
         initial_chunk:
           path: "{{ informix_chunk_store_path }}/prod/scud_log_dbs_1"
