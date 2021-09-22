@@ -22,7 +22,7 @@
 
 - name: "{{ informix_server_name }} : {{ dbspace.key }} :  Create dbspace and initial chunk"
   become_user: "{{ informix_server_name }}"
-  shell: "source /home/ef/informix.env && onspaces -c -d {{ dbspace.key }} -p {{ dbspace.value.initial_chunk.path }} -o {{ dbspace.value.initial_chunk.offset_in_kb }} -s {{ dbspace.value.initial_chunk.size_in_kb }}"
+  shell: "source {{ informix_env_file_path }} && onspaces -c -d {{ dbspace.key }} -p {{ dbspace.value.initial_chunk.path }} -o {{ dbspace.value.initial_chunk.offset_in_kb }} -s {{ dbspace.value.initial_chunk.size_in_kb }}"
   args:
     executable: /bin/bash
 

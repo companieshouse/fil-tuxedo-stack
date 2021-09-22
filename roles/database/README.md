@@ -86,7 +86,7 @@ The `dbspaces` parameter must be a dictionary of dictionaries whose keys represe
 
 ### Chunk configuration
 
-The `initial_chunk` and `additional_chunks` parameters both represent chunks belonging to a dbspace. The former takes the for of a dictionary, while the later must be a list of one or more dictionaries. In either case, the following options are supported:
+The `initial_chunk` and `additional_chunks` parameters both represent chunks belonging to a dbspace. The former parameter is mandator and takes the form of a dictionary, while the later is an optional dictionaries. In either case, the following options are supported:
 
 | Name           | Default |                                                              |
 |----------------|---------|--------------------------------------------------------------|
@@ -131,4 +131,11 @@ informix_service_config:
 
 ## Provisioning hosts with existing dbspaces
 
-**TODO**
+This role is _not_ idempotent and there is a **risk of data loss** if the role is executed against hosts that contain existing dbspaces and chunks. A lock file is used to provide a basic level of protection against by distinguishing hosts that were previously provisioned with this role and failing early if the role is executed again.
+
+If there is a need to run this role a second time against a host, the following steps are necessary:
+
+* Confirm that there are no dbpsaces or chunks present on the host (i.e. check all `path` references in the `informix_service_config` variable on the host) and that it it safe to proceed
+* Remove the lock file from `/etc/fil-tuxedo-stack-database-role` on the host
+* Stop any active `oninit` processes on the host
+* Remove any shared memory segements that were used by the `oninit` processes
