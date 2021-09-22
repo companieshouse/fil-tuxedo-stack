@@ -22,7 +22,7 @@ This role is intended for one-time bootstrapping of IBM Informix server instance
 [5]: #dbspaces-configuration
 [6]: #chunk-configuration
 [7]: #example-configuration
-[7]: #provisioning-hosts-with-existing-dbspaces
+[8]: #provisioning-hosts-with-existing-dbspaces
 
 ## Assumptions
 
