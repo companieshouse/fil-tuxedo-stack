@@ -1,4 +1,4 @@
-data "template_cloudinit_config" "config" {
+data "cloudinit_config" "config" {
   count = var.instance_count
 
   gzip          = true

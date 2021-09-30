@@ -87,7 +87,7 @@ resource "aws_instance" "fil" {
   subnet_id       = element(local.application_subnet_ids_by_az, count.index) # use 'element' function for wrap-around behaviour
 
   iam_instance_profile   = module.instance_profile.aws_iam_instance_profile.name
-  user_data_base64       = data.template_cloudinit_config.config[count.index].rendered
+  user_data_base64       = data.cloudinit_config.config[count.index].rendered
   vpc_security_group_ids = [aws_security_group.common.id]
 
   dynamic "ebs_block_device" {
