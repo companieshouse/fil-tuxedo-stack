@@ -2,11 +2,6 @@
 
 role_lock_file: /etc/fil-tuxedo-stack-database-role
 
-informix_service_users:
-  - ef
-  - prod
-  - scud
-
 informix_chunk_store_path: /data/informix/chunks
 informix_server_id_increment: 1
 informix_server_id_start: 0
