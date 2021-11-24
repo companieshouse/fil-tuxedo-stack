@@ -137,7 +137,7 @@ informix_service_config:
 
 To provision a user on a remote host with this role a second time:
 
-* Confirm that there are no dbpsaces or chunks present for the user account on the host (i.e. check all `path` references in the `informix_service_config` configuration for the target user account and confirm these paths do not contain data on the remote host(s))
+* Confirm that there are no dbpsaces or chunks present for the user account(s) on the remote host(s) (i.e. check all `path` references in the `informix_service_config` configuration for the relevant user account(s) and confirm those paths do not contain actual data on the remote host(s))
 * Remove the lock file `/etc/fil-tuxedo-stack-database-role-<username>` on the remote host(s)
 * Stop any active `oninit` processes on the remote host(s)
 * Remove any shared memory segements that were created by the `oninit` processes
