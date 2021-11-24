@@ -96,7 +96,7 @@ The `initial_chunk` and `additional_chunks` parameters both represent chunks bel
 
 Observations to consider when configuring dbspace chunks:
 
-* Chunks are assumed to be cooked disks if the `path` does not refer to a block device and a suitable file will be created at the specified path using `informix:informix` ownership and `0660` permissions before adding the chunk to a dbspace.
+* Chunks are assumed to be cooked disks if the `path` does not refer to a block device, and a suitable file will be created at the specified path using `informix:informix` ownership and `0660` permissions before adding the chunk to a dbspace.
 * Chunks that belong to different cooked disks should use an offset value of `0`. Chunks that belong to the same cooked disk as other chunks should typically use an `offset_in_kb` value equal the sum of the `offset_in_kb + size_in_kb` of the previous chunk with the same path.
 * Chunks that belong to raw disks should use an offset sufficient to ensure that they do not overlap with existing data on the disk (e.g. filesystem metadata) or other chunks.
 
