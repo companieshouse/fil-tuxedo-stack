@@ -86,7 +86,7 @@ The `dbspaces` parameter must be a dictionary of dictionaries whose keys represe
 
 ### Chunk configuration
 
-The `initial_chunk` and `additional_chunks` parameters both represent chunks belonging to a dbspace. The former parameter is mandator and takes the form of a dictionary, while the later is an optional dictionaries. In either case, the following options are supported:
+The `initial_chunk` and `additional_chunks` parameters both represent chunks belonging to a dbspace. The former parameter is mandatory and takes the form of a dictionary, while the later is an optional dictionaries. In either case, the following options are supported:
 
 | Name           | Default |                                                              |
 |----------------|---------|--------------------------------------------------------------|
