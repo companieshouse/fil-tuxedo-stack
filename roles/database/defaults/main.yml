@@ -41,8 +41,8 @@ informix_service_config:
           offset_in_kb: 0
           size_in_kb: 8388608
   prod:
-    server_id: "{{ informix_server_id_start + (0 * informix_server_id_increment) | int }}"
-    server_port: "{{ informix_server_port_start + (0 * informix_server_port_increment) | int }}"
+    server_id: "{{ informix_server_id_start + (1 * informix_server_id_increment) | int }}"
+    server_port: "{{ informix_server_port_start + (1 * informix_server_port_increment) | int }}"
     dbspaces:
       root:
         initial_chunk:
@@ -64,8 +64,8 @@ informix_service_config:
           offset_in_kb: 0
           size_in_kb: 2097152
   scud:
-    server_id: "{{ informix_server_id_start + (0 * informix_server_id_increment) | int }}"
-    server_port: "{{ informix_server_port_start + (0 * informix_server_port_increment) | int }}"
+    server_id: "{{ informix_server_id_start + (2 * informix_server_id_increment) | int }}"
+    server_port: "{{ informix_server_port_start + (2 * informix_server_port_increment) | int }}"
     dbspaces:
       root:
         initial_chunk:
