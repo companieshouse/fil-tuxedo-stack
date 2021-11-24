@@ -22,7 +22,7 @@ This role is intended for one-time bootstrapping of IBM Informix server instance
 [5]: #dbspaces-configuration
 [6]: #chunk-configuration
 [7]: #example-configuration
-[7]: #provisioning-hosts-with-existing-dbspaces
+[8]: #provisioning-hosts-with-existing-dbspaces
 
 ## Assumptions
 
@@ -94,9 +94,11 @@ The `initial_chunk` and `additional_chunks` parameters both represent chunks bel
 | `offset_in_kb` |         | The offset in KiB for this chunk.                            |
 | `size_in_kb`   |         | The size in KiB for this chunk.                              |
 
-:notebook: Chunks are assumed to be cooked disks if the `path` does not refer to a block device and a suitable file will be created at the specified path using `informix:informix` ownership and `0660` permissions before adding the chunk to a dbspace.
+Observations to consider when configuring dbspace chunks:
 
-:notebook: Chunks that belong to different raw or cooked disks should use an offset value of `0`. Chunks that belong to the same raw or cooked disk as other chunks should typically use an `offset_in_kb` value equal the sum of the `offset_in_kb + size_in_kb` of the previous chunk with the same path.
+* Chunks are assumed to be cooked disks if the `path` does not refer to a block device and a suitable file will be created at the specified path using `informix:informix` ownership and `0660` permissions before adding the chunk to a dbspace.
+* Chunks that belong to different cooked disks should use an offset value of `0`. Chunks that belong to the same cooked disk as other chunks should typically use an `offset_in_kb` value equal the sum of the `offset_in_kb + size_in_kb` of the previous chunk with the same path.
+* Chunks that belong to raw disks should use an offset sufficient to ensure that they do not overlap with existing data on the disk (e.g. filesystem metadata) or other chunks.
 
 ### Example configuration
 
