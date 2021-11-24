@@ -3,15 +3,6 @@
 - name: Set EC2 metadata facts
   amazon.aws.ec2_metadata_facts:
 
-- name: Check for presence of role lock file
-  stat:
-    path: "{{ role_lock_file }}"
-  register: lock_result
-
-- fail:
-    msg: "This host was previously provisioned by the same Ansible role. There is a risk of data loss to dbspaces and chunks present on this host when running this role again. Refer to the 'fil-tuxedo-stack' project documentation for more information."
-  when: lock_result.stat.exists
-
 - name: Check required variables are set
   assert:
     that:
@@ -22,11 +13,3 @@
   loop: "{{ informix_service_users }}"
   loop_control:
     loop_var: informix_server_name
-
-- name: Create role lock file
-  copy:
-    content: "{{ ansible_date_time.iso8601 }} Provisioned by 'database' role in 'fil-tuxedo-stack' project\n"
-    dest: "{{ role_lock_file }}"
-    owner: root
-    group: root
-    mode: 0444

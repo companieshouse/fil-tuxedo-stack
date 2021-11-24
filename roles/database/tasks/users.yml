@@ -1,5 +1,14 @@
 ---
 
+- name:  "{{ informix_server_name }} : Check for presence of role lock file"
+  stat:
+    path: "{{ role_lock_file_prefix }}-{{ informix_server_name }}"
+  register: lock_result
+
+- fail:
+    msg: "The user '{{ informix_server_name }}' was previously provisioned by this role. There is a risk of data loss if this role is executed against a remote that contains existing dbspaces and chunks. Refer to the README.md file for this role for more information."
+  when: lock_result.stat.exists
+
 - name: "{{ informix_server_name }} : Check Informix configuration is present"
   assert:
     that:
@@ -100,3 +109,11 @@
   loop: "{{ informix_service_config[informix_server_name].dbspaces | dict2items | rejectattr('key', 'eq', 'root') | list }}"
   loop_control:
     loop_var: dbspace
+
+- name: Create role lock file
+  copy:
+    content: "{{ ansible_date_time.iso8601 }} Provisioned by 'database' role in 'fil-tuxedo-stack' project\n"
+    dest: "{{ role_lock_file_prefix }}-{{ informix_server_name }}"
+    owner: root
+    group: root
+    mode: 0444

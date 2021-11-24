@@ -131,11 +131,12 @@ informix_service_config:
 
 ## Provisioning hosts with existing dbspaces
 
-:warning: This role is _not_ idempotent and there is a **risk of data loss** if the role is executed against hosts that contain existing dbspaces and chunks. A lock file is used to provide a basic level of protection against this by distinguishing hosts that were previously provisioned with this role and failing early if the role is executed again.
+:warning: This role is _not_ idempotent and there is a **risk of data loss** if the role is executed against hosts whose user accounts contain existing dbspaces and chunks. A lock file is created for each user provisioned by this role to provide a basic level of protection against this. The presence of such lock files are used to distinguish any user accounts that were previously provisioned with this role, and the role will fail to execute until manual action is taken.
 
-The following steps are necessary if there is a need to run this role a second time against a given host:
+To provision a user on a remote host with this role a second time:
 
-* Confirm that there are no dbpsaces or chunks present on the host (i.e. check all `path` references in the `informix_service_config` variable on the host) and that it it safe to proceed
-* Remove the lock file from `/etc/fil-tuxedo-stack-database-role` on the host
-* Stop any active `oninit` processes on the host
+* Confirm that there are no dbpsaces or chunks present for the user account on the host (i.e. check all `path` references in the `informix_service_config` configuration for the target user account and confirm these paths do not contain data on the remote host(s))
+* Remove the lock file `/etc/fil-tuxedo-stack-database-role-<username>` on the remote host(s)
+* Stop any active `oninit` processes on the remote host(s)
 * Remove any shared memory segements that were created by the `oninit` processes
+* Rerun this role and

@@ -1,0 +1,5 @@
+---
+
+informix_install_path: /opt/informix/14.10
+informix_service_group: informix
+informix_service_user: informix
