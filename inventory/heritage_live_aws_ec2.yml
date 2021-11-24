@@ -1,0 +1,12 @@
+plugin: aws_ec2
+boto_profile: heritage-live-eu-west-2
+
+regions:
+  - eu-west-2
+
+filters:
+  tag:Environment: live
+  tag:Service: tuxedo
+  tag:ServiceSubType: fil
+
+hostnames: private-ip-address

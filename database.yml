@@ -1,0 +1,17 @@
+---
+
+# Provision Ansible controller with SSH key for remote
+- hosts: localhost
+  serial: 1
+  remote_user: centos
+  become: yes
+  roles:
+    - ssh-key
+
+# Provision Informix dbspaces and chunks
+- hosts: aws_ec2
+  serial: 1
+  remote_user: centos
+  become: yes
+  roles:
+    - database
