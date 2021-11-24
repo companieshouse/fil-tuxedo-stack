@@ -141,4 +141,4 @@ To provision a user on a remote host with this role a second time:
 * Remove the lock file `/etc/fil-tuxedo-stack-database-role-<username>` on the remote host(s)
 * Stop any active `oninit` processes on the remote host(s)
 * Remove any shared memory segements that were created by the `oninit` processes
-* Rerun this role and
+* Rerun this role against the same user account(s) and host(s)
