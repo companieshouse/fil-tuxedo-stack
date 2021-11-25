@@ -7,6 +7,9 @@
   become: yes
   roles:
     - ssh-key
+  vars:
+    ssh_key_name: ansible_remote
+    hashicorp_vault_private_key_path: "/applications/heritage-{{ environment_name }}-eu-west-2/fil-tuxedo/aws"
 
 # Provision Informix dbspaces and chunks
 - hosts: aws_ec2
