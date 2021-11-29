@@ -1,0 +1,112 @@
+---
+
+- name: Set EC2 metadata facts
+  amazon.aws.ec2_metadata_facts:
+
+- name: Set host facts for passwd database
+  getent:
+    database: passwd
+
+- name: Check required variables are set
+  assert:
+    that:
+      - tuxedo_service_users is defined and tuxedo_service_users | length > 0
+      - environment_name is defined and environment_name | trim | length > 0
+      - application_artifact_path is defined and application_artifact_path | trim | length > 0
+      - application_configs_path is defined and application_configs_path | trim | length > 0
+    msg: "Required variable(s) empty or undefined"
+
+# The hostname is assumed to be in the format: fil-tuxedo-<environment>-<instance-index>
+- name: Set Tuxedo facts for config population
+  set_fact:
+     tuxedo_domain_id_suffix: "{{ ansible_facts.hostname | regex_replace('^fil-tuxedo-([A-Za-z].*)-(\\d+)$', 'FIL_\\2_\\1_DOM') | upper }}"
+     tuxedo_logical_machine_id_suffix: "{{ ansible_facts.hostname | regex_replace('^fil-tuxedo-([A-Za-z].*)-(\\d+)$', 'FIL_\\2_\\1_SRV') | upper }}"
+     tuxedo_local_domain_suffix: "{{ ansible_facts.hostname | regex_replace('^fil-tuxedo-([A-Za-z].*)-(\\d+)$', 'FIL_\\2_\\1_LOD') | upper }}"
+
+- name: Set CloudWatch agent facts for config population
+  set_fact:
+    cloudwatch_log_stream_name: "{{ ansible_ec2_instance_id }}_{{ ansible_ec2_hostname }}"
+    region: "{{ ansible_ec2_instance_identity_document_region }}"
+
+- name: Create CloudWatch agent primary configuration file
+  template:
+    src: templates/cloudwatch-config.json.j2
+    dest: "{{ cloudwatch_agent.config_dir }}/cloudwatch-config.json"
+    trim_blocks: False
+
+- name: Start CloudWatch agent using primary configuration file
+  command:
+    cmd: "{{ cloudwatch_agent.path }} -a fetch-config -m ec2 -s -c file:{{ cloudwatch_agent.config_dir }}/cloudwatch-config.json"
+
+- name: Using constructed variable suffixes
+  ansible.builtin.debug:
+    var: "{{ item }}"
+  loop:
+    - tuxedo_domain_id_suffix
+    - tuxedo_logical_machine_id_suffix
+    - tuxedo_local_domain_suffix
+
+- name: Create temporary directory for application artifact files
+  tempfile:
+    state: directory
+  register: application_artifact_files
+
+- name: Set permissions to allow service users to read from temporary directory
+  file:
+    path: "{{ application_artifact_files.path }}"
+    owner: root
+    group: "{{ tuxedo_service_group }}"
+    mode: 0755
+
+- name: Deploy and extract application arterfact
+  unarchive:
+    src: "{{ application_artifact_path }}"
+    dest: "{{ application_artifact_files.path }}"
+    remote_src: no
+    owner: root
+    group: "{{ tuxedo_service_group }}"
+    mode: 0755
+
+- name: Create Tuxedo logs directory
+  file:
+    path: "{{ tuxedo_logs_path }}"
+    owner: root
+    group: "{{ tuxedo_service_group }}"
+    mode: 0755
+    state: directory
+
+- name: Create shared log rotation configuration for Tuxedo services
+  template:
+    src: templates/logrotate.tuxedo.conf.j2
+    dest: "{{ tuxedo_log_rotation_config_path }}"
+
+- name: Create system cron job for log rotation
+  cron:
+    name: Log rotation for Tuxedo services
+    weekday: "*"
+    minute: "*/15"
+    hour: "*"
+    user: "root"
+    job: "logrotate {{ tuxedo_log_rotation_config_path }}"
+    cron_file: /etc/crontab
+
+- include_tasks: deploy.yml
+  loop: "{{ tuxedo_service_users }}"
+  loop_control:
+    loop_var: tuxedo_user
+
+- name: Find application-specific CloudWatch configuration files
+  find:
+    paths: "{{ cloudwatch_agent.config_dir }}"
+    patterns: 'cloudwatch-config-*.json'
+  register: cloudwatch_configs
+
+- name: "{{ tuxedo_user }} : Add configuration for Tuxedo service group to CloudWatch agent"
+  command:
+    cmd: "{{ cloudwatch_agent.path }} -a append-config -m ec2 -s -c file:{{ item.path }}"
+  loop: "{{ cloudwatch_configs.files }}"
+
+- name: Remove temporary directories
+  file:
+    path: "{{ application_artifact_files.path }}"
+    state: absent

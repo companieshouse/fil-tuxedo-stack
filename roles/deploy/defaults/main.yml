@@ -1,0 +1,53 @@
+---
+
+cloudwatch_agent:
+  path: /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl
+  config_dir: /opt/aws/amazon-cloudwatch-agent/etc
+  log_file: /opt/aws/amazon-cloudwatch-agent/logs/amazon-cloudwatch-agent.log
+  metrics_collection_interval: 60
+  user: cwagent
+
+getent_gid_index: 2
+getent_uid_index: 1
+
+tuxedo_log_files:
+  cabs:
+    - file_pattern: ULOG*
+      cloudwatch_log_group_name: fil-tuxedo-cabs-ulog
+  ef:
+    - file_pattern: ULOG*
+      cloudwatch_log_group_name: fil-tuxedo-ef-ulog
+  prod:
+    - file_pattern: ULOG*
+      cloudwatch_log_group_name: fil-tuxedo-prod-ulog
+  scud:
+    - file_pattern: ULOG*
+      cloudwatch_log_group_name: fil-tuxedo-scud-ulog
+
+tuxedo_log_rotation_config_path: /etc/logrotate.tuxedo.conf
+tuxedo_logs_path: /var/log/tuxedo
+tuxedo_service_domain_port_increment: 100
+tuxedo_service_domain_port_start: 38000
+tuxedo_service_group: tuxedo
+tuxedo_service_ipc_key_increment: 100
+tuxedo_service_ipc_key_start: 48000
+
+tuxedo_service_config:
+  cabs:
+    ipc_key: "{{ tuxedo_service_ipc_key_start + (0 * tuxedo_service_ipc_key_increment) | int }}"
+    local_domain_port: "{{ tuxedo_service_domain_port_start + (0 * tuxedo_service_domain_port_increment) | int }}"
+  ef:
+    ipc_key: "{{ tuxedo_service_ipc_key_start + (1 * tuxedo_service_ipc_key_increment) | int }}"
+    local_domain_port: "{{ tuxedo_service_domain_port_start + (1 * tuxedo_service_domain_port_increment) | int }}"
+    informix_server_name: ef
+  prod:
+    ipc_key: "{{ tuxedo_service_ipc_key_start + (2 * tuxedo_service_ipc_key_increment) | int }}"
+    local_domain_port: "{{ tuxedo_service_domain_port_start + (2 * tuxedo_service_domain_port_increment) | int }}"
+    informix_server_name: prod
+  scud:
+    ipc_key: "{{ tuxedo_service_ipc_key_start + (3 * tuxedo_service_ipc_key_increment) | int }}"
+    local_domain_port: "{{ tuxedo_service_domain_port_start + (3 * tuxedo_service_domain_port_increment) | int }}"
+    informix_server_name: scud
+
+deployment_dir: deployment
+rollback_dir: rollback

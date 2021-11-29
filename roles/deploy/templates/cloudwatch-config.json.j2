@@ -1,0 +1,22 @@
+{
+  "agent": {
+   "metrics_collection_interval": {{ cloudwatch_agent.metrics_collection_interval }},
+   "region": "{{ region }}",
+   "logfile": "{{ cloudwatch_agent.log_file }}",
+   "debug": false,
+   "run_as_user": "{{ cloudwatch_agent.user }}"
+  },
+  "logs": {
+    "logs_collected": {
+      "files": {
+        "collect_list": [
+          {
+            "file_path": "{{ cloudwatch_agent.log_file }}",
+            "log_group_name": "fil-tuxedo-cloudwatch",
+            "log_stream_name": "{{ cloudwatch_log_stream_name }}"
+          }
+        ]
+      }
+    }
+  }
+}
