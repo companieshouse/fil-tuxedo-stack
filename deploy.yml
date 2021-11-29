@@ -8,10 +8,10 @@
     ssh_key_name: ansible_remote
     hashicorp_vault_private_key_path: "/applications/heritage-{{ environment_name }}-eu-west-2/fil-tuxedo/aws"
 
-# Provision Informix dbspaces and chunks
+# Deploy Tuxedo services
 - hosts: aws_ec2
   serial: 1
   remote_user: centos
   become: yes
   roles:
-    - database
+    - deploy

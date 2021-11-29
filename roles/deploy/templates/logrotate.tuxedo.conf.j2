@@ -1,0 +1,28 @@
+{{ tuxedo_logs_path }}/*/*.log {
+  daily
+  copytruncate
+  compress
+  maxage 7
+  maxsize 1G
+  missingok
+  notifempty
+  olddir old
+  rotate 20
+  createolddir 0755 root root
+}
+
+{{ tuxedo_logs_path }}/*/ULOG.* {
+  daily
+  copytruncate
+  compress
+  maxage 93
+  maxsize 1800M
+  missingok
+  notifempty
+  olddir old
+  rotate 20
+  createolddir 0755 root root
+  lastaction
+    /bin/find /var/log/tuxedo -maxdepth 2 -name 'ULOG.*' -mtime +1 -size 0 -delete
+  endscript
+}
