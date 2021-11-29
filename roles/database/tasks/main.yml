@@ -9,6 +9,14 @@
       - informix_service_users is defined and informix_service_users | length > 0
     msg: "Required variable(s) empty or undefined"
 
+- name: Create Informix logs directory
+  file:
+    path: "{{ informix_logs_path }}"
+    owner: "{{ informix_service_user }}"
+    group: "{{ informix_service_group }}"
+    mode: 0755
+    state: directory
+
 - include_tasks: users.yml
   loop: "{{ informix_service_users }}"
   loop_control:

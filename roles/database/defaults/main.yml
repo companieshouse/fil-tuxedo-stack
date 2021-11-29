@@ -7,6 +7,7 @@ informix_server_id_increment: 1
 informix_server_id_start: 0
 informix_server_port_increment: 10
 informix_server_port_start: 1500
+informix_logs_path: /var/log/informix
 
 informix_service_config:
   ef:
