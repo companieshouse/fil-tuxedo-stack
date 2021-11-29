@@ -75,14 +75,6 @@
     mode: 0755
     state: directory
 
-- name: Create Informix logs directory
-  file:
-    path: "{{ informix_logs_path }}"
-    owner: "{{ informix_service_user }}"
-    group: "{{ informix_service_group }}"
-    mode: 0755
-    state: directory
-
 - name: Create shared log rotation configuration for Tuxedo services
   template:
     src: templates/logrotate.tuxedo.conf.j2

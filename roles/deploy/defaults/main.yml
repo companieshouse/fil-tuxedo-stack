@@ -32,8 +32,6 @@ tuxedo_service_group: tuxedo
 tuxedo_service_ipc_key_increment: 100
 tuxedo_service_ipc_key_start: 48000
 
-informix_logs_path: /var/log/informix
-
 tuxedo_service_config:
   cabs:
     ipc_key: "{{ tuxedo_service_ipc_key_start + (0 * tuxedo_service_ipc_key_increment) | int }}"
