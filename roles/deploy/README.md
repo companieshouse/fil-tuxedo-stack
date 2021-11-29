@@ -32,9 +32,7 @@ Each dictionary must include the following parameters unless marked _optional_:
 |-------------------------|---------|---------------------------------------------------------------------------------------|
 | `ipc_key`               |         | A unique IPC key value for Tuxedo services.                                           |
 | `local_domain_port`     |         | The port number to use for the local Tuxedo domain.                                   |
-| `queue_space_ipc_key`   |         | A unique IPC key value for the primary Tuxedo queue space.                            |
-| `queue_space_2_ipc_key` |         | _Optional_. A unique IPC key value for services that use a second Tuxedo queue space. |
-| `tuxedo_log_size`       |         | The log size to use when creating the Tuxedo queue(s).                                |
+| `informix_server_name`  |         | _Optional_. The name of the Informix server that services will access.                |
 
 A `tuxedo_service_users` variable is required when running this role and can be provided using the `-e|--extra-vars` option to the `ansible-playbook` command. This variable should be defined as a list of group names to be deployed, where each group name corresponds to a key in the `tuxedo_service_config` configuration variable discussed above. For example, to deploy only services belonging to the `cabs` group:
 

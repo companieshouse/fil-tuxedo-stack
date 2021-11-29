@@ -36,6 +36,14 @@
     mode: 0755
     state: directory
 
+- name: "{{ tuxedo_user }} : Create Informix server logs directory"
+  file:
+    path: "{{ informix_logs_path }}/{{ tuxedo_user }}"
+    owner: "{{ informix_service_user }}"
+    group: "{{ informix_service_group }}"
+    mode: 0755
+    state: directory
+
 - name: "{{ tuxedo_user }} : Create config directory"
   file:
     path: "{{ new_deployment_files.path }}/config"

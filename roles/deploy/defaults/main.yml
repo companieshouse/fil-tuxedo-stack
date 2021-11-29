@@ -26,8 +26,6 @@ tuxedo_log_files:
 
 tuxedo_log_rotation_config_path: /etc/logrotate.tuxedo.conf
 tuxedo_logs_path: /var/log/tuxedo
-tuxedo_queue_space_ipc_key_increment: 100
-tuxedo_queue_space_ipc_key_start: 58000
 tuxedo_service_domain_port_increment: 100
 tuxedo_service_domain_port_start: 38000
 tuxedo_service_group: tuxedo
@@ -35,32 +33,23 @@ tuxedo_service_ipc_key_increment: 100
 tuxedo_service_ipc_key_start: 48000
 
 informix_logs_path: /var/log/informix
-informix_server_id_increment: 1
-informix_server_id_start: 0
 
 tuxedo_service_config:
   cabs:
     ipc_key: "{{ tuxedo_service_ipc_key_start + (0 * tuxedo_service_ipc_key_increment) | int }}"
     local_domain_port: "{{ tuxedo_service_domain_port_start + (0 * tuxedo_service_domain_port_increment) | int }}"
-    tuxedo_log_size: 10
   ef:
     ipc_key: "{{ tuxedo_service_ipc_key_start + (1 * tuxedo_service_ipc_key_increment) | int }}"
     local_domain_port: "{{ tuxedo_service_domain_port_start + (1 * tuxedo_service_domain_port_increment) | int }}"
-    informix_server_id: "{{ informix_server_id_start + (0 * informix_server_id_increment) | int }}"
     informix_server_name: ef
-    tuxedo_log_size: 10
   prod:
     ipc_key: "{{ tuxedo_service_ipc_key_start + (2 * tuxedo_service_ipc_key_increment) | int }}"
     local_domain_port: "{{ tuxedo_service_domain_port_start + (2 * tuxedo_service_domain_port_increment) | int }}"
-    informix_server_id: "{{ informix_server_id_start + (1 * informix_server_id_increment) | int }}"
     informix_server_name: prod
-    tuxedo_log_size: 10
   scud:
     ipc_key: "{{ tuxedo_service_ipc_key_start + (3 * tuxedo_service_ipc_key_increment) | int }}"
     local_domain_port: "{{ tuxedo_service_domain_port_start + (3 * tuxedo_service_domain_port_increment) | int }}"
-    informix_server_id: "{{ informix_server_id_start + (2 * informix_server_id_increment) | int }}"
     informix_server_name: scud
-    tuxedo_log_size: 10
 
 deployment_dir: deployment
 rollback_dir: rollback
