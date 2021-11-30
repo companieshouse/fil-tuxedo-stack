@@ -22,7 +22,6 @@
       - informix_service_config[informix_server_name].dbspaces.root.initial_chunk is defined
     msg: "Informix root dbspace configuration for Tuxedo user {{ informix_server_name }} must include an 'initial_chunk' configuration in 'informix_service_config[{{ informix_server_name }}].dbspaces.root'"
 
-
 - name: "{{ informix_server_name }} : Set variables for config population"
   set_fact:
     informix_server_name: "{{ informix_server_name }}"
@@ -50,6 +49,14 @@
   set_fact:
     informix_connections: "{{ informix_service_config[informix_server_name].server_connections }}"
   when: informix_service_config[informix_server_name].server_connections is defined
+
+- name: "{{ informix_server_name }} : Create Informix server logs directory"
+  file:
+    path: "{{ informix_logs_path }}/{{ informix_server_name }}"
+    owner: "{{ informix_service_user }}"
+    group: "{{ informix_service_group }}"
+    mode: 0755
+    state: directory
 
 - name: "{{ informix_server_name }} : Create Informix environment file"
   template:
