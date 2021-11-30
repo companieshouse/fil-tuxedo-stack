@@ -8,7 +8,7 @@
     informix_server_id: "{{ tuxedo_service_config[tuxedo_user].informix_server_id }}"
     informix_server_name: "{{ tuxedo_service_config[tuxedo_user].informix_server_name }}"
     tuxedo_env_file_path: "/home/{{ tuxedo_user }}/deployment/config/envfile"
-    tuxedo_domain_id: "{{ tuxedo_user | upper }}_FIL_{{ tuxedo_domain_id_suffix }}"
+    tuxedo_domain_id: "{{ tuxedo_user | upper }}_{{ tuxedo_domain_id_suffix }}"
     tuxedo_group_id: "{{ getent_passwd[tuxedo_user][getent_gid_index] }}"
     tuxedo_ipc_key: "{{ tuxedo_service_config[tuxedo_user].ipc_key }}"
     tuxedo_local_domain_id: "{{ tuxedo_user | upper }}_{{ tuxedo_local_domain_suffix }}"
