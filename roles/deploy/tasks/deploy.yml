@@ -5,8 +5,7 @@
     private_host_address: "{{ inventory_hostname }}"
     private_host_local_domain_port: "{{ tuxedo_service_config[tuxedo_user].local_domain_port }}"
     service_name: "{{ tuxedo_user }}"
-    informix_server_id: "{{ tuxedo_service_config[tuxedo_user].informix_server_id }}"
-    informix_server_name: "{{ tuxedo_service_config[tuxedo_user].informix_server_name }}"
+    informix_server_name: "{{ tuxedo_service_config[tuxedo_user].informix_server_name | default('') }}"
     tuxedo_env_file_path: "/home/{{ tuxedo_user }}/deployment/config/envfile"
     tuxedo_domain_id: "{{ tuxedo_user | upper }}_{{ tuxedo_domain_id_suffix }}"
     tuxedo_group_id: "{{ getent_passwd[tuxedo_user][getent_gid_index] }}"
@@ -15,7 +14,6 @@
     tuxedo_logical_machine_id: "{{ tuxedo_user | upper }}_{{ tuxedo_logical_machine_id_suffix }}"
     tuxedo_machine_name: "{{ ansible_facts.hostname }}"
     tuxedo_user_id: "{{ getent_passwd[tuxedo_user][getent_uid_index] }}"
-    tuxedo_log_size: "{{ tuxedo_service_config[tuxedo_user].tuxedo_log_size }}"
   no_log: True
 
 - name: "{{ tuxedo_user }} : Create temporary directory for new {{ tuxedo_user }} deployment"
