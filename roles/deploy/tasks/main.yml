@@ -106,6 +106,23 @@
     cmd: "{{ cloudwatch_agent.path }} -a append-config -m ec2 -s -c file:{{ item.path }}"
   loop: "{{ cloudwatch_configs.files }}"
 
+- name: Allow logrotate to modify CloudWatch log
+  community.general.sefcontext:
+    target: "{{ item }}"
+    setype: var_log_t
+    state: present
+  loop:
+    - /opt/aws/amazon-cloudwatch-agent/logs
+    - /opt/aws/amazon-cloudwatch-agent/logs/amazon-cloudwatch-agent.log
+  register: selinux_context
+
+- name: Apply SELinux file context for CloudWatch log
+  command: "restorecon {{ item }}"
+  loop:
+    - /opt/aws/amazon-cloudwatch-agent/logs
+    - /opt/aws/amazon-cloudwatch-agent/logs/amazon-cloudwatch-agent.log
+  when: selinux_context.changed
+
 - name: Remove temporary directories
   file:
     path: "{{ application_artifact_files.path }}"
