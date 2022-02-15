@@ -45,6 +45,10 @@ informix_service_config:
           offset_in_kb: 0
           size_in_kb: 8388608
     server_connections:
+        - server_name: ef
+          connection_type: onipcshm
+          host: localhost
+          service_or_port: localhost
         - server_name: ef_prime
           connection_type: onsoctcp
           host: instance-1.fil.tuxedo.staging.heritage.aws.internal
