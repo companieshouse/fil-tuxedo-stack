@@ -64,6 +64,18 @@ resource "aws_security_group" "common" {
     }
   }
 
+  dynamic "ingress" {
+    for_each = var.tuxedo_services
+    iterator = service
+    content {
+      description = "Allow OIS Tuxedo connectivity for Tuxedo ${upper(service.key)} services"
+      from_port   = service.value
+      to_port     = service.value
+      protocol    = "TCP"
+      cidr_blocks = data.aws_subnet.application.*.cidr_block
+    }
+  }
+
   egress {
     description = "Allow outbound traffic"
     from_port   = 0
@@ -72,7 +84,7 @@ resource "aws_security_group" "common" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = merge(local.common_tags ,{
+  tags = merge(local.common_tags, {
     Name = "common-${local.common_resource_name}"
   })
 }
@@ -110,7 +122,7 @@ resource "aws_instance" "fil" {
     volume_size = var.root_volume_size
   }
 
-  tags = merge(local.common_tags ,{
+  tags = merge(local.common_tags, {
     Name = "${var.service_subtype}-${var.service}-${var.environment}-${count.index + 1}"
   })
   volume_tags = local.common_tags
