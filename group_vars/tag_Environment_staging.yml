@@ -49,11 +49,11 @@ informix_service_config:
           connection_type: onipcshm
           host: localhost
           service_or_port: localhost
-        - server_name: ef_prime
+        - server_name: ef_primary
           connection_type: onsoctcp
           host: instance-1.fil.tuxedo.staging.heritage.aws.internal
           service_or_port: "{{ informix_server_port_start + (0 * informix_server_port_increment) | int }}"
-        - server_name: ef_second
+        - server_name: ef_secondary
           connection_type: onsoctcp
           host: instance-2.fil.tuxedo.staging.heritage.aws.internal
           service_or_port: "{{ informix_server_port_start + (0 * informix_server_port_increment) | int }}"
@@ -85,11 +85,11 @@ informix_service_config:
           connection_type: onipcshm
           host: localhost
           service_or_port: localhost
-        - server_name: prod_prime
+        - server_name: prod_primary
           connection_type: onsoctcp
           host: instance-1.fil.tuxedo.staging.heritage.aws.internal
           service_or_port: "{{ informix_server_port_start + (1 * informix_server_port_increment) | int }}"
-        - server_name: prod_second
+        - server_name: prod_secondary
           connection_type: onsoctcp
           host: instance-2.fil.tuxedo.staging.heritage.aws.internal
           service_or_port: "{{ informix_server_port_start + (1 * informix_server_port_increment) | int }}"
@@ -121,11 +121,11 @@ informix_service_config:
           connection_type: onipcshm
           host: localhost
           service_or_port: localhost
-        - server_name: scud_prime
+        - server_name: scud_primary
           connection_type: onsoctcp
           host: instance-1.fil.tuxedo.staging.heritage.aws.internal
           service_or_port: "{{ informix_server_port_start + (2 * informix_server_port_increment) | int }}"
-        - server_name: scud_second
+        - server_name: scud_secondary
           connection_type: onsoctcp
           host: instance-2.fil.tuxedo.staging.heritage.aws.internal
           service_or_port: "{{ informix_server_port_start + (2 * informix_server_port_increment) | int }}"
