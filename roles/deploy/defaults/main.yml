@@ -34,20 +34,20 @@ tuxedo_service_ipc_key_start: 48000
 
 tuxedo_service_config:
   ef:
-    ipc_key: "{{ tuxedo_service_ipc_key_start + (1 * tuxedo_service_ipc_key_increment) | int }}"
-    local_domain_port: "{{ tuxedo_service_domain_port_start + (1 * tuxedo_service_domain_port_increment) | int }}"
-    informix_server_name: ef
-  prod:
-    ipc_key: "{{ tuxedo_service_ipc_key_start + (2 * tuxedo_service_ipc_key_increment) | int }}"
-    local_domain_port: "{{ tuxedo_service_domain_port_start + (2 * tuxedo_service_domain_port_increment) | int }}"
-    informix_server_name: prod
-  scud:
-    ipc_key: "{{ tuxedo_service_ipc_key_start + (3 * tuxedo_service_ipc_key_increment) | int }}"
-    local_domain_port: "{{ tuxedo_service_domain_port_start + (3 * tuxedo_service_domain_port_increment) | int }}"
-    informix_server_name: scud
-  cabs:
     ipc_key: "{{ tuxedo_service_ipc_key_start + (0 * tuxedo_service_ipc_key_increment) | int }}"
     local_domain_port: "{{ tuxedo_service_domain_port_start + (0 * tuxedo_service_domain_port_increment) | int }}"
+    informix_server_name: ef
+  prod:
+    ipc_key: "{{ tuxedo_service_ipc_key_start + (1 * tuxedo_service_ipc_key_increment) | int }}"
+    local_domain_port: "{{ tuxedo_service_domain_port_start + (1 * tuxedo_service_domain_port_increment) | int }}"
+    informix_server_name: prod
+  scud:
+    ipc_key: "{{ tuxedo_service_ipc_key_start + (2 * tuxedo_service_ipc_key_increment) | int }}"
+    local_domain_port: "{{ tuxedo_service_domain_port_start + (2 * tuxedo_service_domain_port_increment) | int }}"
+    informix_server_name: scud
+  cabs:
+    ipc_key: "{{ tuxedo_service_ipc_key_start + (3 * tuxedo_service_ipc_key_increment) | int }}"
+    local_domain_port: "{{ tuxedo_service_domain_port_start + (3 * tuxedo_service_domain_port_increment) | int }}"
 
 deployment_dir: deployment
 rollback_dir: rollback
