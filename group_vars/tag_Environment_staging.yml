@@ -1,0 +1,131 @@
+---
+
+# Staging environment
+#
+# Server port mappings:
+#   - ef   6000 (primary/secondary)
+#   - prod 7000 (primary/secondary)
+#   - scud 8000 (primary/secondary)
+#
+# Server ID mappings:
+#   - ef   0 (primary/secondary)
+#   - prod 1 (primary/secondary)
+#   - scud 2 (primary/secondary)
+
+informix_server_id_increment: 1
+informix_server_id_start: 0
+informix_server_port_increment: 1000
+informix_server_port_start: 6000
+
+informix_service_config:
+  ef:
+    server_id: "{{ informix_server_id_start + (0 * informix_server_id_increment) | int }}"
+    server_port: "{{ informix_server_port_start + (0 * informix_server_port_increment) | int }}"
+    dbspaces:
+      root:
+        initial_chunk:
+          path: "{{ informix_chunk_store_path }}/ef/ef_root_dbs_1"
+          offset_in_kb: 0
+          size_in_kb: 2097152
+      ef_data_dbs:
+        initial_chunk:
+          path: "{{ informix_chunk_store_path }}/ef/ef_data_dbs_1"
+          offset_in_kb: 0
+          size_in_kb: 8388608
+        additional_chunks:
+          - path: "{{ informix_chunk_store_path }}/ef/ef_data_dbs_2"
+            offset_in_kb: 0
+            size_in_kb: 8388608
+          - path: "{{ informix_chunk_store_path }}/ef/ef_data_dbs_3"
+            offset_in_kb: 0
+            size_in_kb: 8388608
+      ef_log_dbs:
+        initial_chunk:
+          path: "{{ informix_chunk_store_path }}/ef/ef_log_dbs_1"
+          offset_in_kb: 0
+          size_in_kb: 8388608
+    server_connections:
+        - server_name: ef
+          connection_type: onipcshm
+          host: localhost
+          service_or_port: localhost
+        - server_name: ef_primary
+          connection_type: onsoctcp
+          host: instance-1.fil.tuxedo.staging.heritage.aws.internal
+          service_or_port: "{{ informix_server_port_start + (0 * informix_server_port_increment) | int }}"
+        - server_name: ef_secondary
+          connection_type: onsoctcp
+          host: instance-2.fil.tuxedo.staging.heritage.aws.internal
+          service_or_port: "{{ informix_server_port_start + (0 * informix_server_port_increment) | int }}"
+  prod:
+    server_id: "{{ informix_server_id_start + (1 * informix_server_id_increment) | int }}"
+    server_port: "{{ informix_server_port_start + (1 * informix_server_port_increment) | int }}"
+    dbspaces:
+      root:
+        initial_chunk:
+          path: "{{ informix_chunk_store_path }}/prod/prod_root_dbs_1"
+          offset_in_kb: 0
+          size_in_kb: 2097152
+      prod_data_dbs:
+        initial_chunk:
+          path: "{{ informix_chunk_store_path }}/prod/prod_data_dbs_1"
+          offset_in_kb: 0
+          size_in_kb: 4194304
+        additional_chunks:
+          - path: "{{ informix_chunk_store_path }}/prod/prod_data_dbs_2"
+            offset_in_kb: 0
+            size_in_kb: 4194304
+      prod_log_dbs:
+        initial_chunk:
+          path: "{{ informix_chunk_store_path }}/prod/prod_log_dbs_1"
+          offset_in_kb: 0
+          size_in_kb: 2097152
+    server_connections:
+        - server_name: prod
+          connection_type: onipcshm
+          host: localhost
+          service_or_port: localhost
+        - server_name: prod_primary
+          connection_type: onsoctcp
+          host: instance-1.fil.tuxedo.staging.heritage.aws.internal
+          service_or_port: "{{ informix_server_port_start + (1 * informix_server_port_increment) | int }}"
+        - server_name: prod_secondary
+          connection_type: onsoctcp
+          host: instance-2.fil.tuxedo.staging.heritage.aws.internal
+          service_or_port: "{{ informix_server_port_start + (1 * informix_server_port_increment) | int }}"
+  scud:
+    server_id: "{{ informix_server_id_start + (2 * informix_server_id_increment) | int }}"
+    server_port: "{{ informix_server_port_start + (2 * informix_server_port_increment) | int }}"
+    dbspaces:
+      root:
+        initial_chunk:
+          path: "{{ informix_chunk_store_path }}/scud/scud_root_dbs_1"
+          offset_in_kb: 0
+          size_in_kb: 2097152
+      scud_data_dbs:
+        initial_chunk:
+          path: "{{ informix_chunk_store_path }}/scud/scud_data_dbs_1"
+          offset_in_kb: 0
+          size_in_kb: 4194304
+        additional_chunks:
+          - path: "{{ informix_chunk_store_path }}/scud/scud_data_dbs_2"
+            offset_in_kb: 0
+            size_in_kb: 4194304
+      scud_log_dbs:
+        initial_chunk:
+          path: "{{ informix_chunk_store_path }}/scud/scud_log_dbs_1"
+          offset_in_kb: 0
+          size_in_kb: 2097152
+    server_connections:
+        - server_name: scud
+          connection_type: onipcshm
+          host: localhost
+          service_or_port: localhost
+        - server_name: scud_primary
+          connection_type: onsoctcp
+          host: instance-1.fil.tuxedo.staging.heritage.aws.internal
+          service_or_port: "{{ informix_server_port_start + (2 * informix_server_port_increment) | int }}"
+        - server_name: scud_secondary
+          connection_type: onsoctcp
+          host: instance-2.fil.tuxedo.staging.heritage.aws.internal
+          service_or_port: "{{ informix_server_port_start + (2 * informix_server_port_increment) | int }}"

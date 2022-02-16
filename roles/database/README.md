@@ -67,6 +67,7 @@ The _optional_ `server_connections` parameter must comprise a list of dictionari
 | `connection_type`    |         | The connection type to use (e.g. `onipcshm` for shared memory segment or `onsoctcp` for TCP/IP connection) | `nettype` |
 | `host`               |         | The host computer for the database server. | `hostname` |
 | `service_or_port`    |         | The service name or port number dependent upon `connection_type`. | `servicename` |
+| `options`            |         | Any options that describe or limit the connection | `options` |
 
 #### Default server connections configuration
 

@@ -126,9 +126,9 @@ LTXEHWM 80
 # CONSOLE      - The path of the server console message file
 ###################################################################
 
-MSGPATH $INFORMIXDIR/var/log/informix/{{ informix_server_name }}/online.log
+MSGPATH /var/log/informix/{{ informix_server_name }}/online.log
 MSG_DATE 0
-CONSOLE $INFORMIXDIR/var/log/informix/{{ informix_server_name }}/online.con
+CONSOLE /var/log/informix/{{ informix_server_name }}/online.con
 
 ###################################################################
 # Tblspace Configuration Parameters
@@ -212,8 +212,8 @@ ONDBSPACEDOWN 2
 ###################################################################
 
 SERVERNUM {{ informix_server_id }}
-DBSERVERNAME {{ informix_server_name }}
-DBSERVERALIASES {% for connection in connections %}{{ connection.server_name }}{% if not loop.last %},{% endif %}{% endfor %}
+DBSERVERNAME {{ informix_server_name }}{{ informix_server_name_suffix }}
+DBSERVERALIASES {{ informix_server_name }}{{ informix_server_name_suffix }}
 FULL_DISK_INIT 0
 
 ###################################################################
@@ -1417,7 +1417,7 @@ SMX_COMPRESS            0
 SMX_PING_INTERVAL       10
 SMX_PING_RETRY          6
 CLUSTER_TXN_SCOPE       SERVER
-RSS_NONBLOCKING_CKPT    0
+SEC_NONBLOCKING_CKPT    0
 SEC_LOGREC_MAXBUFS      1000
 SEC_DR_BUFS             12
 SEC_APPLY_POLLTIME      0

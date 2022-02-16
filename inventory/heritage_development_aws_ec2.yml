@@ -9,4 +9,9 @@ filters:
   tag:Service: tuxedo
   tag:ServiceSubType: fil
 
+keyed_groups:
+  - key: tags
+    prefix: tag
+    separator: "_"
+
 hostnames: private-ip-address
