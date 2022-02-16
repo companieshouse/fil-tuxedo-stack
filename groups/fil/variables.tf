@@ -110,6 +110,8 @@ variable "tuxedo_service_logs" {
     # ]
     # scud = [
     # ]
+    # cabs = [
+    # ]
   }
 }
 
@@ -126,6 +128,9 @@ variable "tuxedo_user_logs" {
     scud = [
       { name: "ULOG" }
     ]
+    cabs = [
+      { name: "ULOG" }
+    ]
   }
 }
 
@@ -136,6 +141,7 @@ variable "tuxedo_services" {
     ef    = 38000,
     prod  = 38100,
     scud  = 38200,
+    cabs  = 38300,
   }
 }
 
