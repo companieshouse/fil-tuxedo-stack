@@ -36,10 +36,5 @@ locals {
     }
   ]...)
 
-  tuxedo_log_groups = merge(
-    local.tuxedo_log_groups,
-    local.tuxedo_user_log_groups
-  )
-
   logs_kms_key_id = data.vault_generic_secret.kms_keys.data["logs"]
 }
