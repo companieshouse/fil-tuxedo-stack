@@ -132,6 +132,16 @@ variable "tuxedo_services" {
   }
 }
 
+variable "informix_services" {
+  type        = map(number)
+  description = "A map whose key-value pairs represent informix servers and assocaited port numbers"
+  default = {
+    ef    = 6000,
+    prod  = 7000,
+    scud  = 8000,
+  }
+}
+
 variable "ssh_master_public_key" {
   type        = string
   description = "The SSH master public key; EC2 instance connect should be used for regular connectivity"
