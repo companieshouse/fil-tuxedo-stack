@@ -57,6 +57,13 @@ Each dictionary representing a server (e.g. `server1` and `server2` in the above
 | `server_connections` | See [Server connections][3] for defaults. | A list of dictionaries representing client/server connections for this server (i.e. the `sqlhosts` file configuration). See [Server connections][3] for more details. |
 | `dbspaces`           |         | A dictionary of uniquely named dbspaces. Must include at least a `root` dbspace. See [Dbspaces configuration][5] for more details.
 
+Additional global configuration variables are used for the purposes detailed below:
+
+| Name                 | Default | Description                                            |
+|----------------------|---------|--------------------------------------------------------|
+| `informix_chunk_store_path` | `/data/informix/chunks` | The path of the directory for storing cooked files for dbspace chunks (when not using raw disks). This variable should be referenced in the [Dbspaces configuration][5] `path` option for any dbspace chunks that are to be represented using cooked files (e.g. `{{ informix_chunk_store_path }}/rootdbs`).
+| `informix_server_name_suffix`        |         | _Optional_. An optional suffix value that will be appended to the Informix server name in configuration files and environment variables to differentiate servers when using High Availability Data Replication (HDR). For example, the values `_primary` and `_secondary`. Such configuration should be specified for individual hosts using dynamic inventory `keyed_groups`. |
+
 ### Server connections configuration
 
 The _optional_ `server_connections` parameter must comprise a list of dictionaries. See [Default server connections configuration][4] for information regarding default connections. Each dictionary may specify the following options:
@@ -97,8 +104,8 @@ The `initial_chunk` and `additional_chunks` parameters both represent chunks bel
 
 Observations to consider when configuring dbspace chunks:
 
-* Chunks are assumed to be cooked disks if the `path` does not refer to a block device, and a suitable file will be created at the specified path using `informix:informix` ownership and `0660` permissions before adding the chunk to a dbspace.
-* Chunks that belong to different cooked disks should use an offset value of `0`. Chunks that belong to the same cooked disk as other chunks should typically use an `offset_in_kb` value equal the sum of the `offset_in_kb + size_in_kb` of the previous chunk with the same path.
+* Chunks are assumed to be cooked files if the `path` does not refer to a block device, and a suitable file will be created at the specified path using `informix:informix` ownership and `0660` permissions before adding the chunk to a dbspace.
+* Chunks that belong to different cooked files should use an offset value of `0`. Chunks that belong to the same cooked file as other chunks should typically use an `offset_in_kb` value equal the sum of the `offset_in_kb + size_in_kb` of the previous chunk with the same path.
 * Chunks that belong to raw disks should use an offset sufficient to ensure that they do not overlap with existing data on the disk (e.g. filesystem metadata) or other chunks.
 
 ### Example configuration
@@ -106,8 +113,8 @@ Observations to consider when configuring dbspace chunks:
 The example that follows shows how to define the configuration for a single server instance named `server1` that meets the following criteria:
 
 * One Informix server instance `server1` with server identifier `1`
-* A `root` dbspace composed of one initial cooked disk chunk of size 1GiB
-* An additional `data` dbspace with initial cooked disk chunk of size 1GiB and an additional chunk of size 2GiB (both belonging to the same filesystem object)
+* A `root` dbspace composed of one initial cooked file chunk of size 1GiB
+* An additional `data` dbspace with initial cooked file chunk of size 1GiB and an additional chunk of size 2GiB (both belonging to the same filesystem object)
 * The two [default connection types][4] (i.e. a shared memory segment and TCP/IP connection respectively) with port `1234` used for TCP/IP connectivity
 
 ```yaml
