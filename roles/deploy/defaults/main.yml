@@ -18,12 +18,14 @@ tuxedo_log_files:
     - file_pattern: ULOG*
       cloudwatch_log_group_name: fil-tuxedo-ef-ulog
   prod:
-    - file_pattern: ULOG*
-      cloudwatch_log_group_name: fil-tuxedo-prod-ulog
-    - file_pattern: prod.log
-      cloudwatch_log_group_name: fil-tuxedo-prod-prod
     - file_pattern: domain.log
       cloudwatch_log_group_name: fil-tuxedo-prod-domain
+    - file_pattern: domaudit.log
+      cloudwatch_log_group_name: fil-tuxedo-prod-domaudit
+    - file_pattern: prod.log
+      cloudwatch_log_group_name: fil-tuxedo-prod-prod
+    - file_pattern: ULOG*
+      cloudwatch_log_group_name: fil-tuxedo-prod-ulog
   scud:
     - file_pattern: ULOG*
       cloudwatch_log_group_name: fil-tuxedo-scud-ulog
