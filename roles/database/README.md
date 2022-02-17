@@ -61,7 +61,7 @@ Additional global configuration variables are used for the purposes detailed bel
 
 | Name                 | Default | Description                                            |
 |----------------------|---------|--------------------------------------------------------|
-| `informix_chunk_store_path` | `/data/informix/chunks` | The path of the directory for storing cooked files for dbspace chunks (if not using raw disks). This variable should be referenced in the [Dbspaces configuration][5] `path` option for any dbspace chunks that are to be represented using coooked files (e.g. `{{ informix_chunk_store_path }}/rootdbs`).
+| `informix_chunk_store_path` | `/data/informix/chunks` | The path of the directory for storing cooked files for dbspace chunks (when not using raw disks). This variable should be referenced in the [Dbspaces configuration][5] `path` option for any dbspace chunks that are to be represented using coooked files (e.g. `{{ informix_chunk_store_path }}/rootdbs`).
 | `informix_server_name_suffix`        |         | _Optional_. An optional suffix value that will be appended to the Informix server name in configuration files and environment variables to differentiate servers when using High Availability Data Replication (HDR). For example, the values `_primary` and `_secondary`. Such configuration should be specified for individual hosts using dynamic inventory `keyed_groups`. |
 
 ### Server connections configuration
