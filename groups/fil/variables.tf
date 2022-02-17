@@ -101,7 +101,7 @@ variable "service_subtype" {
 
 variable "tuxedo_logs" {
   type        = map(list(any))
-  description = "A map whose keys represent server-side tuxedo server groups with lists of objects representing individual log files for each server group. Each object is expected to have at a minimum a 'name' key. A single CloudWatch log group will be created for each object. Optional 'log_retention_in_days' and 'kms_key_id' attributes can be set per-file to override the default values."
+  description = "A map whose keys represent server-side Tuxedo server groups with lists of objects representing individual log files for each server group. Each object is expected to have at a minimum a 'name' key. A single CloudWatch log group will be created for each object. Optional 'log_retention_in_days' and 'kms_key_id' attributes can be set per-file to override the default values."
   default = {
     ef = [
       { name: "ULOG" }
@@ -123,12 +123,22 @@ variable "tuxedo_logs" {
 
 variable "tuxedo_services" {
   type        = map(number)
-  description = "A map whose key-value pairs represent server-side tuxedo server groups and assocaited port numbers"
+  description = "A map whose key-value pairs represent server-side Tuxedo server groups and associated port numbers"
   default = {
     ef    = 38000,
     prod  = 38100,
     scud  = 38200,
     cabs  = 38300,
+  }
+}
+
+variable "informix_services" {
+  type        = map(number)
+  description = "A map whose key-value pairs represent Informix servers and associated port numbers"
+  default = {
+    ef    = 6000,
+    prod  = 7000,
+    scud  = 8000,
   }
 }
 

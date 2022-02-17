@@ -76,6 +76,18 @@ resource "aws_security_group" "common" {
     }
   }
 
+  dynamic "ingress" {
+    for_each = var.informix_services
+    iterator = service
+    content {
+      description = "Allow Informix HDR connectivity for Tuxedo ${upper(service.key)} services"
+      from_port   = service.value
+      to_port     = service.value
+      protocol    = "TCP"
+      cidr_blocks = data.aws_subnet.application.*.cidr_block
+    }
+  }
+
   egress {
     description = "Allow outbound traffic"
     from_port   = 0
