@@ -20,6 +20,10 @@ tuxedo_log_files:
   prod:
     - file_pattern: ULOG*
       cloudwatch_log_group_name: fil-tuxedo-prod-ulog
+    - file_pattern: prod.log
+      cloudwatch_log_group_name: fil-tuxedo-prod-prod
+    - file_pattern: domain.log
+      cloudwatch_log_group_name: fil-tuxedo-prod-domain
   scud:
     - file_pattern: ULOG*
       cloudwatch_log_group_name: fil-tuxedo-scud-ulog
