@@ -134,7 +134,7 @@ variable "tuxedo_services" {
 
 variable "informix_services" {
   type        = map(number)
-  description = "A map whose key-value pairs represent informix servers and associated port numbers"
+  description = "A map whose key-value pairs represent Informix servers and associated port numbers"
   default = {
     ef    = 6000,
     prod  = 7000,
