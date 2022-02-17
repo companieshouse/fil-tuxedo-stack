@@ -107,9 +107,10 @@ variable "tuxedo_logs" {
       { name: "ULOG" }
     ]
     prod = [
-      { name: "ULOG" },
       { name: "domain" },
-      { name: "prod" }
+      { name: "domaudit" },
+      { name: "prod" },
+      { name: "ULOG" }
     ]
     scud = [
       { name: "ULOG" }
