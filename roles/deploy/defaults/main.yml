@@ -15,6 +15,12 @@ tuxedo_log_files:
     - file_pattern: ULOG*
       cloudwatch_log_group_name: fil-tuxedo-cabs-ulog
   ef:
+    - file_pattern: EFFE_SYNC*
+      cloudwatch_log_group_name: fil-tuxedo-ef-effesync
+    - file_pattern: effesync-stderr.log
+      cloudwatch_log_group_name: fil-tuxedo-ef-effesync-stderr
+    - file_pattern: effesync-stdout.log
+      cloudwatch_log_group_name: fil-tuxedo-ef-effesync-stdout
     - file_pattern: ULOG*
       cloudwatch_log_group_name: fil-tuxedo-ef-ulog
   prod:
