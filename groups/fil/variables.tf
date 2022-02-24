@@ -104,6 +104,11 @@ variable "tuxedo_logs" {
   description = "A map whose keys represent server-side Tuxedo server groups with lists of objects representing individual log files for each server group. Each object is expected to have at a minimum a 'name' key. A single CloudWatch log group will be created for each object. Optional 'log_retention_in_days' and 'kms_key_id' attributes can be set per-file to override the default values."
   default = {
     ef = [
+      { name: "domain" },
+      { name: "domaudit" },
+      { name: "effesync-stderr" },
+      { name: "effesync-stdout" },
+      { name: "EFFESYNC" },
       { name: "ULOG" }
     ]
     prod = [
