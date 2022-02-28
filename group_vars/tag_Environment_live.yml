@@ -51,12 +51,12 @@ informix_service_config:
           service_or_port: localhost
         - server_name: ef_primary
           connection_type: onsoctcp
-          host: instance-1.fil.tuxedo.live.heritage.aws.internal
-          service_or_port: "{{ informix_server_port_start + (0 * informix_server_port_increment) | int }}"
+          host: che-fil-pl3.internal.ch
+          service_or_port: 6271
         - server_name: ef_secondary
           connection_type: onsoctcp
-          host: instance-2.fil.tuxedo.live.heritage.aws.internal
-          service_or_port: "{{ informix_server_port_start + (0 * informix_server_port_increment) | int }}"
+          host: che-fil-sl3.internal.ch
+          service_or_port: 6270
   prod:
     server_id: "{{ informix_server_id_start + (1 * informix_server_id_increment) | int }}"
     server_port: "{{ informix_server_port_start + (1 * informix_server_port_increment) | int }}"
@@ -87,12 +87,12 @@ informix_service_config:
           service_or_port: localhost
         - server_name: prod_primary
           connection_type: onsoctcp
-          host: instance-1.fil.tuxedo.live.heritage.aws.internal
-          service_or_port: "{{ informix_server_port_start + (1 * informix_server_port_increment) | int }}"
+          host: che-fil-pl3.internal.ch
+          service_or_port: 6005
         - server_name: prod_secondary
           connection_type: onsoctcp
-          host: instance-2.fil.tuxedo.live.heritage.aws.internal
-          service_or_port: "{{ informix_server_port_start + (1 * informix_server_port_increment) | int }}"
+          host: che-fil-sl3.internal.ch
+          service_or_port: 6006
   scud:
     server_id: "{{ informix_server_id_start + (2 * informix_server_id_increment) | int }}"
     server_port: "{{ informix_server_port_start + (2 * informix_server_port_increment) | int }}"
@@ -123,9 +123,9 @@ informix_service_config:
           service_or_port: localhost
         - server_name: scud_primary
           connection_type: onsoctcp
-          host: instance-1.fil.tuxedo.live.heritage.aws.internal
-          service_or_port: "{{ informix_server_port_start + (2 * informix_server_port_increment) | int }}"
+          host: che-fil-pl3.internal.ch
+          service_or_port: 6001
         - server_name: scud_secondary
           connection_type: onsoctcp
-          host: instance-2.fil.tuxedo.live.heritage.aws.internal
-          service_or_port: "{{ informix_server_port_start + (2 * informix_server_port_increment) | int }}"
+          host: che-fil-sl3.internal.ch
+          service_or_port: 6002
