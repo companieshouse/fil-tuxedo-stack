@@ -7,6 +7,7 @@
     service_name: "{{ tuxedo_user }}"
     informix_server_name: "{{ tuxedo_service_config[tuxedo_user].informix_server_name | default('') }}"
     tuxedo_env_file_path: "/home/{{ tuxedo_user }}/deployment/config/envfile"
+    tuxedo_cabs_env_file_path: "/home/{{ tuxedo_user }}/deployment/config/cabsenvfile"
     tuxedo_domain_id: "{{ tuxedo_user | upper }}_{{ tuxedo_domain_id_suffix }}"
     tuxedo_group_id: "{{ getent_passwd[tuxedo_user][getent_gid_index] }}"
     tuxedo_ipc_key: "{{ tuxedo_service_config[tuxedo_user].ipc_key }}"
