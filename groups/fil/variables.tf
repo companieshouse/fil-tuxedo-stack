@@ -121,6 +121,7 @@ variable "tuxedo_logs" {
       { name: "ULOG" }
     ]
     cabs = [
+      { name: "cabs" },
       { name: "ULOG" }
     ]
   }
