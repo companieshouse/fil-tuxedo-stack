@@ -1,5 +1,5 @@
 write_files:
-  - path: /opt/oracle/10.2.0/network/admin/tnsnames.ora
+  - path: /opt/oracle-instant-client/11.2.0.4.0/tnsnames.ora
     owner: root:root
     permissions: 0644
     content: |
