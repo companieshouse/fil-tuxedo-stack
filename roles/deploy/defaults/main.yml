@@ -12,9 +12,19 @@ getent_uid_index: 1
 
 tuxedo_log_files:
   cabs:
+    - file_pattern: domain.log
+      cloudwatch_log_group_name: fil-tuxedo-cabs-domain
+    - file_pattern: domaudit.log
+      cloudwatch_log_group_name: fil-tuxedo-cabs-domaudit
+    - file_pattern: cabs.log
+      cloudwatch_log_group_name: fil-tuxedo-cabs-cabs
     - file_pattern: ULOG*
       cloudwatch_log_group_name: fil-tuxedo-cabs-ulog
   ef:
+    - file_pattern: domain.log
+      cloudwatch_log_group_name: fil-tuxedo-ef-domain
+    - file_pattern: domaudit.log
+      cloudwatch_log_group_name: fil-tuxedo-ef-domaudit
     - file_pattern: EFFE_SYNC*
       cloudwatch_log_group_name: fil-tuxedo-ef-effesync
     - file_pattern: effesync-stderr.log
@@ -33,6 +43,10 @@ tuxedo_log_files:
     - file_pattern: ULOG*
       cloudwatch_log_group_name: fil-tuxedo-prod-ulog
   scud:
+    - file_pattern: domain.log
+      cloudwatch_log_group_name: fil-tuxedo-scud-domain
+    - file_pattern: domaudit.log
+      cloudwatch_log_group_name: fil-tuxedo-scud-domaudit
     - file_pattern: ULOG*
       cloudwatch_log_group_name: fil-tuxedo-scud-ulog
 
