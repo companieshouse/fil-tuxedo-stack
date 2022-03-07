@@ -121,6 +121,7 @@ variable "tuxedo_logs" {
       { name: "domain" },
       { name: "domaudit" },
       { name: "sms" },
+      { name: "smspoll" },
       { name: "ULOG" }
     ]
     cabs = [
