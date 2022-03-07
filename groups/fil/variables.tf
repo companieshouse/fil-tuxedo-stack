@@ -118,9 +118,15 @@ variable "tuxedo_logs" {
       { name: "ULOG" }
     ]
     scud = [
+      { name: "domain" },
+      { name: "domaudit" },
+      { name: "sms" },
+      { name: "smspoll" },
       { name: "ULOG" }
     ]
     cabs = [
+      { name: "domain" },
+      { name: "domaudit" },
       { name: "cabs" },
       { name: "ULOG" }
     ]
