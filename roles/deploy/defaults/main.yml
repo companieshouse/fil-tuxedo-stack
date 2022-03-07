@@ -47,6 +47,10 @@ tuxedo_log_files:
       cloudwatch_log_group_name: fil-tuxedo-scud-domain
     - file_pattern: domaudit.log
       cloudwatch_log_group_name: fil-tuxedo-scud-domaudit
+    - file_pattern: sms_poll.log
+      cloudwatch_log_group_name: fil-tuxedo-scud-smspoll
+    - file_pattern: sms.log
+      cloudwatch_log_group_name: fil-tuxedo-scud-sms
     - file_pattern: ULOG*
       cloudwatch_log_group_name: fil-tuxedo-scud-ulog
 
