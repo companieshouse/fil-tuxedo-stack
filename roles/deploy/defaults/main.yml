@@ -51,6 +51,10 @@ tuxedo_log_files:
       cloudwatch_log_group_name: fil-tuxedo-scud-smspoll
     - file_pattern: sms.log
       cloudwatch_log_group_name: fil-tuxedo-scud-sms
+    - file_pattern: sms-stderr.log
+      cloudwatch_log_group_name: fil-tuxedo-scud-sms-stderr
+    - file_pattern: sms-stdout.log
+      cloudwatch_log_group_name: fil-tuxedo-scud-sms-stdout
     - file_pattern: ULOG*
       cloudwatch_log_group_name: fil-tuxedo-scud-ulog
 
