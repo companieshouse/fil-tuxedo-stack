@@ -121,6 +121,8 @@ variable "tuxedo_logs" {
       { name: "domain" },
       { name: "domaudit" },
       { name: "sms" },
+      { name: "sms-stderr" },
+      { name: "sms-stdout" },
       { name: "smspoll" },
       { name: "ULOG" }
     ]
