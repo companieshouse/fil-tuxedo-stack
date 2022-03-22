@@ -114,6 +114,10 @@ resource "aws_instance" "fil" {
   user_data_base64       = data.cloudinit_config.config[count.index].rendered
   vpc_security_group_ids = [aws_security_group.common.id]
 
+  // AMIs are not encrypted so hardcoded to true.
+  // "kms_key_id" omitted so will use default ebs key.  Add this field to set a custom key.
+  // All the AMIs for the Tuxedo service look to be a single volume, making this dynamic block (possibly) unneeded
+  // suggest removal and just use root_block_device
   dynamic "ebs_block_device" {
     for_each = [
       for block_device in data.aws_ami.fil_tuxedo.block_device_mappings :
@@ -122,7 +126,7 @@ resource "aws_instance" "fil" {
     iterator = block_device
     content {
       device_name = block_device.value.device_name
-      encrypted   = block_device.value.ebs.encrypted
+      encrypted   = true
       iops        = block_device.value.ebs.iops
       snapshot_id = block_device.value.ebs.snapshot_id
       volume_size = var.lvm_block_devices[index(var.lvm_block_devices.*.lvm_physical_volume_device_node, block_device.value.device_name)].aws_volume_size_gb
@@ -132,6 +136,7 @@ resource "aws_instance" "fil" {
 
   root_block_device {
     volume_size = var.root_volume_size
+    encrypted   = true
   }
 
   tags = merge(local.common_tags, {
