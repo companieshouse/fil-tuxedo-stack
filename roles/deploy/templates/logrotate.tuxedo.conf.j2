@@ -23,6 +23,20 @@
   rotate 20
   createolddir 0755 root root
   lastaction
-    /bin/find /var/log/tuxedo -maxdepth 2 -name 'ULOG.*' -mtime +1 -size 0 -delete
+    /bin/find /var/log/tuxedo -maxdepth 2 -name 'ULOG.*' -not -name "ULOG.$(date +%m%d%y)" -size 0 -delete
+  endscript
+}
+
+{{ tuxedo_logs_path }}/prod/sage_extract_data.* {
+  daily
+  copytruncate
+  compress
+  maxage 7
+  missingok
+  notifempty
+  olddir old
+  createolddir 0755 root root
+  lastaction
+    /bin/find /var/log/tuxedo/prod -maxdepth 1 -name 'sage_extract_data.*' -not -name "sage_extract_data.$(date +%Y%m%d)" -size 0 -delete
   endscript
 }
