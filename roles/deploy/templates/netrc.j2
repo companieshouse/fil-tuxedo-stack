@@ -1,0 +1,3 @@
+{% for remote in stats_config.ftp_hosts %}
+machine {{ remote.host }} login {{ remote.username }} password {{ remote.password }}
+{% endfor %}
