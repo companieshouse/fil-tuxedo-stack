@@ -1,3 +1,28 @@
 ---
 
 informix_server_name_suffix: _primary
+
+alerts:
+  enabled: yes
+  vault_path: "/applications/heritage-live-eu-west-2/fil-tuxedo/alerts"
+
+stats:
+  enabled: yes
+  vault_path: "/applications/heritage-live-eu-west-2/fil-tuxedo/stats"
+
+maintenance_jobs:
+  prod:
+    - name: Check for database update failures
+      day_of_week: "*"
+      day_of_month: "*"
+      minute: "*"
+      hour: "*"
+      month: "*"
+      script: "db_error_check"
+    - name: Transfer telesales data to finance system
+      day_of_week: "1-5"
+      day_of_month: "*"
+      minute: "45"
+      hour: "21"
+      month: "*"
+      script: "sage_extract"

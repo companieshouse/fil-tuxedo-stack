@@ -14,6 +14,7 @@
       - environment_name is defined and environment_name | trim | length > 0
       - application_artifact_path is defined and application_artifact_path | trim | length > 0
       - application_configs_path is defined and application_configs_path | trim | length > 0
+      - scripts_artifact_path is defined and scripts_artifact_path | trim | length > 0
     msg: "Required variable(s) empty or undefined"
 
 # The hostname is assumed to be in the format: fil-tuxedo-<environment>-<instance-index>
@@ -90,22 +91,6 @@
     job: "logrotate {{ tuxedo_log_rotation_config_path }}"
     cron_file: /etc/crontab
 
-- include_tasks: deploy.yml
-  loop: "{{ tuxedo_service_users }}"
-  loop_control:
-    loop_var: tuxedo_user
-
-- name: Find application-specific CloudWatch configuration files
-  find:
-    paths: "{{ cloudwatch_agent.config_dir }}"
-    patterns: 'cloudwatch-config-*.json'
-  register: cloudwatch_configs
-
-- name: "{{ tuxedo_user }} : Add configuration for Tuxedo service group to CloudWatch agent"
-  command:
-    cmd: "{{ cloudwatch_agent.path }} -a append-config -m ec2 -s -c file:{{ item.path }}"
-  loop: "{{ cloudwatch_configs.files }}"
-
 - name: Allow logrotate to modify CloudWatch log
   community.general.sefcontext:
     target: "{{ item }}"
@@ -122,6 +107,38 @@
     - /opt/aws/amazon-cloudwatch-agent/logs
     - /opt/aws/amazon-cloudwatch-agent/logs/amazon-cloudwatch-agent.log
   when: selinux_context.changed
+
+- name: Install ftp client for maintenance jobs
+  yum:
+    name: ftp
+    state: present
+
+- name: Install mailx mail processing system
+  yum:
+    name: mailx
+    state: present
+
+- name: Configure mailx SMTP relay
+  lineinfile:
+    path: /etc/mail.rc
+    regexp: '^set smtp='
+    line: 'set smtp={{ smtp_mail_relay }}'
+
+- include_tasks: deploy.yml
+  loop: "{{ tuxedo_service_users }}"
+  loop_control:
+    loop_var: tuxedo_user
+
+- name: Find application-specific CloudWatch configuration files
+  find:
+    paths: "{{ cloudwatch_agent.config_dir }}"
+    patterns: 'cloudwatch-config-*.json'
+  register: cloudwatch_configs
+
+- name: "{{ tuxedo_user }} : Add configuration for Tuxedo service group to CloudWatch agent"
+  command:
+    cmd: "{{ cloudwatch_agent.path }} -a append-config -m ec2 -s -c file:{{ item.path }}"
+  loop: "{{ cloudwatch_configs.files }}"
 
 - name: Remove temporary directories
   file:

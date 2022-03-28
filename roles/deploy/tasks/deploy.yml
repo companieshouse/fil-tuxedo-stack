@@ -18,6 +18,23 @@
     tuxedo_user_id: "{{ getent_passwd[tuxedo_user][getent_uid_index] }}"
   no_log: True
 
+- name: Retrieve alerts config from Hashicorp Vault
+  set_fact:
+    alerts_config: "{{ lookup('community.hashi_vault.hashi_vault', alerts.vault_path) }}"
+  when: alerts.enabled
+
+- name: Retrieve stats config from Hashicorp Vault
+  set_fact:
+    stats_config: "{{ lookup('community.hashi_vault.hashi_vault', stats.vault_path) }}"
+  when: stats.enabled
+
+- name: "{{ tuxedo_user }} : Remove maintenance jobs during deploy"
+  cron:
+    name: "{{ item.name }}"
+    user: "{{ tuxedo_user }}"
+    state: absent
+  loop: "{{ maintenance_jobs[tuxedo_user] | default([]) }}"
+
 - name: "{{ tuxedo_user }} : Create temporary directory for new {{ tuxedo_user }} deployment"
   become_user: "{{ tuxedo_user }}"
   tempfile:
@@ -54,6 +71,24 @@
   with_fileglob:
     - "{{ application_configs_path }}/{{ tuxedo_user }}/*.j2"
   no_log: True
+
+- name: "{{ tuxedo_user }} : Create scripts directory"
+  file:
+    path: "{{ new_deployment_files.path }}/scripts"
+    owner: "{{ tuxedo_user }}"
+    group: "{{ tuxedo_user }}"
+    mode: 0755
+    state: directory
+
+- name: "{{ tuxedo_user }} : Populate script template files"
+  template:
+    src: "{{ item }}"
+    dest: "{{ new_deployment_files.path }}/scripts/{{ item | basename | replace('.j2', '') }}"
+    owner: "{{ tuxedo_user }}"
+    group: "{{ tuxedo_user }}"
+    mode: 0755
+  with_fileglob:
+    - "{{ scripts_artifact_path }}/*.j2"
 
 - name: "{{ tuxedo_user }} : Set permissions for new deployment files"
   file:
@@ -151,3 +186,25 @@
   shell: "source $HOME/deployment/config/envfile && tmboot -y"
   args:
     executable: /bin/bash
+
+- name: Create autologin configuration for FTP client
+  template:
+    src: templates/netrc.j2
+    dest: "/home/{{ tuxedo_user }}/.netrc"
+    owner: "{{ tuxedo_user }}"
+    group: "{{ tuxedo_user }}"
+    mode: 0400
+  when: stats.enabled
+  no_log: True
+
+- name: "{{ tuxedo_user }} : Create maintenance jobs"
+  cron:
+    name: "{{ item.name }}"
+    day: "{{ item.day_of_month }}"
+    weekday: "{{ item.day_of_week }}"
+    minute: "{{ item.minute }}"
+    hour: "{{ item.hour }}"
+    month: "{{ item.month }}"
+    user: "{{ tuxedo_user }}"
+    job: "source {{ tuxedo_env_file_path }} && /home/{{ tuxedo_user }}/deployment/scripts/{{ item.script }}"
+  loop: "{{ maintenance_jobs[tuxedo_user] | default([]) }}"
