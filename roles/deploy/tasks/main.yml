@@ -108,7 +108,7 @@
     - /opt/aws/amazon-cloudwatch-agent/logs/amazon-cloudwatch-agent.log
   when: selinux_context.changed
 
-- name: Install ftp client for maintenance jobs
+- name: Install FTP client for maintenance jobs
   yum:
     name: ftp
     state: present
