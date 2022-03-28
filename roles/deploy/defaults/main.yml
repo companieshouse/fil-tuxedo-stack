@@ -1,5 +1,11 @@
 ---
 
+alerts:
+  enabled: no
+
+stats:
+  enabled: no
+
 cloudwatch_agent:
   path: /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl
   config_dir: /opt/aws/amazon-cloudwatch-agent/etc
