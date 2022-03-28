@@ -1,3 +1,21 @@
 ---
 
 informix_server_name_suffix: _secondary
+
+alerts:
+  enabled: yes
+  vault_path: "/applications/heritage-live-eu-west-2/fil-tuxedo/alerts"
+
+stats:
+  enabled: yes
+  vault_path: "/applications/heritage-live-eu-west-2/fil-tuxedo/stats"
+
+maintenance_jobs:
+  prod:
+    - name: Check for database update failures
+      day_of_week: "*"
+      day_of_month: "*"
+      minute: "*"
+      hour: "*"
+      month: "*"
+      script: "db_error_check"
