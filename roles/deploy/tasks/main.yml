@@ -118,18 +118,23 @@
     name: mailx
     state: present
 
-- name: Install CUPS for printer support
+- name: Install printer support services
   yum:
-    name: cups
+    name:
+      - cups
+      - colord
     state: present
 
-- name: Start CUPS service
-  ansible.builtin.systemd:
-    name: cups
+- name: Start printer support services
+  systemd:
+    name: "{{ item }}"
     state: started
     enabled: yes
+  loop:
+      - cups
+      - colord
 
-- name: Configure printer for SMS service
+- name: Configure printer
   shell: "lpadmin -p {{ sms_printer_name }} -E -v {{ sms_printer_uri }} -P {{ sms_printer_ppd_file }} && touch /etc/fil-tuxedo-stack-deploy-provisioned-sms-printer"
   args:
     creates: /etc/fil-tuxedo-stack-deploy-provisioned-sms-printer
