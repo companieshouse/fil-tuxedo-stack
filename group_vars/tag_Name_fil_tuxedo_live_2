@@ -19,6 +19,7 @@ maintenance_jobs:
       hour: "*"
       month: "*"
       script: "db_error_check"
+  cabs:
     - name: Check cabs service and logs for errors
       day_of_week: "*"
       day_of_month: "*"
