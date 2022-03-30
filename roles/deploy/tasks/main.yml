@@ -59,7 +59,7 @@
     group: "{{ tuxedo_service_group }}"
     mode: 0755
 
-- name: Deploy and extract application arterfact
+- name: Deploy and extract application artefact
   unarchive:
     src: "{{ application_artifact_path }}"
     dest: "{{ application_artifact_files.path }}"
