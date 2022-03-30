@@ -118,6 +118,22 @@
     name: mailx
     state: present
 
+- name: Install CUPS for printer support
+  yum:
+    name: cups
+    state: present
+
+- name: Start CUPS service
+  ansible.builtin.systemd:
+    name: cups
+    state: started
+    enabled: yes
+
+- name: Configure printer for SMS service
+  shell: 'lpadmin -E -p {{ sms_printer_name }} -v {{ sms_printer_uri }} -P {{ sms_printer_ppd_file }}'
+  args:
+    creates: /etc/fil-tuxedo-stack-deploy-provisioned-sms-printer
+
 - name: Configure mailx SMTP relay
   lineinfile:
     path: /etc/mail.rc
