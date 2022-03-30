@@ -130,7 +130,7 @@
     enabled: yes
 
 - name: Configure printer for SMS service
-  shell: 'lpadmin -E -p {{ sms_printer_name }} -v {{ sms_printer_uri }} -P {{ sms_printer_ppd_file }}'
+  shell: 'lpadmin -p {{ sms_printer_name }} -E -v {{ sms_printer_uri }} -P {{ sms_printer_ppd_file }}'
   args:
     creates: /etc/fil-tuxedo-stack-deploy-provisioned-sms-printer
 
