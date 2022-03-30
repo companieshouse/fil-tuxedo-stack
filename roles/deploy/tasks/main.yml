@@ -124,6 +124,11 @@
     regexp: '^set smtp='
     line: 'set smtp={{ smtp_mail_relay }}'
 
+- name: Add host entry for SQL client connectivity
+  lineinfile:
+    path: /etc/hosts
+    line: "127.0.0.1   {{ ansible_facts.hostname }}"
+
 - include_tasks: deploy.yml
   loop: "{{ tuxedo_service_users }}"
   loop_control:
