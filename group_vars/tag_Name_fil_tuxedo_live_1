@@ -26,3 +26,10 @@ maintenance_jobs:
       hour: "21"
       month: "*"
       script: "sage_extract"
+    - name: Check cabs service and logs for errors
+      day_of_week: "*"
+      day_of_month: "*"
+      minute: "10,20,30,40,50"
+      hour: "*"
+      month: "*"
+      script: "cabs_check"
