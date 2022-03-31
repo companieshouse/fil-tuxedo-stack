@@ -7,8 +7,8 @@ stats:
   enabled: no
 
 sms_printer_name: sms-printer
-sms_printer_uri: socket://1flrp003.internal.ch:9100
-sms_printer_ppd_file: /usr/share/ppd/cupsfilters/Generic-PDF_Printer-PDF.ppd
+sms_printer_uri: socket://172.19.33.138
+sms_printer_model: drv:///sample.drv/generic.ppd
 
 cloudwatch_agent:
   path: /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl
