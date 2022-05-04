@@ -129,3 +129,13 @@ informix_service_config:
           connection_type: onsoctcp
           host: instance-2.fil.tuxedo.live.heritage.aws.internal
           service_or_port: "{{ informix_server_port_start + (2 * informix_server_port_increment) | int }}"
+
+nfsmounts:
+  - path: "/home/scud/downloadchd/email"
+    src: "ipo-file-svm-lif-be1.internal.ch:chd_image"
+  - path: "/home/scud/downloadceu/email"
+    src: "ipo-file-svm-lif-be1.internal.ch:chcc_email"
+  - path: "/home/scud/downloadwck/email"
+    src: "ipo-file-svm-lif-be1.internal.ch:wck_image"
+  - path: "/home/scud/downloadceu/post"
+    src: "ipo-file-svm-lif-be1.internal.ch:chcc_post"
