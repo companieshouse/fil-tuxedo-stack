@@ -1,0 +1,15 @@
+---
+
+- name: Install NFS tools
+  yum:
+    name: nfs-utils
+    state: latest
+
+- name: Mount NFS shares
+  mount:
+    fstype: "nfs"
+    opts: "hard,bg"
+    src: "{{ item.src }}"
+    path: "{{ item.path }}"
+    state: mounted
+  with_items: "{{ nfsmounts }}"
