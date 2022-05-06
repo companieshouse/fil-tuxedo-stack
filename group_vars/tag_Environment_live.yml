@@ -143,7 +143,5 @@ nfsmounts:
     src: "ipo-file-svm-lif-be1.internal.ch:scanning"
   - path: "/data1/home/scanning"
     src: "ipo-file-svm-lif-be1.internal.ch:tiffexport"
-    opts: "soft,bg"
   - path: "/data1/image/scud"
     src: "ipo-file-svm-lif-be1.internal.ch:tiffexport"
-    opts: "soft,bg"
