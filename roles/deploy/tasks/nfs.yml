@@ -12,4 +12,5 @@
     src: "{{ item.src }}"
     path: "{{ item.path }}"
     state: mounted
+    mode:  0777
   with_items: "{{ nfsmounts }}"
