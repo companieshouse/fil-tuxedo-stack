@@ -8,5 +8,6 @@ roles:
 collections:
   - name: amazon.aws
   - name: community.general
+    version: "4.8.0"
   - name: community.hashi_vault
 
