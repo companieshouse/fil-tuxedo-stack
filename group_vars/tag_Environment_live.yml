@@ -141,6 +141,7 @@ nfsmounts:
     src: "ipo-file-svm-lif-be1.internal.ch:chcc_post"
   - path: "/data1/apps/scud"
     src: "ipo-file-svm-lif-be1.internal.ch:scanning"
+    symlink: "/scanning"
   - path: "/data1/home/scanning"
     src: "/data1/apps/scud/tiffexport"
     opts: "bind"
