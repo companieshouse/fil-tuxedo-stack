@@ -1,3 +1,8 @@
 ---
 
-informix_server_name_suffix: _secondary
+# TODO In the staging environment both instances are currrently configured to use
+# the _primary suffix to ensure that manual changes can be made to the sqlhosts.ef
+# after service deployment to point both instances at the primary on-premise
+# Informix database for testing; after migration to cloud-based Informix and HDR
+# configuration has been added this value should be set to _secondary
+informix_server_name_suffix: _primary
