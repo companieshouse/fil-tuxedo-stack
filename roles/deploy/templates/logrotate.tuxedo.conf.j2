@@ -9,6 +9,9 @@
   olddir old
   rotate 20
   createolddir 0755 root root
+  lastaction
+    /bin/find {{ tuxedo_logs_path }}/ef -maxdepth 1 -name 'EFFE_SYNC_*.log' -not -name "EFFE_SYNC_$(date +%Y%m%d).log" -size 0 -delete
+  endscript
 }
 
 {{ tuxedo_logs_path }}/*/ULOG.* {
