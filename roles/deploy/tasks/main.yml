@@ -134,7 +134,7 @@
       - cups
       - colord
 
-- name: Configure printer
+- name: Configure SMS printer
   shell: "lpadmin -p {{ sms_printer_name }} -E -v {{ sms_printer_uri }} -m {{ sms_printer_model }} && touch /etc/fil-tuxedo-stack-deploy-provisioned-sms-printer"
   args:
     creates: /etc/fil-tuxedo-stack-deploy-provisioned-sms-printer

@@ -6,6 +6,8 @@ alerts:
 stats:
   enabled: no
 
+sms_poll_daemon_enabled: false
+
 sms_printer_name: sms-printer
 sms_printer_uri: socket://172.19.33.138
 sms_printer_model: drv:///sample.drv/generic.ppd
