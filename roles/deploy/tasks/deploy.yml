@@ -108,7 +108,7 @@
   args:
     executable: /bin/bash
   ignore_errors: yes
-  when: tuxedo_user == "scud"
+  when: sms_poll_daemon_enabled and tuxedo_user == "scud"
 
 - name: "{{ tuxedo_user }} : Stop Tuxedo services"
   become_user: "{{ tuxedo_user }}"
@@ -201,7 +201,7 @@
   args:
     executable: /bin/bash
   ignore_errors: yes
-  when: tuxedo_user == "scud"
+  when: sms_poll_daemon_enabled and tuxedo_user == "scud"
 
 - name: Create autologin configuration for FTP client
   template:
