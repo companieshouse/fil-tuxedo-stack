@@ -12,7 +12,7 @@
 #   - prod 1 (primary/secondary)
 #   - scud 2 (primary/secondary)
 
-sms_poll_daemon_enabled: true
+sms_poll_daemon_enabled: false
 
 informix_server_id_increment: 1
 informix_server_id_start: 0
