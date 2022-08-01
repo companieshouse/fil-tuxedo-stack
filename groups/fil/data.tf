@@ -6,7 +6,7 @@ data "aws_iam_roles" "sso_administrator" {
 }
 
 data "aws_iam_user" "concourse" {
-    user_name = "concourse-platform"
+  user_name = "concourse-platform"
 }
 
 data "aws_iam_policy_document" "fil" {
@@ -15,7 +15,7 @@ data "aws_iam_policy_document" "fil" {
 
     principals {
       type        = "AWS"
-      identifiers =["arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"]
+      identifiers = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"]
     }
 
     actions   = ["kms:*"]
@@ -58,14 +58,14 @@ data "aws_iam_policy_document" "ef_presenter_data_bucket" {
 
     content {
       sid = "AllowListBucketFromThesePrincipals"
-      
+
       principals {
         type        = "AWS"
         identifiers = var.ef_presenter_data_read_only_principal_arns
       }
 
       actions = [
-      "s3:ListBucket"
+        "s3:ListBucket"
       ]
 
       resources = [
