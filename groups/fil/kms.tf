@@ -1,6 +1,6 @@
 
 resource "aws_kms_key" "fil" {
-  count = var.create_ef_presenter_data_bucket ? 1 : 0
+  count = var.ef_presenter_data_bucket_enabled ? 1 : 0
 
   description         = "KMS key for FIL Tuxedo services"
   enable_key_rotation = true

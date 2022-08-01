@@ -35,14 +35,14 @@ data "aws_iam_policy_document" "fil" {
   }
 
   dynamic "statement" {
-    for_each = var.create_ef_presenter_data_bucket ? [1] : []
+    for_each = var.ef_presenter_data_bucket_enabled ? [1] : []
 
     content {
       sid = "AllowDecryptionOperationsForThesePrincipals"
 
       principals {
         type        = "AWS"
-        identifiers = var.ef_presenter_data_read_only_principal_arns
+        identifiers = var.ef_presenter_data_read_only_principals
       }
 
       actions = ["kms:Decrypt"]
@@ -54,14 +54,14 @@ data "aws_iam_policy_document" "fil" {
 
 data "aws_iam_policy_document" "ef_presenter_data_bucket" {
   dynamic "statement" {
-    for_each = var.create_ef_presenter_data_bucket ? [1] : []
+    for_each = var.ef_presenter_data_bucket_enabled ? [1] : []
 
     content {
       sid = "AllowListBucketFromThesePrincipals"
 
       principals {
         type        = "AWS"
-        identifiers = var.ef_presenter_data_read_only_principal_arns
+        identifiers = var.ef_presenter_data_read_only_principals
       }
 
       actions = [
@@ -75,14 +75,14 @@ data "aws_iam_policy_document" "ef_presenter_data_bucket" {
   }
 
   dynamic "statement" {
-    for_each = var.create_ef_presenter_data_bucket ? [1] : []
+    for_each = var.ef_presenter_data_bucket_enabled ? [1] : []
 
     content {
       sid = "AllowReadAccessFromThesePrincipals"
 
       principals {
         type        = "AWS"
-        identifiers = var.ef_presenter_data_read_only_principal_arns
+        identifiers = var.ef_presenter_data_read_only_principals
       }
 
       actions = [
