@@ -25,6 +25,12 @@ variable "chips_cidr" {
   description = "A string representing the CIDR range from which CHIPS instances will connect to Tuxedo services"
 }
 
+variable "create_ef_presenter_data_bucket" {
+  type        = bool
+  description = "A boolean value representing whether to create an S3 bucket and associated resources for EF presenter data"
+  default     = false
+}
+
 variable "default_log_retention_in_days" {
   type        = string
   description = "The default log retention period in days for CloudWatch log groups"
@@ -45,6 +51,12 @@ variable "dns_zone_suffix" {
 variable "environment" {
   type        = string
   description = "The environment name to be used when creating AWS resources"
+}
+
+variable "ef_presenter_data_read_only_principal_arns" {
+  type        = list(string)
+  description = "An optional list of principal ARNs which will be granted read-only access to the EF preseter data bucket and decryption key, applicable only when 'create_ef_presenter_data_bucket' is true"
+  default     = []
 }
 
 variable "instance_count" {

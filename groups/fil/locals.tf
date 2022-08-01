@@ -36,5 +36,18 @@ locals {
     }
   ]...)
 
+  ef_presenter_data_bucket_name = "ef-presenter-data.${var.service_subtype}.${var.service}.${var.aws_account}.ch.gov.uk"
+
+  instance_profile_writable_buckets = flatten([
+    local.session_manager_bucket_name,
+    var.create_ef_presenter_data_bucket ? [local.ef_presenter_data_bucket_name] : []
+  ])
+
+  instance_profile_kms_key_access_ids = flatten([
+    local.ssm_kms_key_id,
+    var.create_ef_presenter_data_bucket ? [aws_kms_key.fil[0].key_id] : []
+  ])
+
   logs_kms_key_id = data.vault_generic_secret.kms_keys.data["logs"]
+  kms_key_administrator_arns = concat(tolist(data.aws_iam_roles.sso_administrator.arns), [data.aws_iam_user.concourse.arn])
 }
