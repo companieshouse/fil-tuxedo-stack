@@ -10,6 +10,8 @@ data "aws_iam_user" "concourse" {
 }
 
 data "aws_iam_policy_document" "fil" {
+  count = var.ef_presenter_data_bucket_enabled ? 1 : 0
+
   statement {
     sid = "EnableIAMPolicies"
 
@@ -53,6 +55,8 @@ data "aws_iam_policy_document" "fil" {
 }
 
 data "aws_iam_policy_document" "ef_presenter_data_bucket" {
+  count = var.ef_presenter_data_bucket_enabled ? 1 : 0
+
   dynamic "statement" {
     for_each = var.ef_presenter_data_bucket_enabled ? [1] : []
 
@@ -92,6 +96,106 @@ data "aws_iam_policy_document" "ef_presenter_data_bucket" {
       resources = [
         "${aws_s3_bucket.ef_presenter_data[0].arn}/*",
       ]
+    }
+  }
+
+  statement {
+    sid = "DenyPutObjectWithInvalidEncryptionHeader"
+
+    effect = "Deny"
+
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
+
+    actions = [
+      "s3:PutObject"
+    ]
+
+    resources = [
+      "${aws_s3_bucket.ef_presenter_data[0].arn}/*"
+    ]
+
+    condition {
+      test     = "StringNotEquals"
+      variable = "s3:x-amz-server-side-encryption"
+      values   = ["aws:kms"]
+    }
+  }
+
+  statement {
+    sid = "DenyPutObjectWithMissingEncryptionHeader"
+
+    effect = "Deny"
+
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
+
+    actions = [
+      "s3:PutObject"
+    ]
+
+    resources = [
+      "${aws_s3_bucket.ef_presenter_data[0].arn}/*"
+    ]
+
+    condition {
+      test     = "Null"
+      variable = "s3:x-amz-server-side-encryption"
+      values   = ["true"]
+    }
+  }
+
+  statement {
+    sid = "DenyPutObjectWithInvalidEncryptionKeyHeader"
+
+    effect = "Deny"
+
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
+
+    actions = [
+      "s3:PutObject"
+    ]
+
+    resources = [
+      "${aws_s3_bucket.ef_presenter_data[0].arn}/*"
+    ]
+
+    condition {
+      test     = "StringNotEquals"
+      variable = "s3:x-amz-server-side-encryption-aws-kms-key-id"
+      values   = [aws_kms_key.fil[0].arn]
+    }
+  }
+
+  statement {
+    sid = "DenyPutObjectWithMissingEncryptionKeyHeader"
+
+    effect = "Deny"
+
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
+
+    actions = [
+      "s3:PutObject"
+    ]
+
+    resources = [
+      "${aws_s3_bucket.ef_presenter_data[0].arn}/*"
+    ]
+
+    condition {
+      test     = "Null"
+      variable = "s3:x-amz-server-side-encryption-aws-kms-key-id"
+      values   = ["true"]
     }
   }
 }

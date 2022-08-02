@@ -32,7 +32,7 @@ resource "aws_s3_bucket_policy" "ef_presenter_data" {
   count = var.ef_presenter_data_bucket_enabled ? 1 : 0
 
   bucket = aws_s3_bucket.ef_presenter_data[0].id
-  policy = data.aws_iam_policy_document.ef_presenter_data_bucket.json
+  policy = data.aws_iam_policy_document.ef_presenter_data_bucket[0].json
 }
 
 resource "aws_s3_bucket_lifecycle_configuration" "ef_presenter_data" {

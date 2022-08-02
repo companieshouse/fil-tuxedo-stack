@@ -4,7 +4,7 @@ resource "aws_kms_key" "fil" {
 
   description         = "KMS key for FIL Tuxedo services"
   enable_key_rotation = true
-  policy              = data.aws_iam_policy_document.fil.json
+  policy              = data.aws_iam_policy_document.fil[0].json
 
   tags = merge(local.common_tags, {
     Name = local.common_resource_name
