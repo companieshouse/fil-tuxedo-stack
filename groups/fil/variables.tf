@@ -47,6 +47,18 @@ variable "environment" {
   description = "The environment name to be used when creating AWS resources"
 }
 
+variable "ef_presenter_data_bucket_enabled" {
+  type        = bool
+  description = "A boolean value representing whether to create an S3 bucket and associated resources for EF presenter data"
+  default     = false
+}
+
+variable "ef_presenter_data_read_only_principals" {
+  type        = list(string)
+  description = "An optional list of principal ARNs which will be granted read-only access to the EF preseter data bucket and use of the decryption key, applicable only when 'ef_presenter_data_bucket_enabled' is true"
+  default     = []
+}
+
 variable "instance_count" {
   type        = number
   description = "The number of instances to create"
