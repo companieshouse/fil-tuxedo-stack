@@ -45,6 +45,11 @@ locals {
   ]
 
   ef_presenter_data_bucket_name = "ef-presenter-data.${var.service_subtype}.${var.service}.${var.aws_account}.ch.gov.uk"
+  ef_presenter_data_bucket_read_only_principals = (
+    var.ef_presenter_data_bucket_enabled ?
+    jsondecode(data.vault_generic_secret.ef_presenter[0].data.s3_bucket_read_only_principals) :
+    []
+  )
 
   instance_profile_writable_buckets = flatten([
     local.session_manager_bucket_name,

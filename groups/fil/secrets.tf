@@ -13,3 +13,8 @@ data "vault_generic_secret" "security_kms_keys" {
 data "vault_generic_secret" "tns_names" {
   path = "applications/${var.aws_account}-${var.region}/${var.service_subtype}-${var.service}/tnsnames"
 }
+data "vault_generic_secret" "ef_presenter" {
+  count = var.ef_presenter_data_bucket_enabled ? 1 : 0
+
+  path = "applications/${var.aws_account}-${var.region}/${var.service_subtype}-${var.service}/ef-presenter"
+}
