@@ -44,7 +44,7 @@ data "aws_iam_policy_document" "fil" {
 
       principals {
         type        = "AWS"
-        identifiers = var.ef_presenter_data_read_only_principals
+        identifiers = local.ef_presenter_data_bucket_read_only_principals
       }
 
       actions = ["kms:Decrypt"]
@@ -65,7 +65,7 @@ data "aws_iam_policy_document" "ef_presenter_data_bucket" {
 
       principals {
         type        = "AWS"
-        identifiers = var.ef_presenter_data_read_only_principals
+        identifiers = local.ef_presenter_data_bucket_read_only_principals
       }
 
       actions = [
@@ -86,7 +86,7 @@ data "aws_iam_policy_document" "ef_presenter_data_bucket" {
 
       principals {
         type        = "AWS"
-        identifiers = var.ef_presenter_data_read_only_principals
+        identifiers = local.ef_presenter_data_bucket_read_only_principals
       }
 
       actions = [
