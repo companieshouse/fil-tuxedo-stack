@@ -36,6 +36,14 @@ locals {
     }
   ]...)
 
+  tuxedo_log_group_arns = [
+    for log_group in merge(
+      aws_cloudwatch_log_group.tuxedo,
+      { "cloudwatch" = aws_cloudwatch_log_group.cloudwatch }
+    )
+    : log_group.arn
+  ]
+
   ef_presenter_data_bucket_name = "ef-presenter-data.${var.service_subtype}.${var.service}.${var.aws_account}.ch.gov.uk"
 
   instance_profile_writable_buckets = flatten([
