@@ -24,6 +24,9 @@ getent_uid_index: 1
 
 smtp_mail_relay: smtp-outbound.sharedservices.aws.internal
 
+presenter_data_bucket_name: non-existent-presenter-data-bucket-name
+presenter_data_kms_key_id: non-existent-presenter-data-kms-key-id
+
 tuxedo_log_files:
   cabs:
     - file_pattern: domain.log
