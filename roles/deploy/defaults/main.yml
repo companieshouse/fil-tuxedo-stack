@@ -6,6 +6,9 @@ alerts:
 stats:
   enabled: no
 
+ef_presenter_data:
+  enabled: no
+
 sms_poll_daemon_enabled: false
 
 sms_printer_name: sms-printer

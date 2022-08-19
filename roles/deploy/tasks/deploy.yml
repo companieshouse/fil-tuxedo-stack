@@ -28,6 +28,11 @@
     stats_config: "{{ lookup('community.hashi_vault.hashi_vault', stats.vault_path) }}"
   when: stats.enabled
 
+- name: Retrieve EF presenter data config from Hashicorp Vault
+  set_fact:
+    ef_presenter_config: "{{ lookup('community.hashi_vault.hashi_vault', ef_presenter_data.vault_path) }}"
+  when: ef_presenter_data.enabled
+
 - name: "{{ tuxedo_user }} : Remove maintenance jobs during deploy"
   cron:
     name: "{{ item.name }}"

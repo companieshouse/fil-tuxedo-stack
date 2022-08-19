@@ -17,6 +17,10 @@ informix_server_id_start: 0
 informix_server_port_increment: 1000
 informix_server_port_start: 6000
 
+ef_presenter_data:
+  enabled: yes
+  vault_path: "/applications/heritage-staging-eu-west-2/fil-tuxedo/ef-presenter"
+
 informix_service_config:
   ef:
     server_id: "{{ informix_server_id_start + (0 * informix_server_id_increment) | int }}"
