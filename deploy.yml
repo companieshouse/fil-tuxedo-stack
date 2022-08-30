@@ -14,4 +14,7 @@
   remote_user: centos
   become: yes
   roles:
-    - deploy
+    - role: aws-cli
+      vars:
+        temp_dir: "/home/{{ansible_user}}"
+   - role: deploy
