@@ -16,5 +16,5 @@
   roles:
     - role: aws-cli
       vars:
-        temp_dir: "/home/{{ansible_user}}"
-   - role: deploy
+        temp_dir: "/home/{{ ansible_user }}"
+    - role: deploy
