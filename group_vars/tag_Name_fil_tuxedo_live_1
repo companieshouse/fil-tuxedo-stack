@@ -26,3 +26,11 @@ maintenance_jobs:
       hour: "*"
       month: "*"
       script: "cabs_check"
+  ef:
+    - name: Copy presenter data to S3 for XML backend instances to process
+      day_of_week: "*"
+      day_of_month: "*"
+      minute: "15"
+      hour: "00"
+      month: "*"
+      script: "presenter_data_transfer"
