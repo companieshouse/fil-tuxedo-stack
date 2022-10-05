@@ -71,12 +71,6 @@ variable "instance_type" {
   default     = "t3.small"
 }
 
-variable "lb_deletion_protection" {
-  type        = bool
-  description = "A boolean value representing whether to enable load balancer deletion protection"
-  default     = false
-}
-
 variable "lvm_block_devices" {
   type = list(object({
     aws_volume_size_gb: string,
