@@ -99,7 +99,7 @@ maintenance_jobs:
 
 During execution of this role, cron jobs are temporarily disabled to avoid generating false positive email alerts and are enabled again before completion of the role.
 
-### Ephemeral data directories
+### Ephemeral data directories
 
 The `ephemeral_data_dirs` variable can be used to create service-specific directories for the storage of short-lived files. This is used primarily as a group or host variable.
 
