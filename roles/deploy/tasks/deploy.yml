@@ -33,6 +33,15 @@
     ef_presenter_config: "{{ lookup('community.hashi_vault.hashi_vault', ef_presenter_data.vault_path) }}"
   when: ef_presenter_data.enabled
 
+- name: "{{ tuxedo_user }} : Create ephemeral data directories for {{ tuxedo_user }} services"
+  file:
+    path: "/home/{{ tuxedo_user }}/{{ item.name }}"
+    owner: "{{ tuxedo_user }}"
+    group: "{{ tuxedo_user }}"
+    mode: 0755
+    state: directory
+  loop: "{{ ephemeral_data_dirs[tuxedo_user] | default([]) }}"
+
 - name: "{{ tuxedo_user }} : Remove maintenance jobs during deploy"
   cron:
     name: "{{ item.name }}"
