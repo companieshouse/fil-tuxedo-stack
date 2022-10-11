@@ -38,7 +38,7 @@
     path: "/home/{{ tuxedo_user }}/{{ item.name }}"
     owner: "{{ tuxedo_user }}"
     group: "{{ tuxedo_user }}"
-    mode: 0755
+    mode: 0700
     state: directory
   loop: "{{ ephemeral_data_dirs[tuxedo_user] | default([]) }}"
 
