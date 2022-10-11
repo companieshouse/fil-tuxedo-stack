@@ -14,13 +14,6 @@
     state: mounted
   with_items: "{{ nfsmounts }}"
 
-- name: Create mount points
-  file:
-    path: "{{ item.path }}"
-    state: directory
-    mode: 0777
-  with_items: "{{ nfsmounts }}"
-
 - name: Create mount point symlinks
   file:
     src: "{{ item.path }}"
