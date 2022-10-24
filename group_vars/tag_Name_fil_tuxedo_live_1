@@ -77,10 +77,3 @@ maintenance_jobs:
       hour: "00"
       month: "*"
       script: "fiche_clean"
-    - name: Update file permissions for CHS services
-      day_of_week: "1-5"
-      day_of_month: "*"
-      minute: "*/5"
-      hour: "07-18"
-      month: "*"
-      script: "chs_permissions"
