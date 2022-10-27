@@ -43,7 +43,9 @@
   loop: "{{ ephemeral_data_dirs[tuxedo_user] | default([]) }}"
 
 - name: "{{ tuxedo_user }} : Remove maintenance jobs during deploy"
-  command: "rm -f /var/spool/cron/{{ tuxedo_user }}"
+  file:
+    path: "/var/spool/cron/{{ tuxedo_user }}"
+    state: absent
 
 - name: "{{ tuxedo_user }} : Create temporary directory for new {{ tuxedo_user }} deployment"
   become_user: "{{ tuxedo_user }}"
