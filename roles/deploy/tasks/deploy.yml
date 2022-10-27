@@ -43,11 +43,7 @@
   loop: "{{ ephemeral_data_dirs[tuxedo_user] | default([]) }}"
 
 - name: "{{ tuxedo_user }} : Remove maintenance jobs during deploy"
-  cron:
-    name: "{{ item.name }}"
-    user: "{{ tuxedo_user }}"
-    state: absent
-  loop: "{{ maintenance_jobs[tuxedo_user] | default([]) }}"
+  command: "crontab -r -u {{ tuxedo_user }}"
 
 - name: "{{ tuxedo_user }} : Create temporary directory for new {{ tuxedo_user }} deployment"
   become_user: "{{ tuxedo_user }}"
@@ -237,4 +233,5 @@
     month: "{{ item.month }}"
     user: "{{ tuxedo_user }}"
     job: "source {{ tuxedo_env_file_path }} && /home/{{ tuxedo_user }}/deployment/scripts/{{ item.script }}"
+    disabled: "{{ item.disabled | default(false) }}"
   loop: "{{ maintenance_jobs[tuxedo_user] | default([]) }}"
