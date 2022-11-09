@@ -18,5 +18,41 @@
         ]
       }
     }
+  },
+  "metrics": {
+    "namespace": "Tuxedo",
+    "metrics_collected": {
+      "disk": {
+        "measurement": [
+          "disk_free",
+          "disk_inodes_free",
+          "disk_inodes_total",
+          "disk_inodes_used",
+          "disk_total",
+          "disk_used",
+          "disk_used_percent"
+        ],
+        "resources": [
+          "/"
+        ],
+        "drop_device": true
+      },
+      "mem": {
+        "measurement": [
+          "mem_available",
+          "mem_available_percent",
+          "mem_free",
+          "mem_total",
+          "mem_used",
+          "mem_used_percent"
+        ]
+      },
+      "processes": {
+        "measurement": [
+          "processes_total",
+          "processes_total_threads"
+        ]
+      }
+    }
   }
 }
