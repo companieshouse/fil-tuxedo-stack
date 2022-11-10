@@ -15,7 +15,7 @@ sms_printer_name: sms-printer
 sms_printer_uri: socket://172.19.33.138
 sms_printer_model: drv:///sample.drv/generic.ppd
 
-cloudwatch_agent:
+cloudwatch_agent_defaults:
   path: /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl
   config_dir: /opt/aws/amazon-cloudwatch-agent/etc
   log_file: /opt/aws/amazon-cloudwatch-agent/logs/amazon-cloudwatch-agent.log
