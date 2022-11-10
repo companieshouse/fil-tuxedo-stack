@@ -31,6 +31,9 @@ ef_presenter_data:
   enabled: yes
   vault_path: "/applications/heritage-live-eu-west-2/fil-tuxedo/ef-presenter"
 
+cloudwatch_agent_overrides:
+  metrics_enabled: true
+
 informix_service_config:
   ef:
     server_id: "{{ informix_server_id_start + (0 * informix_server_id_increment) | int }}"
