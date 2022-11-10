@@ -20,6 +20,7 @@ cloudwatch_agent:
   config_dir: /opt/aws/amazon-cloudwatch-agent/etc
   log_file: /opt/aws/amazon-cloudwatch-agent/logs/amazon-cloudwatch-agent.log
   metrics_collection_interval: 60
+  metrics_enabled: false
   user: cwagent
 
 getent_gid_index: 2
