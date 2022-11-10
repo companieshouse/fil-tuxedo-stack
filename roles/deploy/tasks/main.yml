@@ -26,6 +26,7 @@
 
 - name: Set CloudWatch agent facts for config population
   set_fact:
+    cloudwatch_agent: "{{ cloudwatch_agent_defaults | combine(cloudwatch_agent_overrides | default({})) }}"
     cloudwatch_log_stream_name: "{{ ansible_ec2_instance_id }}_{{ ansible_ec2_hostname }}"
     region: "{{ ansible_ec2_instance_identity_document_region }}"
 
