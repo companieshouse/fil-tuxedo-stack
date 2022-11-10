@@ -6,4 +6,15 @@ module "instance_profile" {
   enable_SSM        = true
   kms_key_refs      = local.instance_profile_kms_key_access_ids
   s3_buckets_write  = local.instance_profile_writable_buckets
+
+  custom_statements = [
+    {
+      sid       = "CloudWatchMetricsWrite"
+      effect    = "Allow"
+      resources = ["*"]
+      actions = [
+        "cloudwatch:PutMetricData"
+      ]
+    }
+  ]
 }
