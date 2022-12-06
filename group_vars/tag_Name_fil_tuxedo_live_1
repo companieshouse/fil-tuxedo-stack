@@ -3,21 +3,6 @@
 informix_server_name_suffix: _primary
 
 maintenance_jobs:
-  prod:
-    - name: Check for database update failures
-      day_of_week: "*"
-      day_of_month: "*"
-      minute: "*"
-      hour: "*"
-      month: "*"
-      script: "db_error_check"
-    - name: Transfer telesales data to finance system
-      day_of_week: "1-5"
-      day_of_month: "*"
-      minute: "45"
-      hour: "21"
-      month: "*"
-      script: "sage_extract"
   cabs:
     - name: Check cabs service and logs for errors
       day_of_week: "*"
@@ -34,6 +19,83 @@ maintenance_jobs:
       hour: "00"
       month: "*"
       script: "presenter_data_transfer"
+    - name: Check for service forwarding errors
+      day_of_week: "*"
+      day_of_month: "*"
+      minute: "*/5"
+      hour: "00"
+      month: "*"
+      script: "forward_check"
+    - name: Generate active auth codes stats for the previous week
+      day_of_week: "1"
+      day_of_month: "*"
+      minute: "05"
+      hour: "06"
+      month: "*"
+      script: "active_auth_codes_stats"
+    - name: Generate auth code stats
+      day_of_week: "*"
+      day_of_month: "*"
+      minute: "58"
+      hour: "23"
+      month: "*"
+      script: "auth_code_stats"
+    - name: Check for duplicate auth codes
+      day_of_week: "1-5"
+      day_of_month: "*"
+      minute: "05"
+      hour: "07"
+      month: "*"
+      script: "duplicate_auth_codes_check"
+    - name: Check for database lock
+      day_of_week: "*"
+      day_of_month: "*"
+      minute: "*/10"
+      hour: "*"
+      month: "*"
+      script: "database_lock_check"
+    - name: Check for SQLSTATE exception errors
+      day_of_week: "*"
+      day_of_month: "*"
+      minute: "5,35"
+      hour: "*"
+      month: "*"
+      script: "sqlstate_check"
+    - name: Check ULOG for generic errors
+      day_of_week: "*"
+      day_of_month: "*"
+      minute: "6,16,26,36,46,56"
+      hour: "*"
+      month: "*"
+      script: "ulog_error_check"
+    - name: Clear old entries from auth change database table
+      day_of_week: "*"
+      day_of_month: "*"
+      minute: "00"
+      hour: "06"
+      month: "*"
+      script: "auth_change_clear"
+    - name: Check for auth change records with status 'v'
+      day_of_week: "*"
+      day_of_month: "*"
+      minute: "20"
+      hour: "06"
+      month: "*"
+      script: "auth_change_status_check"
+    - name: Generate daily letter count stats
+      day_of_week: "*"
+      day_of_month: "*"
+      minute: "05"
+      hour: "06"
+      month: "*"
+      script: "daily_letter_count_stats"
+    - name: Insert auth letter records into EF database
+      day_of_week: "*"
+      day_of_month: "*"
+      minute: "50"
+      hour: "04"
+      month: "*"
+      script: "auth_letter_insert"
   scud:
     - name: Generate weekly statistics for SCUD service
       day_of_week: "5"
@@ -77,3 +139,18 @@ maintenance_jobs:
       hour: "00"
       month: "*"
       script: "fiche_clean"
+  prod:
+    - name: Check for database update failures
+      day_of_week: "*"
+      day_of_month: "*"
+      minute: "*"
+      hour: "*"
+      month: "*"
+      script: "db_error_check"
+    - name: Transfer telesales data to finance system
+      day_of_week: "1-5"
+      day_of_month: "*"
+      minute: "45"
+      hour: "21"
+      month: "*"
+      script: "sage_extract"
