@@ -3,3 +3,4 @@
 role_lock_file_prefix: /etc/fil-tuxedo-stack-database-provisioned
 
 informix_chunk_store_path: /data/informix/chunks
+informix_tape_device_path: /db_dump

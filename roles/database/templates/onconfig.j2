@@ -490,8 +490,8 @@ HETERO_COMMIT 0
 #                positive integral multiple of TAPEBLK.
 ###################################################################
 
-TAPEDEV /dev/tapedev
-TAPEBLK 32
+TAPEDEV /db_dump/{{ informix_server_name }}level0.log
+TAPEBLK 256
 TAPESIZE 0
 
 ###################################################################
@@ -505,8 +505,8 @@ TAPESIZE 0
 #                positive integral multiple of LTAPEBLK.
 ###################################################################
 
-LTAPEDEV /dev/tapedev
-LTAPEBLK 32
+LTAPEDEV /db_dump/{{ informix_server_name }}logical.log
+LTAPEBLK 256
 LTAPESIZE 0
 
 ###################################################################
@@ -1387,7 +1387,7 @@ SHARD_EDGE_NODE  0
 #                       Default value: 12
 ###################################################################
 
-DRAUTO                  0
+DRAUTO                  1
 DRINTERVAL              0
 HDR_TXN_SCOPE           NEAR_SYNC
 DRTIMEOUT               30
@@ -1403,7 +1403,7 @@ SDS_PAGING
 SDS_LOGCHECK            10
 SDS_ALTERNATE           NONE
 SDS_FLOW_CONTROL        0
-UPDATABLE_SECONDARY     0
+UPDATABLE_SECONDARY     1
 FAILOVER_CALLBACK
 FAILOVER_TX_TIMEOUT     0
 TEMPTAB_NOLOG           0
