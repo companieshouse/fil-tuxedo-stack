@@ -158,6 +158,30 @@ maintenance_jobs:
       month: "*"
       script: "fiche_clean"
       disabled: true
+    - name: Check SMS poll daemon is running
+      day_of_week: "1-5"
+      day_of_month: "*"
+      minute: "*/5"
+      hour: "07-19"
+      month: "*"
+      script: "sms_poll_check"
+      disabled: true
+    - name: Check SMS poll daemon log for order processing errors
+      day_of_week: "1-5"
+      day_of_month: "*"
+      minute: "30"
+      hour: "06-15"
+      month: "*"
+      script: "transmission_check"
+      disabled: true
+    - name: Check SMS poll daemon log for charging process errors
+      day_of_week: "1-5"
+      day_of_month: "*"
+      minute: "*/5"
+      hour: "07-19"
+      month: "*"
+      script: "qsp_check"
+      disabled: true
   prod:
     - name: Check for database update failures
       day_of_week: "*"

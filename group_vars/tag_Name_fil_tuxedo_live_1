@@ -2,6 +2,8 @@
 
 informix_server_name_suffix: _primary
 
+sms_poll_daemon_enabled: true
+
 maintenance_jobs:
   cabs:
     - name: Check cabs service and logs for errors
@@ -139,6 +141,27 @@ maintenance_jobs:
       hour: "00"
       month: "*"
       script: "fiche_clean"
+    - name: Check SMS poll daemon is running
+      day_of_week: "1-5"
+      day_of_month: "*"
+      minute: "*/5"
+      hour: "07-19"
+      month: "*"
+      script: "sms_poll_check"
+    - name: Check SMS poll daemon log for order processing errors
+      day_of_week: "1-5"
+      day_of_month: "*"
+      minute: "30"
+      hour: "06-15"
+      month: "*"
+      script: "transmission_check"
+    - name: Check SMS poll daemon log for charging process errors
+      day_of_week: "1-5"
+      day_of_month: "*"
+      minute: "*/5"
+      hour: "07-19"
+      month: "*"
+      script: "qsp_check"
   prod:
     - name: Check for database update failures
       day_of_week: "*"
