@@ -81,8 +81,8 @@ PHYSBUFF 128
 # AUTO_LLOG    - Add logical logs automatically to improve performance
 ###################################################################
 
-LOGFILES 6
-LOGSIZE 10000
+LOGFILES {{ informix_logical_log_number_files }}
+LOGSIZE {{ informix_logical_log_size }}
 DYNAMIC_LOGS 2
 LOGBUFF 64
 

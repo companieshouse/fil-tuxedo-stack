@@ -31,6 +31,8 @@
     informix_root_dbspace_path: "{{ informix_service_config[informix_server_name].dbspaces.root.initial_chunk.path }}"
     informix_root_dbspace_offset: "{{ informix_service_config[informix_server_name].dbspaces.root.initial_chunk.offset_in_kb }}"
     informix_root_dbspace_size: "{{ informix_service_config[informix_server_name].dbspaces.root.initial_chunk.size_in_kb }}"
+    informix_logical_log_size: "{{ informix_service_config[informix_server_name].logical_log_size | default(10000) }}"
+    informix_logical_log_number_files: "{{ informix_service_config[informix_server_name].logical_log_number_files | default(100) }}"
 
 - name: "{{ informix_server_name }} : Use default server connections for config population"
   set_fact:
