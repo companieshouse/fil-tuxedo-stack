@@ -11,6 +11,9 @@
   notify:
     - Start printer support services
 
+- name: Flush handlers
+  meta: flush_handlers
+
 - name: Configure SMS printer
   shell: "lpadmin -p {{ sms_printer_name }} -E -v {{ sms_printer_uri }} -m {{ sms_printer_model }} && touch /etc/fil-tuxedo-stack-deploy-provisioned-sms-printer"
   args:
@@ -30,6 +33,3 @@
       - lzip
       - ncompress
     state: present
-
-- name: Flush handlers
-  meta: flush_handlers
