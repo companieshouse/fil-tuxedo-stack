@@ -6,5 +6,5 @@
     state: started
     enabled: yes
   loop:
-      - cups
-      - colord
+    - cups
+    - colord
