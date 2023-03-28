@@ -100,7 +100,7 @@
     group: "{{ tuxedo_user }}"
     mode: 0755
   with_fileglob:
-    - "{{ scripts_artifact_path }}/*.j2"
+    - "{{ scripts_artifact_path }}/{{ tuxedo_user }}/*.j2"
 
 - name: "{{ tuxedo_user }} : Set permissions for new deployment files"
   file:

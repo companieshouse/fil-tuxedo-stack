@@ -1,0 +1,27 @@
+---
+
+- name: Install additional tools for service maintenance scripts
+  yum:
+    state: present
+    name:
+      - ftp
+      - mailx
+      - cups
+      - colord
+  notify:
+    - Start printer support services
+
+- name: Flush handlers
+  meta: flush_handlers
+
+- name: Configure SMS printer
+  shell: "lpadmin -p {{ sms_printer_name }} -E -v {{ sms_printer_uri }} -m {{ sms_printer_model }} && touch /etc/fil-tuxedo-stack-deploy-provisioned-sms-printer"
+  args:
+    creates: /etc/fil-tuxedo-stack-deploy-provisioned-sms-printer
+
+- name: Configure mailx SMTP relay
+  lineinfile:
+    path: /etc/mail.rc
+    regexp: '^set smtp='
+    line: 'set smtp={{ smtp_mail_relay }}'
+

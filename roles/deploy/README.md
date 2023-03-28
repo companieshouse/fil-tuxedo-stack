@@ -82,7 +82,7 @@ The `maintenance_jobs` variable can be used to configure scheduled maintenance j
 | `day_of_month`       |         | Day of the month the job should run (`1-31`, `*`, `*/2`, and so on).                 |
 | `minute`             |         | Minute when the job should run (`0-59`, `*`, `*/2`, and so on).                      |
 | `hour`               |         | Hour when the job should run (`0-23`, `*`, `*/2`, and so on).                        |
-| `script`             |         | The name of the script to execute. This should correspond to a script that is present in the [fil-tuxedo-scripts](https://github.com/companieshouse/fil-tuxedo-scripts) artefact being used at the time the role is executed (i.e. the archive file whose path was provided with the `scripts_artifact_path` variable when executing `ansible-playbook`).
+| `script`             |         | The name of the script to execute. This should correspond to a script that is present in the [fil-tuxedo-scripts](https://github.com/companieshouse/fil-tuxedo-scripts) artefact being used at the time the role is executed, and is expected to exist in a `scripts/<service>` subdirectory in the expanded artefact, where `<service>` matches the name of the Tuxedo service user for which the script will be deployed (e.g. `cabs`, `ef`, `prod`, `scud`).
 
 For example, to execute the `prod_stats` script at midnight every day as the `prod` user:
 
