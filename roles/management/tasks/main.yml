@@ -48,7 +48,7 @@
     user: "{{ informix_user }}"
     job: "/home/{{ informix_user }}/scripts/{{ item.script }}"
     disabled: "{{ item.disabled | default(false) }}"
-  loop: "{{ maintenance_jobs[tuxedo_user] | default([]) }}"
+  loop: "{{ informix_maintenance_jobs | default([]) }}"
 
 - name: Install additional tools for Informix maintenance scripts
   yum:
