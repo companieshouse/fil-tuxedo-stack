@@ -201,7 +201,6 @@ maintenance_jobs:
       disabled: true
 
 informix_maintenance_jobs:
-  # TODO This script needs to be added to fil-tuxedo-scripts
   - name: Stop all logical log continuous backup processes
     day_of_week: "*"
     day_of_month: "*"
