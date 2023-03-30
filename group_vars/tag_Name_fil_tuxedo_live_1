@@ -186,6 +186,7 @@ informix_maintenance_jobs:
     hour: "00"
     month: "*"
     script: "stop_all_logicals"
+    disabled: true
   - name: Informix EF database logical log archive
     day_of_week: "*"
     day_of_month: "*"
@@ -193,6 +194,7 @@ informix_maintenance_jobs:
     hour: "00"
     month: "*"
     script: "logical_log_archive ef"
+    disabled: true
   - name: Informix EF database level zero backup
     day_of_week: "*"
     day_of_month: "*"
@@ -200,6 +202,7 @@ informix_maintenance_jobs:
     hour: "00"
     month: "*"
     script: "level_zero_backup ef"
+    disabled: true
   - name: Informix EF database statistics update
     day_of_week: "*"
     day_of_month: "*"
@@ -207,6 +210,7 @@ informix_maintenance_jobs:
     hour: "00"
     month: "*"
     script: "update_statistics ef"
+    disabled: true
   - name: Informix PROD database logical log archive
     day_of_week: "*"
     day_of_month: "*"
@@ -214,6 +218,7 @@ informix_maintenance_jobs:
     hour: "01"
     month: "*"
     script: "logical_log_archive prod"
+    disabled: true
   - name: Informix PROD database level zero backup
     day_of_week: "*"
     day_of_month: "*"
@@ -221,6 +226,7 @@ informix_maintenance_jobs:
     hour: "01"
     month: "*"
     script: "level_zero_backup prod"
+    disabled: true
   - name: Informix PROD database statistics update
     day_of_week: "*"
     day_of_month: "*"
@@ -228,6 +234,7 @@ informix_maintenance_jobs:
     hour: "01"
     month: "*"
     script: "update_statistics prod"
+    disabled: true
   - name: Informix SCUD database logical log archive
     day_of_week: "*"
     day_of_month: "*"
@@ -235,6 +242,7 @@ informix_maintenance_jobs:
     hour: "02"
     month: "*"
     script: "logical_log_archive scud"
+    disabled: true
   - name: Informix SCUD database level zero backup
     day_of_week: "*"
     day_of_month: "*"
@@ -242,6 +250,7 @@ informix_maintenance_jobs:
     hour: "02"
     month: "*"
     script: "level_zero_backup scud"
+    disabled: true
   - name: Informix SCUD database statistics update
     day_of_week: "*"
     day_of_month: "*"
@@ -249,7 +258,7 @@ informix_maintenance_jobs:
     hour: "02"
     month: "*"
     script: "update_statistics scud"
-  # TODO This script needs to be added to fil-tuxedo-scripts
+    disabled: true
   - name: Update OIS function call statistics
     day_of_week: "*"
     day_of_month: "*"
@@ -264,6 +273,7 @@ informix_maintenance_jobs:
     hour: "04"
     month: "*"
     script: "ois_stats_production"
+    disabled: true
   - name: Generate daily OIS function call statistics
     day_of_week: "*"
     day_of_month: "*"
@@ -271,3 +281,4 @@ informix_maintenance_jobs:
     hour: "05"
     month: "*"
     script: "ois_stats_production daily"
+    disabled: true
