@@ -210,7 +210,6 @@ informix_maintenance_jobs:
     hour: "00"
     month: "*"
     script: "update_statistics ef"
-    disabled: true
   - name: Informix PROD database logical log archive
     day_of_week: "*"
     day_of_month: "*"
@@ -234,7 +233,6 @@ informix_maintenance_jobs:
     hour: "01"
     month: "*"
     script: "update_statistics prod"
-    disabled: true
   - name: Informix SCUD database logical log archive
     day_of_week: "*"
     day_of_month: "*"
@@ -258,7 +256,6 @@ informix_maintenance_jobs:
     hour: "02"
     month: "*"
     script: "update_statistics scud"
-    disabled: true
   - name: Update OIS function call statistics
     day_of_week: "*"
     day_of_month: "*"
@@ -273,7 +270,6 @@ informix_maintenance_jobs:
     hour: "04"
     month: "*"
     script: "ois_stats_production"
-    disabled: true
   - name: Generate daily OIS function call statistics
     day_of_week: "*"
     day_of_month: "*"
@@ -281,4 +277,3 @@ informix_maintenance_jobs:
     hour: "05"
     month: "*"
     script: "ois_stats_production daily"
-    disabled: true
