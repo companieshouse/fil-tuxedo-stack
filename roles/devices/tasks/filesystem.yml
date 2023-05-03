@@ -9,7 +9,6 @@
     fstype: "{{ device.filesystem.type }}"
     dev: "/dev/mapper/{{ device.alias }}"
     opts: "-m uuid={{ filesystem_uuid }}"
-    force: true
   register: filesystem_created
 
 - name: "Mount filesystem for '{{ device.alias }}' iSCSI device"
