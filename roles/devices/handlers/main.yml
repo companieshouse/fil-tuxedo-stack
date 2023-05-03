@@ -1,0 +1,11 @@
+---
+
+- name: Restart multipath daemon
+  systemd:
+    name: multipathd
+    state: restarted
+    enabled: yes
+
+- name: Replay kernel device events
+  command:
+    cmd: udevadm control --reload-rules && udevadm trigger

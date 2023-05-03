@@ -1,0 +1,17 @@
+---
+
+- name: Create udev device management rules for iSCSI devices
+  template:
+    src: 60-raw.rules.j2
+    dest: /etc/udev/rules.d/60-raw.rules
+    owner: root
+    group: root
+    mode: 0600
+    trim_blocks: no
+  vars:
+    devices: "{{ iscsi_devices }}"
+  notify:
+    - Replay kernel device events
+  
+- name: Flush handlers
+  meta: flush_handlers

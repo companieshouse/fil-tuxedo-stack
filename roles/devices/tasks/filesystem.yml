@@ -1,0 +1,29 @@
+---
+
+- name: "Generate filesystem UUID for '{{ device.alias }}' iSCSI device"
+  set_fact:
+    filesystem_uuid: "{{ device.alias | to_uuid }}"
+
+- name: "Create filesystem for '{{ device.alias }}' iSCSI device"
+  filesystem:
+    fstype: "{{ device.filesystem.type }}"
+    dev: "/dev/mapper/{{ device.alias }}"
+    opts: "-m uuid={{ filesystem_uuid }}"
+    force: true
+  register: filesystem_created
+
+- name: "Mount filesystem for '{{ device.alias }}' iSCSI device"
+  mount:
+    path: "{{ device.filesystem.mount_path }}"
+    src: "UUID={{ filesystem_uuid }}"
+    fstype: "{{ device.filesystem.type }}"
+    opts: "_netdev,x-systemd.requires=iscsi.service"
+    state: mounted
+  when: filesystem_created.changed
+
+- name: "Set ownership and permissions for '{{ device.alias }}' iSCSI mount path '{{ device.filesystem.mount_path }}'"
+  file:
+    path: "{{ device.filesystem.mount_path }}"
+    owner: informix
+    group: informix
+    mode: 0770

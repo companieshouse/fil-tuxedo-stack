@@ -1,0 +1,16 @@
+defaults {
+	user_friendly_names no
+	find_multipaths yes
+}
+
+multipaths {
+    {% for device in iscsi_devices %}
+    multipath {
+        wwid    {{ iscsi_device_ids[ansible_hostname][device.alias] }}
+        alias	{{ device.alias }}  
+    }
+    {% endfor %}
+}
+
+blacklist {
+}
