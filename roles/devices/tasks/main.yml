@@ -1,0 +1,51 @@
+---
+
+- name: Set EC2 metadata facts
+  amazon.aws.ec2_metadata_facts:
+
+- name: Check for presence of role lock file
+  stat:
+    path: "{{ role_lock_file_path }}"
+  register: lock_result
+
+- fail:
+    msg: "The host '{{ ansible_hostname }}' was previously provisioned by this role. There is a risk of data loss when running this role against a previously provisioned host. Refer to the README.md file for this role for more information."
+  when: lock_result.stat.exists
+
+- name: Retrieve iSCSI device WWIDs from Hashicorp Vault
+  set_fact:
+    iscsi_device_ids: "{{ lookup('community.hashi_vault.hashi_vault', vault_path) }}"
+
+- name: iscsi_device_ids
+  debug:
+    var: iscsi_device_ids
+
+- name: Check iSCSI device WWIDs are present in Hashicorp Vault"
+  assert:
+    that:
+      - iscsi_device_ids[ansible_hostname][device.alias] is defined
+    msg: "Missing Hashicorp Vault iSCSI device WWID for host '{{ ansible_hostname }}' and device '{{ device.alias }}'"
+  loop: "{{ iscsi_devices }}"
+  loop_control:
+    loop_var: device
+  when: iscsi_devices is defined
+
+- import_tasks: multipath.yml
+  when: iscsi_devices is defined
+
+- import_tasks: udev.yml
+  when: iscsi_devices is defined
+
+- include_tasks: filesystem.yml
+  loop: "{{ iscsi_devices | selectattr('filesystem', 'defined') | list }}"
+  loop_control:
+    loop_var: device
+  when: iscsi_devices is defined
+
+- name: Create role lock file
+  copy:
+    content: "{{ ansible_date_time.iso8601 }} Provisioned by 'devices' role in 'fil-tuxedo-stack' project\n"
+    dest: "{{ role_lock_file_path }}"
+    owner: root
+    group: root
+    mode: 0444
