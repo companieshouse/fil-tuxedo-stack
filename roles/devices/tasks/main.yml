@@ -16,10 +16,6 @@
   set_fact:
     iscsi_device_ids: "{{ lookup('community.hashi_vault.hashi_vault', vault_path) }}"
 
-- name: iscsi_device_ids
-  debug:
-    var: iscsi_device_ids
-
 - name: Check iSCSI device WWIDs are present in Hashicorp Vault"
   assert:
     that:
