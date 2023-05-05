@@ -8,4 +8,7 @@
 
 - name: Replay kernel device events
   command:
-    cmd: udevadm control --reload-rules && udevadm trigger
+    cmd: "{{ item }}"
+  loop:
+    - udevadm control --reload
+    - udevadm trigger

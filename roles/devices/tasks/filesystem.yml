@@ -9,6 +9,7 @@
     fstype: "{{ device.filesystem.type }}"
     dev: "/dev/mapper/{{ device.alias }}"
     opts: "-m uuid={{ filesystem_uuid }}"
+    force: true
   register: filesystem_created
 
 - name: "Mount filesystem for '{{ device.alias }}' iSCSI device"
@@ -20,9 +21,14 @@
     state: mounted
   when: filesystem_created.changed
 
+- name: Force systemd to reread configs
+  systemd:
+    daemon_reload: true
+  when: filesystem_created.changed
+
 - name: "Set ownership and permissions for '{{ device.alias }}' iSCSI mount path '{{ device.filesystem.mount_path }}'"
   file:
     path: "{{ device.filesystem.mount_path }}"
-    owner: informix
-    group: informix
+    owner: "{{ informix_service_user }}"
+    group: "{{ informix_service_group }}"
     mode: 0770
