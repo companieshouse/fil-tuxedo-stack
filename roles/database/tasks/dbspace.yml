@@ -18,7 +18,7 @@
     group: informix
     mode: 0660
     state: touch
-  when: initial_chunk_result.stat.isblk is not defined
+  when: initial_chunk_result.stat.ischr is not defined or initial_chunk_result.stat.ischr == False
 
 - name: "{{ informix_server_name }} : {{ dbspace.key }} :  Create dbspace and initial chunk"
   become_user: "{{ informix_server_name }}"
