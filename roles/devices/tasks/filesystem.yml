@@ -12,6 +12,14 @@
     force: true
   register: filesystem_created
 
+- name: Create filesystem mount point
+  file:
+    path: "{{ device.filesystem.mount_path }}"
+    owner: "{{ informix_service_user }}"
+    group: "{{ informix_service_group }}"
+    mode: 0770
+    state: directory
+
 - name: "Mount filesystem for '{{ device.alias }}' iSCSI device"
   mount:
     path: "{{ device.filesystem.mount_path }}"
