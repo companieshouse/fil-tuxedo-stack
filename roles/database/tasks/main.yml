@@ -31,7 +31,7 @@
     dest: "/home/{{ informix_service_user }}/.rhosts"
     owner: "{{ informix_service_user }}"
     group: "{{ informix_service_group }}"
-    mode: '0600'
+    mode: 0600
 
 - name: "Configure {{ informix_service_user }} user groups"
   user:

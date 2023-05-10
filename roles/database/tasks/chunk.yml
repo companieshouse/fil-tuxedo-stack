@@ -5,14 +5,14 @@
     path: chunk.path
   register: chunk_result
 
-- name: "{{ informix_server_name }} : {{ dbspace.key }} : Create cooked disk dbspace chunk"
+- name: "{{ informix_server_name }} : {{ dbspace.key }} : Create cooked file dbspace chunk"
   file:
     path: "{{ chunk.path }}"
     owner: informix
     group: informix
     mode: 0660
     state: touch
-  when: chunk_result.stat.isblk is not defined
+  when: root_chunk_result.stat.ischr is not defined or root_chunk_result.stat.ischr == False
 
 - name: "{{ informix_server_name }} : {{ dbspace.key }} :  Add chunk to dbspace"
   become_user: "{{ informix_server_name }}"
