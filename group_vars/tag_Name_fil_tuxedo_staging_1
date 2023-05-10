@@ -73,25 +73,3 @@ informix_maintenance_jobs:
     hour: "02"
     month: "*"
     script: "update_statistics scud"
-  # TODO This script needs to be added to fil-tuxedo-scripts
-  - name: Update OIS function call statistics
-    day_of_week: "*"
-    day_of_month: "*"
-    minute: "16"
-    hour: "03"
-    month: "*"
-    script: "ois_stats_update"
-  - name: Generate monthly OIS function call statistics
-    day_of_week: "*"
-    day_of_month: "1"
-    minute: "11"
-    hour: "04"
-    month: "*"
-    script: "ois_stats_production"
-  - name: Generate daily OIS function call statistics
-    day_of_week: "*"
-    day_of_month: "*"
-    minute: "16"
-    hour: "05"
-    month: "*"
-    script: "ois_stats_production daily"
