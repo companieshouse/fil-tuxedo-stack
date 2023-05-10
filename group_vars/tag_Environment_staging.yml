@@ -31,26 +31,19 @@ informix_service_config:
     dbspaces:
       root:
         initial_chunk:
-          path: "{{ informix_chunk_store_path }}/ef/ef_root_dbs_1"
+          path: "/dev/ef"
           offset_in_kb: 0
-          size_in_kb: 2097152
+          size_in_kb: 2000000
       ef_data_dbs:
         initial_chunk:
-          path: "{{ informix_chunk_store_path }}/ef/ef_data_dbs_1"
-          offset_in_kb: 0
-          size_in_kb: 8388608
-        additional_chunks:
-          - path: "{{ informix_chunk_store_path }}/ef/ef_data_dbs_2"
-            offset_in_kb: 0
-            size_in_kb: 8388608
-          - path: "{{ informix_chunk_store_path }}/ef/ef_data_dbs_3"
-            offset_in_kb: 0
-            size_in_kb: 8388608
+          path: "/dev/ef"
+          offset_in_kb: 2000000
+          size_in_kb: 17500000
       ef_log_dbs:
         initial_chunk:
-          path: "{{ informix_chunk_store_path }}/ef/ef_log_dbs_1"
-          offset_in_kb: 0
-          size_in_kb: 8388608
+          path: "/dev/ef"
+          offset_in_kb: 19500000
+          size_in_kb: 500000
     server_connections:
         - server_name: ef
           connection_type: onipcshm
