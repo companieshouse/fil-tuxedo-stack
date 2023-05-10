@@ -21,15 +21,15 @@ informix_server_port_start: 6000
 
 alerts:
   enabled: yes
-  vault_path: "/applications/heritage-live-eu-west-2/fil-tuxedo/alerts"
+  vault_path: "{{ vault_base_path }}/alerts"
 
 stats:
   enabled: yes
-  vault_path: "/applications/heritage-live-eu-west-2/fil-tuxedo/stats"
+  vault_path: "{{ vault_base_path }}/stats"
 
 ef_presenter_data:
   enabled: yes
-  vault_path: "/applications/heritage-live-eu-west-2/fil-tuxedo/ef-presenter"
+  vault_path: "{{ vault_base_path }}/ef-presenter"
 
 cloudwatch_agent_overrides:
   metrics_enabled: true

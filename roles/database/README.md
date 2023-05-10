@@ -96,17 +96,17 @@ The `dbspaces` parameter must be a dictionary of dictionaries whose keys represe
 
 The `initial_chunk` and `additional_chunks` parameters both represent chunks belonging to a dbspace. The former parameter is mandatory and takes the form of a dictionary, while the later is an optional list of dictionaries. In either case, the following options are supported:
 
-| Name           | Default |                                                              |
-|----------------|---------|--------------------------------------------------------------|
-| `path`         |         | The path to the block device or file on disk for this chunk. |
-| `offset_in_kb` |         | The offset in KiB for this chunk.                            |
-| `size_in_kb`   |         | The size in KiB for this chunk.                              |
+| Name           | Default |                                                                |
+|----------------|---------|----------------------------------------------------------------|
+| `path`         |         | The path to a character device or file on disk for this chunk. |
+| `offset_in_kb` |         | The offset in KiB for this chunk.                              |
+| `size_in_kb`   |         | The size in KiB for this chunk.                                |
 
 Observations to consider when configuring dbspace chunks:
 
 * Chunks are assumed to be cooked files if the `path` does not refer to a block device, and a suitable file will be created at the specified path using `informix:informix` ownership and `0660` permissions before adding the chunk to a dbspace.
 * Chunks that belong to different cooked files should use an offset value of `0`. Chunks that belong to the same cooked file as other chunks should typically use an `offset_in_kb` value equal the sum of the `offset_in_kb + size_in_kb` of the previous chunk with the same path.
-* Chunks that belong to raw disks should use an offset sufficient to ensure that they do not overlap with existing data on the disk (e.g. filesystem metadata) or other chunks.
+* Chunks that belong to raw disks should use an offset sufficient to ensure that they do not overlap with existing data on the disk or other chunks.
 
 ### Example configuration
 

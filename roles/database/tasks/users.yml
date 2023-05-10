@@ -1,8 +1,12 @@
 ---
 
+- name: "Set lock file path variable"
+  set_fact:
+    role_lock_file_path: "{{ role_lock_file_prefix }}-{{ informix_server_name }}"
+
 - name:  "{{ informix_server_name }} : Check for presence of role lock file"
   stat:
-    path: "{{ role_lock_file_prefix }}-{{ informix_server_name }}"
+    path: "{{ role_lock_file_path }}"
   register: lock_result
 
 - fail:
@@ -52,14 +56,6 @@
     informix_connections: "{{ informix_service_config[informix_server_name].server_connections }}"
   when: informix_service_config[informix_server_name].server_connections is defined
 
-- name: "{{ informix_server_name }} : Create common Informix server logs directory"
-  file:
-    path: "{{ informix_logs_path }}/common"
-    owner: "{{ informix_service_user }}"
-    group: "{{ informix_service_group }}"
-    mode: 0755
-    state: directory
-
 - name: "{{ informix_server_name }} : Create Informix server logs directory"
   file:
     path: "{{ informix_logs_path }}/{{ informix_server_name }}"
@@ -74,7 +70,7 @@
     dest: "{{ informix_install_path }}/etc/informix.env.{{ informix_server_name }}"
     owner: "{{ informix_service_user }}"
     group: "{{ informix_service_group }}"
-    mode: '0744'
+    mode: 0744
 
 - name: Set environment file path
   set_fact:
@@ -86,7 +82,7 @@
     dest: "{{ informix_install_path }}/etc/onconfig.{{ informix_server_name }}"
     owner: "{{ informix_service_user }}"
     group: "{{ informix_service_group }}"
-    mode: '0744'
+    mode: 0744
     trim_blocks: no
   vars:
     connections: "{{ informix_connections }}"
@@ -97,7 +93,7 @@
     dest: "{{ informix_install_path }}/etc/sqlhosts.{{ informix_server_name }}"
     owner: "{{ informix_service_user }}"
     group: "{{ informix_service_group }}"
-    mode: '0744'
+    mode: 0744
   vars:
     connections: "{{ informix_connections }}"
 
@@ -130,7 +126,7 @@
 - name: Create role lock file
   copy:
     content: "{{ ansible_date_time.iso8601 }} Provisioned by 'database' role in 'fil-tuxedo-stack' project\n"
-    dest: "{{ role_lock_file_prefix }}-{{ informix_server_name }}"
+    dest: "{{ role_lock_file_path }}"
     owner: root
     group: root
     mode: 0444
