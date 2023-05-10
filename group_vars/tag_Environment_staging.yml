@@ -135,13 +135,12 @@ nfsmounts:
 
 iscsi_devices:
   - alias: db_dump
-    raw_character_device_path: /dev/raw/raw1
     filesystem:
       type: xfs
       mount_path: /db_dump
   - alias: scud
-    raw_character_device_path: /dev/raw/raw2
+    raw_character_device_path: /dev/raw/raw1
   - alias: prod
-    raw_character_device_path: /dev/raw/raw3
+    raw_character_device_path: /dev/raw/raw2
   - alias: ef
-    raw_character_device_path: /dev/raw/raw4
+    raw_character_device_path: /dev/raw/raw3

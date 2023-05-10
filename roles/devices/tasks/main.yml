@@ -25,6 +25,15 @@
   loop_control:
     loop_var: device
 
+- name: Check iSCSI device configuration contains filesystem or raw character device setting
+  assert:
+    that:
+      - device.filesystem is defined or device.raw_character_device_path is defined
+    msg: "Each element in list iscsi_devices must contain a 'filesystem' or 'raw_character_device_path' atribute"
+  loop: "{{ iscsi_devices }}"
+  loop_control:
+    loop_var: device
+
 - name: Check iSCSI initiator name is present in Hashicorp Vault
   assert:
     that:
