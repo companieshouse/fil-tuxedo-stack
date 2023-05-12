@@ -163,7 +163,7 @@ informix_service_config:
 To provision a database server on a remote host with this role a second time:
 
 * Confirm that there are no dbpsaces or chunks present for the database server(s) on the remote host(s) (i.e. check all `path` references in the `informix_service_config` configuration and confirm that those paths, whether cooked files or raw disks, do not contain actual data on the remote host(s))
-* Remove the lock file for the database server(s) `/etc`—these follow the naming convention `fil-tuxedo-stack-database-provisioned-<server>`
+* Remove the corresponding lock file(s) for the database server(s) affected from `/etc`—these follow the naming convention `fil-tuxedo-stack-database-provisioned-<server>`
 * Stop any active `oninit` processes on the remote host(s) for the affected database server(s)
-* Remove any shared memory segments that were created by the `oninit` processes
+* Remove any shared memory segments that were created by `oninit` processes for the affected database server(s)
 * Rerun this role against the same database server(s) and host(s)
