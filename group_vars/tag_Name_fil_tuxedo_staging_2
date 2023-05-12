@@ -86,11 +86,16 @@ informix_maintenance_jobs:
 
 informix_host_specific_server_connections:
   ef:
-    - server_name: efliveadmin
+    - server_name: efstagingadmin
       connection_type: onsoctcp
       host: instance-2.fil.tuxedo.staging.heritage.aws.internal
       service_or_port: 6262
-    - server_name: efileliveadmin
+    - server_name: efilestagingadmin
       connection_type: onsoctcp
       host: instance-2.fil.tuxedo.staging.heritage.aws.internal
       service_or_port: 6306
+  scud:
+    - server_name: scud_staging_svr
+      connection_type: onsoctcp
+      host: instance-2.fil.tuxedo.staging.heritage.aws.internal
+      service_or_port: 3005
