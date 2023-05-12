@@ -74,3 +74,13 @@ informix_maintenance_jobs:
     month: "*"
     script: "update_statistics scud"
 
+informix_host_specific_server_connections:
+  ef:
+    - server_name: efliveadmin
+      connection_type: onsoctcp
+      host: instance-1.fil.tuxedo.staging.heritage.aws.internal
+      service_or_port: 6262
+    - server_name: efileliveadmin
+      connection_type: onsoctcp
+      host: instance-1.fil.tuxedo.staging.heritage.aws.internal
+      service_or_port: 6306
