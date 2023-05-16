@@ -54,6 +54,7 @@ Each nested dictionary within `informix_service_config` represents an individual
 |----------------------|---------|--------------------------------------------------------|
 | `server_id`          |         | A unique numeric identifier for this server instance   |
 | `server_port`        |         | _Optional_. The port number this server instance will bind to for TCP/IP connections when using the default `server_connections` value. If a `server_connections` key has been defined then `server_port` should be omitted, and the port number should be specified in the relevant field of the `server_connections` list (if required for that connection type). |
+| `server_aliases`     |         | _Optional_. A comman-separated string containing one or more database server aliases. |
 | `server_connections` | See [Server connections][3] for defaults. | A list of dictionaries representing client/server connections for this server (for constructing the `sqlhosts` configuration file). See [Server connections][3] for more details. Connections specified for this key are common to all remote hosts provisioned by this role. To specify host-specific connections see [Host specific server connections][5]. |
 | `dbspaces`           |         | A dictionary of uniquely named dbspaces. Must include at least a `root` dbspace. See [Dbspaces configuration][5] for more details.
 

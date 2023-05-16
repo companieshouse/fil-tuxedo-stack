@@ -31,6 +31,7 @@
     informix_server_name: "{{ informix_server_name }}"
     informix_server_id: "{{ informix_service_config[informix_server_name].server_id }}"
     informix_server_port: "{{ informix_service_config[informix_server_name].server_port }}"
+    informix_server_aliases: "{{ informix_service_config[informix_server_name].server_aliases | default('') }}"
     informix_root_dbspace_name: "root"
     informix_root_dbspace_path: "{{ informix_service_config[informix_server_name].dbspaces.root.initial_chunk.path }}"
     informix_root_dbspace_offset: "{{ informix_service_config[informix_server_name].dbspaces.root.initial_chunk.offset_in_kb }}"
