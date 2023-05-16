@@ -13,18 +13,18 @@
     msg: "The user '{{ informix_server_name }}' was previously provisioned by this role. There is a risk of data loss if this role is executed against a remote that contains existing dbspaces and chunks. Refer to the README.md file for this role for more information."
   when: lock_result.stat.exists
 
-- name: "{{ informix_server_name }} : Check Informix configuration is present"
+- name: "{{ informix_server_name }} : Check Informix configuration for server '{{ informix_server_name }}' is present"
   assert:
     that:
       - informix_server_name in informix_service_config.keys()
-    msg: "Informix configuration for Tuxedo user '{{ informix_server_name }}' must be defined in 'informix_service_config'"
+    msg: "Informix configuration for server '{{ informix_server_name }}' must be defined in 'informix_service_config'"
 
 - name: "{{ informix_server_name }} : Check Informix root dbspace configuration is present"
   assert:
     that:
       - informix_service_config[informix_server_name].dbspaces.root is defined
       - informix_service_config[informix_server_name].dbspaces.root.initial_chunk is defined
-    msg: "Informix root dbspace configuration for Tuxedo user {{ informix_server_name }} must include an 'initial_chunk' configuration in 'informix_service_config[{{ informix_server_name }}].dbspaces.root'"
+    msg: "Informix root dbspace configuration for server {{ informix_server_name }} must include an 'initial_chunk' configuration in 'informix_service_config[{{ informix_server_name }}].dbspaces.root'"
 
 - name: "{{ informix_server_name }} : Set variables for config population"
   set_fact:
@@ -53,8 +53,8 @@
 
 - name: "{{ informix_server_name }} : Use specified server connections for config population"
   set_fact:
-    informix_connections: "{{ informix_service_config[informix_server_name].server_connections }}"
-  when: informix_service_config[informix_server_name].server_connections is defined
+    informix_connections: "{{ informix_service_config[informix_server_name].server_connections | default([]) + informix_host_specific_server_connections[informix_server_name] | default([]) }}"
+  when: informix_service_config[informix_server_name].server_connections is defined or informix_host_specific_server_connections[informix_server_name] is defined
 
 - name: "{{ informix_server_name }} : Create Informix server logs directory"
   file:
