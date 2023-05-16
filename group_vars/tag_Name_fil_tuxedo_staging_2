@@ -84,18 +84,20 @@ informix_maintenance_jobs:
     script: "update_statistics scud"
     disabled: true
 
+informix_host: instance-2.fil.tuxedo.staging.heritage.aws.internal
+
 informix_host_specific_server_connections:
   ef:
     - server_name: efstgadmin
       connection_type: onsoctcp
-      host: instance-2.fil.tuxedo.staging.heritage.aws.internal
+      host: "{{ informix_host }}"
       service_or_port: 6262
     - server_name: efilestgadmin
       connection_type: onsoctcp
-      host: instance-2.fil.tuxedo.staging.heritage.aws.internal
+      host: "{{ informix_host }}"
       service_or_port: 6306
   scud:
     - server_name: scud_stg_svr
       connection_type: onsoctcp
-      host: instance-2.fil.tuxedo.staging.heritage.aws.internal
+      host: "{{ informix_host }}"
       service_or_port: 3005

@@ -278,18 +278,21 @@ informix_maintenance_jobs:
     month: "*"
     script: "ois_stats_production daily"
 
+
+informix_host: instance-1.fil.tuxedo.live.heritage.aws.internal
+
 informix_host_specific_server_connections:
   ef:
     - server_name: efliveadmin
       connection_type: onsoctcp
-      host: instance-1.fil.tuxedo.live.heritage.aws.internal
+      host: "{{ informix_host }}"
       service_or_port: 6262
     - server_name: efileliveadmin
       connection_type: onsoctcp
-      host: instance-1.fil.tuxedo.live.heritage.aws.internal
+      host: "{{ informix_host }}"
       service_or_port: 6306
   scud:
     - server_name: scud_win_svr
       connection_type: onsoctcp
-      host: instance-1.fil.tuxedo.live.heritage.aws.internal
+      host: "{{ informix_host }}"
       service_or_port: 3005
