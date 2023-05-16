@@ -28,6 +28,7 @@ informix_service_config:
   ef:
     server_id: "{{ informix_server_id_start + (0 * informix_server_id_increment) | int }}"
     server_port: "{{ informix_server_port_start + (0 * informix_server_port_increment) | int }}"
+    server_aliases: "efstgadmin,efilestgadmin"
     dbspaces:
       root:
         initial_chunk:
@@ -92,6 +93,7 @@ informix_service_config:
   scud:
     server_id: "{{ informix_server_id_start + (2 * informix_server_id_increment) | int }}"
     server_port: "{{ informix_server_port_start + (2 * informix_server_port_increment) | int }}"
+    server_aliases: "scud_stg_svr"
     dbspaces:
       root:
         initial_chunk:
