@@ -199,3 +199,7 @@ data "aws_iam_policy_document" "ef_presenter_data_bucket" {
     }
   }
 }
+
+data "vault_generic_secret" "internal_cidrs" {
+  path = "aws-accounts/network/internal_cidr_ranges"
+}
