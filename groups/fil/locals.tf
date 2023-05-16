@@ -63,4 +63,6 @@ locals {
 
   logs_kms_key_id            = data.vault_generic_secret.kms_keys.data["logs"]
   kms_key_administrator_arns = concat(tolist(data.aws_iam_roles.sso_administrator.arns), [data.aws_iam_user.concourse.arn])
+
+  internal_cidrs = values(data.vault_generic_secret.internal_cidrs.data)
 }
