@@ -169,3 +169,17 @@ nfsmounts:
   - path: "/data1/image/scud"
     src: "/data1/apps/scud/tiffexport"
     opts: "bind"
+  - path: "/DBshare"
+    src: "192.168.255.20:/DBshare"
+
+iscsi_devices:
+  - alias: db_dump
+    filesystem:
+      type: xfs
+      mount_path: /db_dump
+  - alias: scud
+    raw_character_device_path: /dev/raw/raw1
+  - alias: prod
+    raw_character_device_path: /dev/raw/raw2
+  - alias: ef
+    raw_character_device_path: /dev/raw/raw3
