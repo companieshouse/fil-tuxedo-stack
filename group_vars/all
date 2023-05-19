@@ -9,3 +9,5 @@ ephemeral_data_dirs:
   scud:
     - name: txt
     - name: fiche
+
+vault_base_path: /applications/heritage-{{ environment_name }}-eu-west-2/fil-tuxedo/

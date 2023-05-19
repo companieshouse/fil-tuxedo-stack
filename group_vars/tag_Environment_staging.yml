@@ -19,7 +19,7 @@ informix_server_port_start: 6000
 
 ef_presenter_data:
   enabled: yes
-  vault_path: "/applications/heritage-staging-eu-west-2/fil-tuxedo/ef-presenter"
+  vault_path: "{{ vault_base_path }}/ef-presenter"
 
 cloudwatch_agent_overrides:
   metrics_enabled: true
@@ -28,29 +28,23 @@ informix_service_config:
   ef:
     server_id: "{{ informix_server_id_start + (0 * informix_server_id_increment) | int }}"
     server_port: "{{ informix_server_port_start + (0 * informix_server_port_increment) | int }}"
+    server_aliases: "efstgadmin,efilestgadmin"
     dbspaces:
       root:
         initial_chunk:
-          path: "{{ informix_chunk_store_path }}/ef/ef_root_dbs_1"
+          path: "/dev/ef"
           offset_in_kb: 0
-          size_in_kb: 2097152
+          size_in_kb: 2000000
       ef_data_dbs:
         initial_chunk:
-          path: "{{ informix_chunk_store_path }}/ef/ef_data_dbs_1"
-          offset_in_kb: 0
-          size_in_kb: 8388608
-        additional_chunks:
-          - path: "{{ informix_chunk_store_path }}/ef/ef_data_dbs_2"
-            offset_in_kb: 0
-            size_in_kb: 8388608
-          - path: "{{ informix_chunk_store_path }}/ef/ef_data_dbs_3"
-            offset_in_kb: 0
-            size_in_kb: 8388608
+          path: "/dev/ef"
+          offset_in_kb: 2000000
+          size_in_kb: 17500000
       ef_log_dbs:
         initial_chunk:
-          path: "{{ informix_chunk_store_path }}/ef/ef_log_dbs_1"
-          offset_in_kb: 0
-          size_in_kb: 8388608
+          path: "/dev/ef"
+          offset_in_kb: 19500000
+          size_in_kb: 500000
     server_connections:
         - server_name: ef
           connection_type: onipcshm
@@ -70,23 +64,19 @@ informix_service_config:
     dbspaces:
       root:
         initial_chunk:
-          path: "{{ informix_chunk_store_path }}/prod/prod_root_dbs_1"
+          path: "/dev/prod"
           offset_in_kb: 0
-          size_in_kb: 2097152
+          size_in_kb: 2000000
       prod_data_dbs:
         initial_chunk:
-          path: "{{ informix_chunk_store_path }}/prod/prod_data_dbs_1"
-          offset_in_kb: 0
-          size_in_kb: 4194304
-        additional_chunks:
-          - path: "{{ informix_chunk_store_path }}/prod/prod_data_dbs_2"
-            offset_in_kb: 0
-            size_in_kb: 4194304
+          path: "/dev/prod"
+          offset_in_kb: 2000000
+          size_in_kb: 7500000
       prod_log_dbs:
         initial_chunk:
-          path: "{{ informix_chunk_store_path }}/prod/prod_log_dbs_1"
-          offset_in_kb: 0
-          size_in_kb: 2097152
+          path: "/dev/prod"
+          offset_in_kb: 9500000
+          size_in_kb: 500000
     server_connections:
         - server_name: prod
           connection_type: onipcshm
@@ -103,26 +93,23 @@ informix_service_config:
   scud:
     server_id: "{{ informix_server_id_start + (2 * informix_server_id_increment) | int }}"
     server_port: "{{ informix_server_port_start + (2 * informix_server_port_increment) | int }}"
+    server_aliases: "scud_stg_svr"
     dbspaces:
       root:
         initial_chunk:
-          path: "{{ informix_chunk_store_path }}/scud/scud_root_dbs_1"
+          path: "/dev/scud"
           offset_in_kb: 0
-          size_in_kb: 2097152
+          size_in_kb: 2000000
       scud_data_dbs:
         initial_chunk:
-          path: "{{ informix_chunk_store_path }}/scud/scud_data_dbs_1"
-          offset_in_kb: 0
-          size_in_kb: 4194304
-        additional_chunks:
-          - path: "{{ informix_chunk_store_path }}/scud/scud_data_dbs_2"
-            offset_in_kb: 0
-            size_in_kb: 4194304
+          path: "/dev/scud"
+          offset_in_kb: 2000000
+          size_in_kb: 7500000
       scud_log_dbs:
         initial_chunk:
-          path: "{{ informix_chunk_store_path }}/scud/scud_log_dbs_1"
-          offset_in_kb: 0
-          size_in_kb: 2097152
+          path: "/dev/scud"
+          offset_in_kb: 9500000
+          size_in_kb: 500000
     server_connections:
         - server_name: scud
           connection_type: onipcshm
@@ -136,3 +123,19 @@ informix_service_config:
           connection_type: onsoctcp
           host: instance-2.fil.tuxedo.staging.heritage.aws.internal
           service_or_port: "{{ informix_server_port_start + (2 * informix_server_port_increment) | int }}"
+
+nfsmounts:
+  - path: "/DBshare"
+    src: "192.168.255.20:/DBshare"
+
+iscsi_devices:
+  - alias: db_dump
+    filesystem:
+      type: xfs
+      mount_path: /db_dump
+  - alias: scud
+    raw_character_device_path: /dev/raw/raw1
+  - alias: prod
+    raw_character_device_path: /dev/raw/raw2
+  - alias: ef
+    raw_character_device_path: /dev/raw/raw3
