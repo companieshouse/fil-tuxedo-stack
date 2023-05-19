@@ -161,7 +161,7 @@ nfsmounts:
   - path: "/home/scud/batenvp1"
     src: "192.168.255.35:batenvp1"
   - path: "/data1/apps/scud"
-    src: "192.168.255.35:/scanning"
+    src: "192.168.255.35:scanning"
     symlink: "/scanning"
   - path: "/data1/home/scanning"
     src: "/data1/apps/scud/tiffexport"
