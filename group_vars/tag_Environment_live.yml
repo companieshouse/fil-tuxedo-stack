@@ -151,13 +151,13 @@ informix_service_config:
 
 nfsmounts:
   - path: "/home/scud/downloadchd/email"
-    src: "ipo-file-svm-lif-be1.internal.ch:chd_image"
+    src: "192.168.255.35:chd_image"
   - path: "/home/scud/downloadceu/email"
-    src: "ipo-file-svm-lif-be1.internal.ch:chcc_email"
+    src: "192.168.255.35:chcc_email"
   - path: "/home/scud/downloadwck/email"
-    src: "ipo-file-svm-lif-be1.internal.ch:wck_image"
+    src: "192.168.255.35:wck_image"
   - path: "/home/scud/downloadceu/post"
-    src: "ipo-file-svm-lif-be1.internal.ch:chcc_post"
+    src: "192.168.255.35:chcc_post"
   - path: "/home/scud/batenvp1"
     src: "192.168.255.35:batenvp1"
   - path: "/data1/apps/scud"
