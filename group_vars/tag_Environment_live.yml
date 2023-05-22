@@ -170,7 +170,7 @@ nfsmounts:
     src: "/data1/apps/scud/tiffexport"
     opts: "bind"
   - path: "/DBshare"
-    src: "192.168.255.35:DBshare"
+    src: "192.168.255.35:/DBshare"
 
 iscsi_devices:
   - alias: db_dump
