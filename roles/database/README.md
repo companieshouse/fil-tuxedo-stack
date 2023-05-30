@@ -143,7 +143,7 @@ User account passwords will be read from HashiCorp Vault configuration using the
 {
   "users": {
     "server-name": {
-      "example-user" : {
+      "example-user": {
         "password": "..."
       }
     }
