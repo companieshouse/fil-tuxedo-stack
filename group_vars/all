@@ -10,4 +10,4 @@ ephemeral_data_dirs:
     - name: txt
     - name: fiche
 
-vault_base_path: /applications/heritage-{{ environment_name }}-eu-west-2/fil-tuxedo/
+vault_base_path: /applications/heritage-{{ environment_name }}-eu-west-2/fil-tuxedo

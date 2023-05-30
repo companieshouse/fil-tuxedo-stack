@@ -124,6 +124,20 @@
   loop_control:
     loop_var: dbspace
 
+- name: Create Informix user accounts
+  user:
+    name: "{{ item.name }}"
+    create_home: false
+    expires: -1
+    password: "{{ informix_user_config.users[informix_server_name][item.name].password | password_hash }}"
+    shell: /sbin/nologin
+  loop: "{{ informix_service_config[informix_server_name].users | default([]) }}"
+  no_log: True
+
+- name: Disable password expiry for Informix user accounts
+  command: "chage -m 0 -M 99999 -I -1 -E -1 {{ item.name }}"
+  loop: "{{ informix_service_config[informix_server_name].users | default([]) }}"
+
 - name: Create role lock file
   copy:
     content: "{{ ansible_date_time.iso8601 }} Provisioned by 'database' role in 'fil-tuxedo-stack' project\n"

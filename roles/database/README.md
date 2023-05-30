@@ -13,8 +13,9 @@ This role is intended for one-time provisioning of IBM Informix server instances
     * [Host specific server connections][5]
   * [DBSpaces configuration][6]
   * [Chunk configuration][7]
-  * [Example configuration][8]
-* [Provisioning hosts with existing dbspaces][9]
+  * [Informix user configuration][8]
+  * [Example configuration][9]
+* [Provisioning hosts with existing dbspaces][10]
 
 [1]: #assumptions
 [2]: #informix-database-configuration
@@ -23,8 +24,9 @@ This role is intended for one-time provisioning of IBM Informix server instances
 [5]: #host-specific-server-connections
 [6]: #dbspaces-configuration
 [7]: #chunk-configuration
-[8]: #example-configuration
-[9]: #provisioning-hosts-with-existing-dbspaces
+[8]: #informix-user-configuration
+[9]: #example-configuration
+[10]: #provisioning-hosts-with-existing-dbspaces
 
 ## Assumptions
 
@@ -55,14 +57,15 @@ Each nested dictionary within `informix_service_config` represents an individual
 | `server_id`          |         | A unique numeric identifier for this server instance   |
 | `server_port`        |         | _Optional_. The port number this server instance will bind to for TCP/IP connections when using the default `server_connections` value. If a `server_connections` key has been defined then `server_port` should be omitted, and the port number should be specified in the relevant field of the `server_connections` list (if required for that connection type). |
 | `server_aliases`     |         | _Optional_. A comma-separated string containing one or more database server aliases. |
-| `server_connections` | See [Server connections][3] for defaults. | A list of dictionaries representing client/server connections for this server (for constructing the `sqlhosts` configuration file). See [Server connections][3] for more details. Connections specified for this key are common to all remote hosts provisioned by this role. To specify host-specific connections see [Host specific server connections][5]. |
-| `dbspaces`           |         | A dictionary of uniquely named dbspaces. Must include at least a `root` dbspace. See [Dbspaces configuration][5] for more details.
+| `server_connections` | See [Server connections configuration][3] for defaults. | A list of dictionaries representing client/server connections for this server (for constructing the `sqlhosts` configuration file). See [Server connections configuration][3] for more details. Connections specified for this key are common to all remote hosts provisioned by this role. To specify host-specific connections see [Host specific server connections][5]. |
+| `dbspaces`           |         | A dictionary of uniquely named dbspaces. Must include at least a `root` dbspace. See [Dbspaces configuration][6] for more details.
+| `users`              |         | _Optional_. A list of dictionaries specifying user accounts for Informix connections. See [Informix user configuration][8] for more information. |
 
 Additional global configuration variables are used for the purposes detailed below:
 
 | Name                 | Default | Description                                            |
 |----------------------|---------|--------------------------------------------------------|
-| `informix_chunk_store_path` | `/data/informix/chunks` | The path of the directory for storing cooked files for dbspace chunks (when not using raw disks). This variable should be referenced in the [Dbspaces configuration][5] `path` option for any dbspace chunks that are to be represented using cooked files (e.g. `{{ informix_chunk_store_path }}/rootdbs`).
+| `informix_chunk_store_path` | `/data/informix/chunks` | The path of the directory for storing cooked files for dbspace chunks (when not using raw disks). This variable should be referenced in the [Dbspaces configuration][6] `path` option for any dbspace chunks that are to be represented using cooked files (e.g. `{{ informix_chunk_store_path }}/rootdbs`).
 | `informix_server_name_suffix`        |         | _Optional_. An optional suffix value that will be appended to the Informix server name in configuration files and environment variables to differentiate servers when using High Availability Data Replication (HDR). For example, the values `_primary` and `_secondary`. Such configuration should be specified for individual hosts using dynamic inventory `keyed_groups`. |
 
 ### Server connections configuration
@@ -107,8 +110,8 @@ The `dbspaces` key must be a dictionary of dictionaries whose keys represent uni
 
 | Name                 | Default |                                             |
 |----------------------|---------|---------------------------------------------|
-| `initial_chunk`      |         | A dictionary representing the initial chunk for the root dbspace. See [Chunk configuration][6] for more details. |
-| `additional_chunks`  |         | _Optional_. A list of one or more dictionaries representing additional chunks to be added to the dbspace. See [Chunk configuration][6] for more details. |
+| `initial_chunk`      |         | A dictionary representing the initial chunk for the root dbspace. See [Chunk configuration][7] for more details. |
+| `additional_chunks`  |         | _Optional_. A list of one or more dictionaries representing additional chunks to be added to the dbspace. See [Chunk configuration][7] for more details. |
 
 ### Chunk configuration
 
@@ -125,6 +128,30 @@ Observations to consider when configuring dbspace chunks:
 * Chunks are assumed to be cooked files if the `path` does not refer to a block device, and a suitable file will be created at the specified path using `informix:informix` ownership and `0660` permissions before adding the chunk to a dbspace.
 * Chunks that belong to different cooked files should use an offset value of `0`. Chunks that belong to the same cooked file as other chunks should typically use an `offset_in_kb` value equal the sum of the `offset_in_kb + size_in_kb` of the previous chunk with the same path.
 * Chunks that belong to raw disks should use an offset sufficient to ensure that they do not overlap with existing data on the disk or other chunks.
+
+### Informix user configuration
+
+If defined, the _optional_ `users` key must specify a list of dictionaries. Each dictionary supports the following keys:
+
+| Name                 | Default |                                                                                                 |
+|----------------------|---------|-------------------------------------------------------------------------------------------------|
+| `name`               |         | A unique user account name for connectivity to the database server under which this key exists. |
+
+User account passwords will be read from HashiCorp Vault configuration using the path `{{ vault_base_path }}/informix` which is expected to contain a JSON object with `users` key and nested keys corresponding to database server names. User names should be specified as a key with an object containing a single `password` key and string value. For example, given a single database server named `server-name` and user named `example-user`:
+
+```json
+{
+  "users": {
+    "server-name": {
+      "example-user": {
+        "password": "..."
+      }
+    }
+  }
+}
+```
+
+All user accounts are created as non-login accounts using `/sbin/nologin` as the default shell, with no password expiry.
 
 ### Example configuration
 
