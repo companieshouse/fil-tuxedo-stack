@@ -125,6 +125,8 @@ informix_service_config:
           connection_type: onsoctcp
           host: instance-2.fil.tuxedo.staging.heritage.aws.internal
           service_or_port: "{{ informix_server_port_start + (2 * informix_server_port_increment) | int }}"
+    users:
+      - name: scudadmin
 
 nfsmounts:
   - path: "/DBshare"
