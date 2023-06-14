@@ -177,6 +177,22 @@ nfsmounts:
     opts: "bind"
   - path: "/DBshare"
     src: "192.168.255.35:/DBshare"
+  - path: "/mnt/nfs/oltp/input/scud_trans"
+    src: "192.168.255.35:/batenvp1/input/scud_trans"
+  - path: "/mnt/nfs/oltp/input/scud_pre95"
+    src: "192.168.255.35:/batenvp1/input/scud_pre95"
+  - path: "/mnt/nfs/oltp/input/shuttle_process"
+    src: "192.168.255.35:/batenvp1/input/shuttle_process"
+  - path: "/mnt/nfs/oltp/archive/scud_trans"
+    src: "192.168.255.35:/batenvp1/archive/scud_trans"
+  - path: "/mnt/nfs/oltp/archive/scud_pre95"
+    src: "192.168.255.35:/batenvp1/archive/scud_pre95"
+  - path: "/mnt/nfs/oltp/archive/shuttle_process"
+    src: "192.168.255.35:/batenvp1/archive/shuttle_process"
+  - path: "/mnt/nfs/oltp/output/shuttle_process"
+    src: "192.168.255.35:/batenvp1/output/shuttle_process"
+  - path: "/mnt/nfs/oltp/output/eshuttle_process"
+    src: "192.168.255.35:/batenvp1/output/eshuttle_process"
 
 iscsi_devices:
   - alias: db_dump
