@@ -94,10 +94,31 @@ maintenance_jobs:
     - name: Insert auth letter records into EF database
       day_of_week: "*"
       day_of_month: "*"
-      minute: "50"
+      minute: "45"
       hour: "04"
       month: "*"
       script: "auth_letter_insert"
+    - name: Process shuttle files and update auth code database entries
+      day_of_week: "*"
+      day_of_month: "*"
+      minute: "05"
+      hour: "05"
+      month: "*"
+      script: "auth_letter"
+    - name: Update status of auth change entries with missing auth codes
+      day_of_week: "*"
+      day_of_month: "*"
+      minute: "*/10"
+      hour: "*"
+      month: "*"
+      script: "auth_letters"
+    - name: Auth code letter generation processing
+      day_of_week: "*"
+      day_of_month: "*"
+      minute: "30"
+      hour: "04"
+      month: "*"
+      script: "aps_letter_run"
   scud:
     - name: Generate weekly statistics for SCUD service
       day_of_week: "5"
