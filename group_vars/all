@@ -5,9 +5,15 @@ informix_logs_path: /var/log/informix
 informix_service_group: informix
 informix_service_user: informix
 
-ephemeral_data_dirs:
+data_directories:
   scud:
-    - name: txt
-    - name: fiche
+    - path: /home/scud/txt
+    - path: /home/scud/fiche
+  ef:
+    - path: /data1/redtitan/lettbak
+    - path: /data1/redtitan/lettemp
+    - path: /data1/redtitan/lettin
+    - path: /data1/redtitan/printbak
+    - path: /data1/redtitan/printout
 
 vault_base_path: /applications/heritage-{{ environment_name }}-eu-west-2/fil-tuxedo
