@@ -64,5 +64,12 @@ locals {
   logs_kms_key_id            = data.vault_generic_secret.kms_keys.data["logs"]
   kms_key_administrator_arns = concat(tolist(data.aws_iam_roles.sso_administrator.arns), [data.aws_iam_user.concourse.arn])
 
-  internal_cidrs = values(data.vault_generic_secret.internal_cidrs.data)
+  iboss_cidr = "10.40.250.0/24"
+
+  visual_basic_app_cidrs = [
+    data.vault_generic_secret.internal_cidrs.data["cardiff_vpn2"],
+    data.vault_generic_secret.internal_cidrs.data["internal_range"],
+    data.vault_generic_secret.internal_cidrs.data["ipo_vpn"],
+    local.iboss_cidr
+  ]
 }

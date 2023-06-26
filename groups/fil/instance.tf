@@ -57,7 +57,7 @@ resource "aws_security_group" "common" {
     from_port   = 6262
     to_port     = 6262
     protocol    = "TCP"
-    cidr_blocks = local.internal_cidrs
+    cidr_blocks = local.visual_basic_app_cidrs
   }
 
   ingress {
@@ -65,7 +65,7 @@ resource "aws_security_group" "common" {
     from_port   = 6306
     to_port     = 6306
     protocol    = "TCP"
-    cidr_blocks = local.internal_cidrs
+    cidr_blocks = local.visual_basic_app_cidrs
   }
 
   ingress {
@@ -73,7 +73,7 @@ resource "aws_security_group" "common" {
     from_port   = 3005
     to_port     = 3005
     protocol    = "TCP"
-    cidr_blocks = local.internal_cidrs
+    cidr_blocks = local.visual_basic_app_cidrs
   }
 
   dynamic "ingress" {
