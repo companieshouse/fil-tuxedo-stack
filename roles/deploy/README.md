@@ -108,7 +108,7 @@ The `data_directories` variable can be used to create additional service-specifi
 | Name                 | Default | Description                          |
 |----------------------|---------|--------------------------------------|
 | `name`               |         | The name of the directory to create. |
-| `mode`               | `0700`  | The permissions the directory should have (as used by the [file](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/file_module.html) module). |
+| `mode`               | `0755`  | The permissions the directory should have (as used by the [file](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/file_module.html) module). |
 
 For example, to create a `fiche` directory for `scud` user services:
 
