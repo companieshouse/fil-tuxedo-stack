@@ -107,7 +107,7 @@ maintenance_jobs:
       minute: "45"
       hour: "04"
       month: "*"
-      script: "auth_letter_insert"
+      script: "auth_letters_insert"
       disabled: true
     - name: Process shuttle files and update auth code database entries
       day_of_week: "*"
@@ -115,7 +115,7 @@ maintenance_jobs:
       minute: "05"
       hour: "05"
       month: "*"
-      script: "auth_letter"
+      script: "auth_letters_eshuttle"
       disabled: true
     - name: Update status of auth change entries with missing auth codes
       day_of_week: "*"
@@ -123,7 +123,7 @@ maintenance_jobs:
       minute: "*/10"
       hour: "*"
       month: "*"
-      script: "auth_letters"
+      script: "auth_letters_status"
       disabled: true
     - name: Auth code letter generation processing
       day_of_week: "*"
