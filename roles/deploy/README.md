@@ -10,7 +10,7 @@ This role implements a sequence of tasks required to deploy Tuxedo FIL services 
         * [SMS service][4]
     * [Logging][5]
     * [Maintenance jobs][6]
-    * [Ephemeral data directories][7]
+    * [Data directories][7]
 
 [1]: #overview
 [2]: #configuration
