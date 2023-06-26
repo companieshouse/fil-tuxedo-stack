@@ -118,4 +118,4 @@ data_directories:
     - name: fiche
 ```
 
-The resulting directory will be created at the path `/home/scud/fiche` with `scud` user and group ownership, and default `0700` permissions.
+The resulting directory will be created at the path `/home/scud/fiche` with `scud` user and group ownership, and default `0755` permissions.
