@@ -206,6 +206,30 @@ maintenance_jobs:
       month: "*"
       script: "qsp_check"
       disabled: true
+    - name: Export pre-95 mortgage documents from database
+      day_of_week: "2-6"
+      day_of_month: "*"
+      minute: "05"
+      hour: "00"
+      month: "*"
+      script: "pre95_mortgages"
+      disabled: true
+    - name: Generate SCUD extract file and export TIFF images for the day
+      day_of_week: "1-5"
+      day_of_month: "*"
+      minute: "30"
+      hour: "21"
+      month: "*"
+      script: "scud_extract"
+      disabled: true
+    - name: Purge outdated scanning files and directories
+      day_of_week: "1-5"
+      day_of_month: "*"
+      minute: "00"
+      hour: "06"
+      month: "*"
+      script: "scanning_clean"
+      disabled: true
   prod:
     - name: Check for database update failures
       day_of_week: "*"
