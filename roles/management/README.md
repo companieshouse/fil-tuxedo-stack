@@ -10,7 +10,7 @@ This role implements a sequence of tasks required to deploy Informix database ma
 
 [1]: #overview
 [2]: #configuration
-[3]: #maintenance-jobs
+[3]: #informix-maintenance-jobs
 
 ## Overview
 
