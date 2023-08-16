@@ -11,17 +11,35 @@
   notify:
     - Start printer support services
 
-- name: Flush handlers
-  meta: flush_handlers
-
 - name: Configure SMS printer
   shell: "lpadmin -p {{ sms_printer_name }} -E -v {{ sms_printer_uri }} -m {{ sms_printer_model }} && touch /etc/fil-tuxedo-stack-deploy-provisioned-sms-printer"
   args:
     creates: /etc/fil-tuxedo-stack-deploy-provisioned-sms-printer
 
-- name: Configure mailx SMTP relay
-  lineinfile:
+- name: Disable mailx inbuilt SMTP relay
+  replace:
     path: /etc/mail.rc
-    regexp: '^set smtp='
-    line: 'set smtp={{ smtp_mail_relay }}'
+    regexp: '^(set smtp=.*)'
+    replace: '#\1'
 
+- name: Update Postfix configuration for mail relay (existing commented lines)
+  lineinfile:
+    dest: "{{ postfix_main_config_file }}"
+    line: "{{ item.key }} = {{ item.value }}"
+    regexp: "^#{{ item.key }} ="
+    insertafter: "^#{{ item.key }} ="
+  loop: "{{ postfix_config }}"
+  notify:
+    - Restart Postfix service
+
+- name: Update Postfix network config (existing uncommented lines)
+  lineinfile:
+    dest: "{{ postfix_main_config_file }}"
+    line: "{{ item.key }} = {{ item.value }}"
+    regexp: "^{{ item.key }} ="
+  loop: "{{ postfix_net_config }}"
+  notify:
+    - Restart Postfix service
+
+- name: Flush handlers
+  meta: flush_handlers
