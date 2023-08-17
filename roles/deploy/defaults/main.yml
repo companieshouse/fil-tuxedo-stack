@@ -26,21 +26,14 @@ cloudwatch_agent_defaults:
 getent_gid_index: 2
 getent_uid_index: 1
 
-postfix_main_config_file: /etc/postfix/main.cf
+postfix_config_path: /etc/postfix/main.cf
 
 postfix_config:
-  - key: mydomain
-    value: companieshouse.gov.uk
-  - key: myorigin
-    value: $mydomain
-  - key: relayhost
-    value: smtp-outbound.sharedservices.aws.internal
-
-postfix_net_config:
-  - key: inet_interfaces
-    value: all
-  - key: inet_protocols
-    value: ipv4
+  mydomain: companieshouse.gov.uk
+  myorigin: $mydomain
+  relayhost: smtp-outbound.sharedservices.aws.internal
+  inet_interfaces: all
+  inet_protocols: ipv4
 
 tuxedo_log_files:
   cabs:
