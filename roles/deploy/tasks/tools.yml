@@ -22,22 +22,13 @@
     regexp: '^(set smtp=.*)'
     replace: '#\1'
 
-- name: Update Postfix configuration for mail relay (existing commented lines)
-  lineinfile:
-    dest: "{{ postfix_main_config_file }}"
-    line: "{{ item.key }} = {{ item.value }}"
-    regexp: "^#{{ item.key }} ="
-    insertafter: "^#{{ item.key }} ="
-  loop: "{{ postfix_config }}"
-  notify:
-    - Restart Postfix service
-
-- name: Update Postfix network config (existing uncommented lines)
-  lineinfile:
-    dest: "{{ postfix_main_config_file }}"
-    line: "{{ item.key }} = {{ item.value }}"
-    regexp: "^{{ item.key }} ="
-  loop: "{{ postfix_net_config }}"
+- name: Configure Postfix mail transfer agent
+  template:
+    src: main.cf.j2
+    dest: "{{ postfix_config_path }}"
+    owner: root
+    group: root
+    mode: 0644
   notify:
     - Restart Postfix service
 
