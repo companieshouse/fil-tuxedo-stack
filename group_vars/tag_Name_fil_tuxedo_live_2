@@ -354,6 +354,14 @@ informix_maintenance_jobs:
     month: "*"
     script: "ois_stats_production daily"
     disabled: true
+  - name: Check status of logical log backup processes
+    day_of_week: "*"
+    day_of_month: "*"
+    minute: "0"
+    hour: "7,14"
+    month: "*"
+    script: "check_continuous_backups"
+    disabled: true
 
 informix_host: instance-2.fil.tuxedo.live.heritage.aws.internal
 
