@@ -40,7 +40,7 @@ The internal host fact `iscsi_vault_config` is set during execution of this role
     }
     "iscsi_initiator_name": "<iscsi-initiator-name>",
     "iscsi_portal_ips": [
-      "<ip-address-1>"
+      "<ip-address>"
     ]
   }
 }
@@ -53,7 +53,7 @@ If defined, the _optional_ `filesystem` key dictionary must specify the followin
 | Name         | Default | Description                                                                           |
 |--------------|---------|---------------------------------------------------------------------------------------|
 | `type`       |         | The filesystem type to be created. Refer to the Ansible [filesystem module documentation](https://docs.ansible.com/ansible/latest/collections/community/general/filesystem_module.html) for valid options. |
-| `mount_path` |         | The target mount path will be created if it does not already exist, with `0770` permissions and user and group ownership defined by the variables `informix_service_user` and `informix_service_group` respectively. | 
+| `mount_path` |         | That path at which the filesystem will be mounted. The target mount path will be created if it does not already exist, with `0770` permissions and user and group ownership defined by the variables `informix_service_user` and `informix_service_group` respectively. |
 
 ## Reprovisioning Hosts
 
