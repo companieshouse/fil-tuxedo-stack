@@ -15,3 +15,5 @@ Refer to the documentation for each of the following roles for more information:
 
 * [database](roles/database/README.md) - for provisioning Informix database server(s), dbspaces, chunks
 * [deploy](roles/deploy/README.md) - for deploying FIL Tuxedo applications
+* [devices](roles/devices/README.md) - for database storage iSCSI device discovery and configuration
+* [management](roles/management/README.md) - for deploying Informix cron jobs and management tools
