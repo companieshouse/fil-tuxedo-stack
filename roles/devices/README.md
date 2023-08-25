@@ -62,7 +62,6 @@ If defined, the _optional_ `filesystem` key dictionary must specify the followin
 To provision a remote host with this role a second time, accepting the potential risk of data loss:
 
 * Stop any active Informix `oninit` processes on the remote host(s) that may be using the storage device(s)
-* Remove any shared memory segments that were created by `oninit` processes for the affected database server(s)
-* Remove the corresponding lock file from remote hosts at `/etc/fil-tuxedo-stack-iscsi-devices-provisioned`
+* Remove the corresponding lock file from remote host(s) at `/etc/fil-tuxedo-stack-iscsi-devices-provisioned`
 * Rerun this role against the same host(s)
 
