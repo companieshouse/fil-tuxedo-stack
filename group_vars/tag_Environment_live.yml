@@ -163,7 +163,7 @@ nfsmounts:
   - path: "/home/ef/wlenvp1letteroutput"
     src: "192.168.255.35:/wlenvp1letteroutput"
   - path: "/data1/apps/scud"
-    src: "ipo-file-svm-lif-be1.internal.ch:/scanning"
+    src: "192.168.255.35:/scanning"
     symlink: "/scanning"
   - path: "/data1/home/scanning"
     src: "/data1/apps/scud/tiffexport"
