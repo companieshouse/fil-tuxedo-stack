@@ -1502,7 +1502,11 @@ DUMPCNT 1
 #                      when an AF occurs
 ###################################################################
 
+{% if informix_event_alarms_enabled  %}
 ALARMPROGRAM $INFORMIXDIR/etc/alarmprogram.sh.{{ informix_server_name }}
+{% else %}
+ALARMPROGRAM $INFORMIXDIR/etc/alarmprogram.sh
+{% endif %}
 ALRM_ALL_EVENTS 0
 STORAGE_FULL_ALARM 600,3
 SYSALARMPROGRAM $INFORMIXDIR/etc/evidence.sh
