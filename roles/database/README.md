@@ -60,6 +60,8 @@ Each nested dictionary within `informix_service_config` represents an individual
 | `server_connections` | See [Server connections configuration][3] for defaults. | A list of dictionaries representing client/server connections for this server (for constructing the `sqlhosts` configuration file). See [Server connections configuration][3] for more details. Connections specified for this key are common to all remote hosts provisioned by this role. To specify host-specific connections see [Host specific server connections][5]. |
 | `dbspaces`           |         | A dictionary of uniquely named dbspaces. Must include at least a `root` dbspace. See [Dbspaces configuration][6] for more details.
 | `users`              |         | _Optional_. A list of dictionaries specifying user accounts for Informix connections. See [Informix user configuration][8] for more information. |
+| `logical_log_size`   | `10000` | _Optional_. The size of each logical log in kilobytes. |
+| `logical_log_number_files` | `100` | _Optional_. The number of logical log files. |
 
 Additional global configuration variables are used for the purposes detailed below:
 
