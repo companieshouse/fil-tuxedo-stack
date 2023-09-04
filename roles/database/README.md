@@ -14,8 +14,9 @@ This role is intended for one-time provisioning of IBM Informix server instances
   * [DBSpaces configuration][6]
   * [Chunk configuration][7]
   * [Informix user configuration][8]
-  * [Example configuration][9]
-* [Provisioning hosts with existing dbspaces][10]
+  * [Informix event alarms configuration][9]
+  * [Example configuration][10]
+* [Provisioning hosts with existing dbspaces][11]
 
 [1]: #assumptions
 [2]: #informix-database-configuration
@@ -25,8 +26,9 @@ This role is intended for one-time provisioning of IBM Informix server instances
 [6]: #dbspaces-configuration
 [7]: #chunk-configuration
 [8]: #informix-user-configuration
-[9]: #example-configuration
-[10]: #provisioning-hosts-with-existing-dbspaces
+[9]: #informix-event-alarms-configuration
+[10]: #example-configuration
+[11]: #provisioning-hosts-with-existing-dbspaces
 
 ## Assumptions
 
@@ -60,6 +62,9 @@ Each nested dictionary within `informix_service_config` represents an individual
 | `server_connections` | See [Server connections configuration][3] for defaults. | A list of dictionaries representing client/server connections for this server (for constructing the `sqlhosts` configuration file). See [Server connections configuration][3] for more details. Connections specified for this key are common to all remote hosts provisioned by this role. To specify host-specific connections see [Host specific server connections][5]. |
 | `dbspaces`           |         | A dictionary of uniquely named dbspaces. Must include at least a `root` dbspace. See [Dbspaces configuration][6] for more details.
 | `users`              |         | _Optional_. A list of dictionaries specifying user accounts for Informix connections. See [Informix user configuration][8] for more information. |
+| `logical_log_size`   | `10000` | _Optional_. The size of each logical log in kilobytes. |
+| `logical_log_number_files` | `100` | _Optional_. The number of logical log files. |
+| `event_alarms_enabled` | `false` | _Optional_. A boolean value representing whether event alarms are enabled or not. See [Informix event alarms configuration][9] for more information. |
 
 Additional global configuration variables are used for the purposes detailed below:
 
@@ -137,12 +142,13 @@ If defined, the _optional_ `users` key must specify a list of dictionaries. Each
 |----------------------|---------|-------------------------------------------------------------------------------------------------|
 | `name`               |         | A unique user account name for connectivity to the database server under which this key exists. |
 
-User account passwords will be read from HashiCorp Vault configuration using the path `{{ vault_base_path }}/informix` which is expected to contain a JSON object with `users` key and nested keys corresponding to database server names. User names should be specified as a key with an object containing a single `password` key and string value. For example, given a single database server named `server-name` and user named `example-user`:
+
+User configuration will be read from HashiCorp Vault using the path `{{ vault_base_path }}/informix`, which is expected to contain a JSON object with a top-level key corresponding to the database server name. User names should be specified within a `users` key as an object containing a single `password` key and string value. For example, given a single database server named `example-server` and user named `example-user`:
 
 ```json
 {
-  "users": {
-    "server-name": {
+  "example-server": {
+    "users": {
       "example-user": {
         "password": "..."
       }
@@ -152,6 +158,21 @@ User account passwords will be read from HashiCorp Vault configuration using the
 ```
 
 All user accounts are created as non-login accounts using `/sbin/nologin` as the default shell, with no password expiry.
+
+### Informix event alarms configuration
+
+Event alarms configuration will be read from HashiCorp Vault using the path `{{ vault_base_path }}/informix`, which is expected to contain a JSON object with a top-level key corresponding to the database server name. An `event_alarms` key should be set to an object containing the keys `email_addresses` and `level` which are used to configure the event alarms. The value for `level` should correspond to the desired [event severity](https://www.ibm.com/docs/en/informix-servers/14.10?topic=alarms-event-alarm-parameters#ids_adr_0674__title__3) level for alarms. For example, given a single database server named `example-server` and using the email address `user@nowhere.com` for events of severity level `3` or greater:
+
+```json
+{
+  "example-server": {
+    "event_alarms": {
+      "email_addresses": "user@nowhere.com",
+      "level": "3"
+    }
+  }
+}
+```
 
 ### Example configuration
 

@@ -39,9 +39,9 @@
     group: "{{ informix_service_group }}"
     groups: ""
 
-- name: Retrieve Informix user configuration from Hashicorp Vault
+- name: Retrieve Informix configuration from Hashicorp Vault
   set_fact:
-    informix_user_config: "{{ lookup('community.hashi_vault.hashi_vault', vault_base_path + '/informix') | default('') }}"
+    informix_vault_config: "{{ lookup('community.hashi_vault.hashi_vault', vault_base_path + '/informix') | default('') }}"
 
 - include_tasks: users.yml
   loop: "{{ informix_service_users }}"

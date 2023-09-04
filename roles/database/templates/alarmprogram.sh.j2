@@ -1,0 +1,592 @@
+#!/bin/ksh
+#  ****************************************************************************
+#
+#  Licensed Materials - Property of IBM and/or HCL
+#
+#  IBM Informix Dynamic Server
+#  Copyright IBM Corporation 1996, 2011
+#  (c) Copyright HCL Technologies Ltd. 2017.  All Rights Reserved.
+#
+#  ****************************************************************************
+#
+#  Title:       alarmprogram.sh
+#  Description: Automatic handling of many IDS events using event alarms
+#
+#  To install this script, add the following line to the ONCONFIG file:
+#                  ALARMPROGRAM    <INFORMIXDIR>/etc/alarmprogram.sh
+#               where <INFORMIXDIR> is replaced by the full value of $INFORMIXDIR
+#               This script sends email and pages the systems group when necessary.
+#
+#  ****************************************************************************
+
+# ########################################
+#
+# PUBLIC SECTION : CONFIGURATION VARIABLES
+#
+# ########################################
+
+BACKUPLOGS=N
+
+ALARMADMIN="{{ informix_event_alarms_level }}"
+ALARMPAGER=0
+ADMINEMAIL="{{ informix_event_alarms_email_addresses }}"
+PAGEREMAIL=
+
+MAILUTILITY=/bin/mail
+
+# ########################################
+#
+#     PRIVATE SECTION : EVENT HANDLERS
+#
+# ########################################
+
+ALRM_NOTWORTHY=1
+ALRM_INFO=2
+ALRM_ATTENTION=3
+ALRM_EMERGENCY=4
+ALRM_FATAL=5
+
+EVENT_SEVERITY=$1
+EVENT_CLASS=$2
+EVENT_MSG="$3"
+EVENT_ADD_TEXT="$4"
+EVENT_FILE="$5"
+EVENT_UNIQID="$6"
+
+BACKUP_CMD="onbar -b -l"
+RM="rm -f"
+ONSTATCMD="onstat"
+MAILBODY=/tmp/__MAILBODY_$$
+MAILHEAD=/tmp/__MAILHEAD_$$
+TMPFILE=/tmp/__TMPFILE_$$
+ALARMTESTFILE=
+
+osname=`uname -s`
+if [ $osname = "SunOS" ]
+then AWK=nawk
+else AWK=awk
+fi
+
+# Keep track of last 5 minutes alarm log
+LASTALARMFILE=$INFORMIXDIR/tmp/.$INFORMIXSERVER.alarm
+touch $LASTALARMFILE
+CURRENT=/tmp/.$INFORMIXSERVER.alarm_$$
+DATE_INT=`date +%Y%j%H%M%S`; export DATE_INT  # Do not delete the export command
+$AWK -v CT=$DATE_INT '{ if ($1 >= (CT-300)) print $0}' $LASTALARMFILE > $CURRENT
+mv $CURRENT $LASTALARMFILE
+
+# Check the validity for BACKUPLOGS
+if [ "x${BACKUPLOGS}" = x ]
+then
+  # if LTAPEDEV is set to NUL set it to N, if not set it to Y
+  LTAPEDEV=`$ONSTATCMD -c | grep "^LTAPEDEV" | awk '{print $2}'`
+  if [ "x${LTAPEDEV}" = x/dev/null ]
+  then BACKUPLOGS=N
+  else BACKUPLOGS=Y
+  fi
+elif [ "x${BACKUPLOGS}" = xy ]
+then BACKUPLOGS=Y
+fi
+
+# In order not to send incorrect mails, ALARMADMIN and ALARMPAGER
+# must be correctly configured; if they are out of range or unset,
+# they will be reset to 0 (Deactivated)
+if [ "x${ALARMADMIN}" = x ]
+then
+    echo "ALARMADMIN is unset, setting it to 0."
+    ALARMADMIN=0
+elif [ \( $ALARMADMIN -lt 0 \) -o \( $ALARMADMIN -gt 5 \) ]
+then
+    echo "ALARMADMIN is out of range, resetting it to 0 from $ALARMADMIN"
+    ALARMADMIN=0
+  fi
+if [ "x${ALARMPAGER}" = x ]
+then
+    echo "ALARMPAGER is unset, setting it to 0."
+    ALARMPAGER=0
+elif [ \( $ALARMPAGER -lt 0 \) -o \( $ALARMPAGER -gt 5 \) ]
+then
+    echo "ALARMPAGER is out of range, reseting it to 0 from $ALARMPAGER"
+    ALARMPAGER=0
+  fi
+
+case "$EVENT_SEVERITY" in
+1) EVENT_SEVERITY_NAME="trivia";;
+2) EVENT_SEVERITY_NAME="information";;
+3) EVENT_SEVERITY_NAME="Attention!";;
+4) EVENT_SEVERITY_NAME="EMERGENCY!!";;
+5) EVENT_SEVERITY_NAME="FATAL EVENT!!!";;
+esac
+
+# Cleanup the mail header and the mail body file
+$RM $MAILBODY $MAILHEAD $TMPFILE
+trap "$RM $MAILBODY $MAILHEAD $TMPFILE; exit 1" 0 1 2 3 13 15
+
+case "$EVENT_CLASS" in
+      1)
+	printf "Subject: $INFORMIXSERVER : $EVENT_SEVERITY_NAME : $EVENT_MSG\n" >> $MAILHEAD
+        printf "$EVENT_ADD_TEXT\n" > $MAILBODY
+         ;;
+      2)
+	printf "Subject: $INFORMIXSERVER : $EVENT_SEVERITY_NAME : $EVENT_MSG\n" >> $MAILHEAD
+        printf "$EVENT_ADD_TEXT\n" > $MAILBODY
+         ;;
+      3)
+	printf "Subject: $INFORMIXSERVER : $EVENT_SEVERITY_NAME : $EVENT_MSG\n" >> $MAILHEAD
+        printf "$EVENT_ADD_TEXT\n" > $MAILBODY
+         ;;
+      4)
+	# CHUNK IS OFFLINE
+
+	printf "Subject: $INFORMIXSERVER : $EVENT_SEVERITY_NAME : $EVENT_MSG\n" >> $MAILHEAD
+	{
+        printf "$EVENT_ADD_TEXT\n"
+        printf "\n-------------------------------------\n\n"
+        printf "RELATED INFORMATION:\n"
+        printf "\n-------------------------------------\n\n"
+        $ONSTATCMD -d | grep -v Blocked: | grep -v Block: | sed '1,3d'
+        printf "\n-------------------------------------\n\n"
+        $ONSTATCMD -m | grep -v Blocked: | grep -v Block: | sed '1,3d'
+	} > $MAILBODY
+         ;;
+      5)
+	# DBSPACE IS OFF_LINE
+
+	printf "Subject: $INFORMIXSERVER : $EVENT_SEVERITY_NAME : $EVENT_MSG\n" >> $MAILHEAD
+	{
+        printf "$EVENT_ADD_TEXT\n"
+        printf "\n-------------------------------------\n\n"
+        printf "RELATED INFORMATION:\n"
+        printf "\n-------------------------------------\n\n"
+        $ONSTATCMD -d | grep -v Blocked: | grep -v Block: | sed '1,3d'
+        printf "\n-------------------------------------\n\n"
+        $ONSTATCMD -m | grep -v Blocked: | grep -v Block: | sed '1,3d'
+	} > $MAILBODY
+         ;;
+      6)
+	# INTERNAL SUBSYSTEM FAILURE
+
+	printf "Subject: $INFORMIXSERVER : $EVENT_SEVERITY_NAME : $EVENT_MSG\n" >> $MAILHEAD
+	{
+        printf "$EVENT_ADD_TEXT\n"
+
+	# Many things cause this problem see the online.log
+        printf "\n-------------------------------------\n\n"
+        printf "RELATED INFORMATION:\n"
+        printf "\n-------------------------------------\n\n"
+	$ONSTATCMD -m | grep -v Blocked: | grep -v Block: | sed '1,3d'
+	} > $MAILBODY
+         ;;
+      7)
+	printf "Subject: $INFORMIXSERVER : $EVENT_SEVERITY_NAME : $EVENT_MSG\n" >> $MAILHEAD
+        printf "$EVENT_ADD_TEXT\n" > $MAILBODY
+         ;;
+      8)
+	printf "Subject: $INFORMIXSERVER : $EVENT_SEVERITY_NAME : $EVENT_MSG\n" >> $MAILHEAD
+        printf "$EVENT_ADD_TEXT\n" > $MAILBODY
+         ;;
+      9)
+	printf "Subject: $INFORMIXSERVER : $EVENT_SEVERITY_NAME : $EVENT_MSG\n" >> $MAILHEAD
+        printf "$EVENT_ADD_TEXT\n" > $MAILBODY
+         ;;
+     10)
+	printf "Subject: $INFORMIXSERVER : $EVENT_SEVERITY_NAME : $EVENT_MSG\n" >> $MAILHEAD
+        printf "$EVENT_ADD_TEXT\n" > $MAILBODY
+         ;;
+     11)
+	printf "Subject: $INFORMIXSERVER : $EVENT_SEVERITY_NAME : $EVENT_MSG\n" >> $MAILHEAD
+        printf "$EVENT_ADD_TEXT\n" > $MAILBODY
+         ;;
+     12)
+	printf "Subject: $INFORMIXSERVER : $EVENT_SEVERITY_NAME : $EVENT_MSG\n" >> $MAILHEAD
+        printf "$EVENT_ADD_TEXT\n" > $MAILBODY
+         ;;
+     13)
+	printf "Subject: $INFORMIXSERVER : $EVENT_SEVERITY_NAME : $EVENT_MSG\n" >> $MAILHEAD
+        printf "$EVENT_ADD_TEXT\n" > $MAILBODY
+         ;;
+     14)
+	printf "Subject: $INFORMIXSERVER : $EVENT_SEVERITY_NAME : $EVENT_MSG\n" >> $MAILHEAD
+        printf "$EVENT_ADD_TEXT\n" > $MAILBODY
+         ;;
+     15)
+	printf "Subject: $INFORMIXSERVER : $EVENT_SEVERITY_NAME : $EVENT_MSG\n" >> $MAILHEAD
+        printf "$EVENT_ADD_TEXT\n" > $MAILBODY
+         ;;
+     16)
+	# ARCHIVE COMPLETED
+	printf "Subject: $INFORMIXSERVER : $EVENT_SEVERITY_NAME : $EVENT_MSG\n" >> $MAILHEAD
+        printf "$EVENT_ADD_TEXT\n" > $MAILBODY
+         ;;
+     17)
+	# ARCHIVE FAILED
+	printf "Subject: $INFORMIXSERVER : $EVENT_SEVERITY_NAME : $EVENT_MSG\n" >> $MAILHEAD
+
+	{
+        printf "$EVENT_ADD_TEXT\n"
+	# With we will be able to get the stack trace for the ontape thread
+        printf "\n-------------------------------------\n\n"
+        printf "RELATED INFORMATION:\n"
+	printf "\n-------------------------------------\n\n"
+
+        $ONSTATCMD -g ath | grep ontape > $TMPFILE
+        $ONSTATCMD -g ath | grep arcbackup >> $TMPFILE
+
+        for i in `cat $TMPFILE | awk '{print $1}'`
+        do
+	  $ONSTATCMD -g stk $i | grep -v Blocked: | grep -v Block: | sed '1,3d'
+          printf "\n-------------------------------------\n"
+        done
+	} > $MAILBODY
+         ;;
+     18)
+	# LOGICAL LOG BACKUP COMPLETED
+
+	printf "Subject: $INFORMIXSERVER : $EVENT_SEVERITY_NAME : $EVENT_MSG\n" >> $MAILHEAD
+        printf "$EVENT_ADD_TEXT\n" > $MAILBODY
+         ;;
+     19)
+	# LOGICAL LOG BACKUP FAILED
+	printf "Subject: $INFORMIXSERVER : $EVENT_SEVERITY_NAME : $EVENT_MSG\n" >> $MAILHEAD
+
+	{
+        printf "$EVENT_ADD_TEXT\n"
+
+	# Try to get the stack trace for all the ontape thread
+        printf "\n-------------------------------------\n\n"
+        printf "RELATED INFORMATION:\n"
+        printf "\n-------------------------------------\n\n"
+        $ONSTATCMD -g ath | grep -v Blocked: | grep -v Block: | sed '1,3d'
+
+        for i in `$ONSTATCMD -g ath | grep ontape | awk '{print $1}'`
+        do
+          printf "\n-------------------------------------\n\n"
+          $ONSTATCMD -g stk $i
+        done
+	} > $MAILBODY
+         ;;
+     20)
+	# LOGICAL LOGS ARE FULL
+
+	printf "Subject: $INFORMIXSERVER : $EVENT_SEVERITY_NAME : $EVENT_MSG\n" >> $MAILHEAD
+
+	{
+        OLDESTLOG=`$ONSTATCMD -l | sed '1,3d' |grep U- | awk '{print $4}' | sort -n | head -1`
+	$ONSTATCMD -x | grep -v Blocked: | grep -v Block: | sed '1,5d' | grep -v active | grep - > $TMPFILE
+        LONGTX=0
+	while read ADDRESS FLAGS USERTHREAD LOCKS LOGBEGIN CURLOG LOGPOS ISOL RETRYS COORD
+	do
+	  if [ $LOGBEGIN -eq $OLDESTLOG ]
+	  then
+	    LONGTX=1
+            # A long transaction has occurred, get the culprit one
+	    SESSID=`$ONSTATCMD -u | grep $USERTHREAD\  | awk '{print $3}'`
+            printf "   A LONG TRANSACTION has filled the Logical Logs, please check\n"
+            printf "below the information about transaction 0x%s that was generated\n" $ADDRESS
+	    printf "by session %s.\n\nSESSION INFORMATION:\n" $SESSID
+	    $ONSTATCMD -g ses $SESSID | grep -v Blocked: | grep -v Block: | sed '1,3d'
+	  fi
+	done < $TMPFILE
+
+	if [ $LONGTX -eq 0 ]
+	then
+          NUMLOGB=`$ONSTATCMD -l | grep U-B | wc -l`
+	  if [ $NUMLOGB -eq 0 ]
+	  then
+	    printf "NO LONG TRANSACTION HAS OCCURRED\n"
+	    printf "LOGICAL LOGS NEED A BACKUP\n"
+	    printf "RUN 'onbar -b -l' OR 'ontape -a' OR 'ontape -c'\n\n\n"
+	  else
+	    printf "SEEMS THAT THERE ARE NO LONG TRANSACTIONS\n"
+	    printf "AND LOGICAL LOGS WERE BACKED UP\n"
+	    printf "contact tech support\n"
+	    EVENT_SEVERITY=$ALRM_EMERGENCY
+	  fi
+        fi
+
+	printf "\n-------------------------------------\n\n"
+	printf "RELATED INFORMATION:\n"
+	printf "\n-------------------------------------\n\n"
+	$ONSTATCMD -l | grep -v Blocked: | grep -v Block: | sed '1,3d'
+	printf "\n-------------------------------------\n\n"
+	$ONSTATCMD -x | grep -v Blocked: | grep -v Block: | sed '1,3d'
+	printf "\n-------------------------------------\n\n"
+	$ONSTATCMD -u | grep -v Blocked: | grep -v Block: | sed '1,3d'
+	} > $MAILBODY
+        ;;
+     21)
+	printf "Subject: $INFORMIXSERVER : $EVENT_SEVERITY_NAME : $EVENT_MSG\n" >> $MAILHEAD
+        printf "$EVENT_ADD_TEXT\n" > $MAILBODY
+         ;;
+     22)
+	# LONG TRANSACTION DETECTED
+
+        printf "Subject: $INFORMIXSERVER : $EVENT_SEVERITY_NAME : $EVENT_MSG\n" >> $MAILHEAD
+
+        {
+        #
+	# The next line will print something like this:
+	# Aborting Long Transaction: tx: 0x7000001dc3b88a0 username: gcastro uid: 30062
+        #
+	printf "$EVENT_ADD_TEXT,\n\n"
+
+        TX_ADDR=`echo ${EVENT_ADD_TEXT} | awk '{print $5}' | cut -c 3-`
+        printf "Tx Address = 0x${TX_ADDR}:\n"
+        tx_out=`$ONSTATCMD -x | grep ${TX_ADDR}`
+	echo ${tx_out}
+	printf "\n"
+
+        USER_ADDR=`echo ${tx_out} | awk '{print $3}'`
+        printf "Userthread Address = 0x${USER_ADDR}:\n"
+        user_out=`$ONSTATCMD -u | grep ${USER_ADDR}`
+	echo ${user_out}
+	printf "\n"
+
+        SESS_ID=`echo {$user_out} | awk '{print $3}'`
+	printf "Session ID = ${SESS_ID}: \n"
+        $ONSTATCMD -g ses $SESS_ID | grep -v Blocked: | grep -v Block: | sed '1,3d'
+
+	} > ${MAILBODY}
+
+        #
+        # Trying to find other long transactions
+        #
+	{
+        dbaccess sysmaster <<THE_END 2> /dev/null | grep \@ | awk '{print $2, $3, $4}' > $TMPFILE
+select "@", tx_id, trim(LEADING '0' from replace(lower(HEX(tx_owner)), "0x", "")), hex(tx_addr)
+from systrans
+where tx_longtx != 0
+THE_END
+	if [ -s $TMPFILE ]
+	then
+          count=0
+
+          printf "\n-------------------------------------\n\n"
+	  printf "OTHER LONG TRANSACTIONS:\n"
+          printf "\n-------------------------------------\n\n"
+
+	  while read TXID_O TXOWNER_O TXADDR_O
+	  do
+              if ( `test ${TXADDR_O} != ${TXADDR}` ) then
+	          SESSID=`$ONSTATCMD -u | grep ${TXOWNER_O} | awk '{print $3}'`
+	          printf "please check the information below about transaction TID=%s at %s\n" ${TXID_O} ${TXADDR_O}
+	          printf "that was generated by session %s.\n\nSESSION INFORMATION:\n" ${SESSID_O}
+                  ${ONSTATCMD} -g ses ${SESSID_O} | grep -v Blocked: | grep -v Block: | sed '1,3d'
+              else
+                  count=$(( $count + 1))
+              fi
+	  done < $TMPFILE
+
+          if ( `test $count -eq 0` ) then
+            printf "\n\nNONE.\n\n"
+          fi
+	fi
+	} >> ${MAILBODY}
+
+        #
+        # Additional information
+        #
+	{
+	printf "\n-------------------------------------\n\n"
+	printf "RELATED INFORMATION:\n"
+	printf "\n-------------------------------------\n\n"
+	$ONSTATCMD -x | grep -v Blocked: | grep -v Block: | sed '1,3d'
+	printf "\n-------------------------------------\n\n"
+	$ONSTATCMD -l | grep -v Blocked: | grep -v Block: | sed '1,3d'
+	printf "\n-------------------------------------\n\n"
+	$ONSTATCMD -m | grep -v Blocked: | grep -v Block: | sed '1,3d'
+	} >> ${MAILBODY}
+        ;;
+     23)
+	# LOGICAL LOG FILE COMPLETED
+
+        # onbar assumes no operator is present, so all messages are written to the
+	# activity log and there shouldn't be any output, but send everything to
+	# /dev/null just in case
+        printf "Subject: $INFORMIXSERVER : $EVENT_SEVERITY_NAME : $EVENT_MSG\n" >> $MAILHEAD
+
+	{
+        printf "$EVENT_ADD_TEXT\n"
+
+# TO IMPLEMENT LATER
+# If there is already a logical log backup don't launch onbar again.
+        if [ "x${BACKUPLOGS}" = xY ]
+	then
+          $BACKUP_CMD 2>&1 >> /dev/null
+          EXIT_STATUS=$?
+	  printf "   '$BACKUP_CMD' has been executed and returned CODE=%s\n\n" $EXIT_STATUS
+        else
+          echo "Script will not backup the logical logs."
+        fi
+
+	# Now check if the logs are near to fill up
+	NUMLOGUB=`$ONSTATCMD -l | grep U-B | wc -l`
+	NUMLOGF=`$ONSTATCMD -l | grep F- | wc -l`
+	NUMLOGA=`$ONSTATCMD -l | grep A- | wc -l`
+	NUMLOGU=`$ONSTATCMD -l | grep U- | wc -l`
+	NUMLOG=`expr $NUMLOGU + $NUMLOGA + $NUMLOGF`
+	PERC=`expr  \( 100 \*  \( $NUMLOGUB + $NUMLOGF + $NUMLOGA \) \) / $NUMLOG `
+
+        if [  $PERC -le 10 ]
+	then
+          PERC=`expr 100 - $PERC`
+	  printf "\n-------------------------------------\n\n"
+	  printf "WARNING : MORE THAN 90 PERCENT (%s percent) OF THE LOGICAL LOGS ARE FULL\n" $PERC
+	  printf "          A LOGICAL LOG BACKUP IS NEEDED. SEE INFO BELOW\n"
+	  $ONSTATCMD -l | grep -v Blocked: | grep -v Block: | sed '1,3d'
+	fi
+	} > $MAILBODY
+        ;;
+     24)
+	printf "Subject: $INFORMIXSERVER : $EVENT_SEVERITY_NAME : $EVENT_MSG\n" >> $MAILHEAD
+        printf "$EVENT_ADD_TEXT\n" > $MAILBODY
+         ;;
+     25)
+	printf "Subject: $INFORMIXSERVER : $EVENT_SEVERITY_NAME : $EVENT_MSG\n" >> $MAILHEAD
+        printf "$EVENT_ADD_TEXT\n" > $MAILBODY
+         ;;
+     26)
+	# LOG FILE DYNAMICALLY ADDED
+
+	printf "Subject: $INFORMIXSERVER : $EVENT_SEVERITY_NAME : $EVENT_MSG\n" >> $MAILHEAD
+
+	{
+	echo $EVENT_ADD_TEXT | read -r DYN ADD LOG FILE LOGNUM TO DBS DBSNUM
+
+dbaccess sysmaster <<! 2> /dev/null | grep \@ | awk '{print $2, $3, $4, $5}' > $TMPFILE
+select '@', number, trunc(physloc/1048576), lower(hex(physloc)), size
+from syslogfil
+where number = $LOGNUM;
+!
+	read -r LOG CHKNUM PHYSLOC SIZE < $TMPFILE
+dbaccess sysmaster <<! 2> /dev/null | grep dbsname | awk '{print $2}' > $TMPFILE
+select name as dbsname from sysdbspaces d
+where dbsnum = $DBSNUM;
+!
+	read -r DBSNAME < $TMPFILE
+	printf "   Logical log file number %s has been dynamically added by\n" $LOGNUM
+	printf "the engine, the log was added to Chunk Number %s in dbspace '%s';\n" $CHKNUM $DBSNAME
+	printf "please check free space on this dbspace and the process that\n"
+	printf "generated this event.\n"
+	printf "\n-------------------------------------\n\n"
+	printf "RELATED INFORMATION:\n"
+	printf "\n-------------------------------------\n\n"
+	$ONSTATCMD -l | grep -v Blocked: | grep -v Block: | sed '1,3d'
+	printf "\n-------------------------------------\n\n"
+	$ONSTATCMD -d | grep -v Blocked: | grep -v Block: | sed '1,3d'
+	} > $MAILBODY
+         ;;
+     27)
+	# LOG FILE REQUIRED
+
+	printf "Subject: $INFORMIXSERVER : $EVENT_SEVERITY_NAME : $EVENT_MSG\n" >> $MAILHEAD
+
+	{
+        printf "$EVENT_ADD_TEXT\n"
+	printf "\n-------------------------------------\n\n"
+	printf "\nRELATED INFORMATION:\n"
+	printf "\n-------------------------------------\n\n"
+	$ONSTATCMD -l | grep -v Blocked: | grep -v Block: | sed '1,3d'
+	printf "\n-------------------------------------\n\n"
+	$ONSTATCMD -d | grep -v Blocked: | grep -v Block: | sed '1,3d'
+	} > $MAILBODY
+        ;;
+     28)
+	# NO SPACE AVAILABLE FOR DYNAMIC LOG
+
+	printf "Subject: $INFORMIXSERVER : $EVENT_SEVERITY_NAME : $EVENT_MSG\n" >> $MAILHEAD
+
+	{
+        printf "$EVENT_ADD_TEXT\n"
+	printf "\n-------------------------------------\n\n"
+	printf "\nRELATED INFORMATION:\n"
+	printf "\n-------------------------------------\n\n"
+	$ONSTATCMD -d | grep -v Blocked: | grep -v Block: | sed '1,3d'
+	printf "\n-------------------------------------\n\n"
+	$ONSTATCMD -l | grep -v Blocked: | grep -v Block: | sed '1,3d'
+	printf "\n-------------------------------------\n\n"
+	$ONSTATCMD -m | grep -v Blocked: | grep -v Block: | sed '1,3d'
+	} > $MAILBODY
+         ;;
+     29)
+	printf "Subject: $INFORMIXSERVER : $EVENT_SEVERITY_NAME : $EVENT_MSG\n" >> $MAILHEAD
+	{
+		printf "$EVENT_ADD_TEXT\n"
+	printf "\n-------------------------------------\n\n"
+	printf "\nLATEST LICENSE INFORMATION:\n"
+	printf "\n-------------------------------------\n\n"
+	$ONSTATCMD -g lic
+	} > $MAILBODY
+         ;;
+ *)
+	printf "Subject: $INFORMIXSERVER : $EVENT_SEVERITY_NAME : $EVENT_MSG\n" >> $MAILHEAD
+        printf "$EVENT_ADD_TEXT\n" > $MAILBODY
+         ;;
+esac
+
+NOSENDER=1
+# Send e-mail to who may be interested
+if [ $ALARMADMIN -ne 0 ]
+then
+  if [ $EVENT_SEVERITY -ge $ALARMADMIN ]
+  then
+    if [ x"$ADMINEMAIL" != x"" ]
+    then
+    printf "To: %s\n" $ADMINEMAIL  >> $MAILHEAD
+    MAILTO=$ADMINEMAIL
+    NOSENDER=0
+  fi
+else
+  echo "Event Severity = $EVENT_SEVERITY is lower than ALARMADMIN=$ALARMADMIN"
+  echo "No mail will be sent to ALARMEMAIL"
+fi
+fi
+
+if [ $ALARMPAGER -ne 0 ]
+then
+  if [ $EVENT_SEVERITY -ge $ALARMPAGER ]
+  then
+    if [ x"$PAGEREMAIL" != x"" ]
+    then
+      if [ ${NOSENDER} -eq 0 ]
+      then
+      printf "cc: %s\n" $PAGEREMAIL  >> $MAILHEAD
+      MAILTO=$MAILTO,$PAGEREMAIL
+    else
+      printf "To: %s\n" $PAGEREMAIL  >> $MAILHEAD
+      MAILTO=$PAGEREMAIL
+    fi
+  fi
+else
+  echo "Event Severity = $EVENT_SEVERITY is lower than ALARMPAGER=$ALARMPAGER"
+  echo "No mail will be sent to PAGEREMAIL"
+fi
+fi
+
+if [ "x${MAILTO}" != x ]
+then
+  printf "\n" >> $MAILHEAD
+  cat $MAILBODY >> $MAILHEAD
+  if [ "x${ALARMPROGRAMTEST}" = x ]
+  then
+    if [ "x${MAILUTILITY}" != x ]
+    then
+      ## Do not send same alarm in less than 5 minute interval.
+      if [ `grep "$EVENT_MSG" $LASTALARMFILE|wc -l` -lt 1 ]
+      then
+          $MAILUTILITY $MAILTO < $MAILHEAD
+      fi
+    else
+      echo "MAILUTILITY is not set, NO MAIL will be sent."
+    fi
+  else
+    cat $MAILHEAD >> $ALARMTESTFILE
+  fi
+else
+  echo "SENDER IS NULL NO MAIL WILL BE SENT"
+fi
+
+printf "$DATE_INT : $EVENT_SEVERITY_NAME : $EVENT_MSG\n" >> $LASTALARMFILE
+
+$RM $MAILHEAD $MAILBODY $TMPFILE
+trap 0 1 2 3 13 15

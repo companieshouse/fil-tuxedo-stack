@@ -98,6 +98,18 @@
   vars:
     connections: "{{ informix_connections }}"
 
+- name: "{{ informix_server_name }} : Create Informix event alarms script"
+  template:
+    src: alarmprogram.sh.j2
+    dest: "{{ informix_install_path }}/etc/alarmprogram.sh.{{ informix_server_name }}"
+    owner: "{{ informix_service_user }}"
+    group: "{{ informix_service_group }}"
+    mode: 0755
+  when: informix_service_config[informix_server_name].event_alarms_enabled | default(false)
+  vars:
+    informix_event_alarms_email_addresses: "{{ informix_vault_config[informix_server_name].event_alarms.email_addresses }}"
+    informix_event_alarms_level: "{{ informix_vault_config[informix_server_name].event_alarms.level }}"
+
 - name: "{{ informix_server_name }} : Create chunk store directory"
   file:
     path: "{{ informix_chunk_store_path }}/{{ informix_server_name }}"
@@ -129,7 +141,7 @@
     name: "{{ item.name }}"
     create_home: false
     expires: -1
-    password: "{{ informix_user_config.users[informix_server_name][item.name].password | password_hash }}"
+    password: "{{ informix_vault_config[informix_server_name].users[item.name].password | password_hash }}"
     shell: /sbin/nologin
   loop: "{{ informix_service_config[informix_server_name].users | default([]) }}"
   no_log: True
