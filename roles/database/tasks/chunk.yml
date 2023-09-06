@@ -10,7 +10,7 @@
 
 - name: "{{ informix_server_name }} : {{ dbspace.key }} : Check state of chunk"
   stat:
-    path: chunk_path.stdout
+    path: "{{ chunk_path.stdout }}"
   register: chunk_state
 
 - name: "{{ informix_server_name }} : {{ dbspace.key }} : Print state of chunk (debug info)"
@@ -24,7 +24,7 @@
     group: informix
     mode: 0660
     state: touch
-  when: not chunk_state.stat.ischr
+  when: chunk_state.stat.ischr is not defined or chunk_state.stat.ischr == False
 
 - name: "{{ informix_server_name }} : {{ dbspace.key }} :  Add chunk to dbspace"
   become_user: "{{ informix_server_name }}"
