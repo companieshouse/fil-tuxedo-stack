@@ -80,7 +80,7 @@
 
 - name: "{{ informix_server_name }} : Create Informix runtime configuration file"
   template:
-    src: "{{ application_configs_path }}/onconfig.j2"
+    src: "{{ informix_config_templates_path }}/onconfig.j2"
     dest: "{{ informix_install_path }}/etc/onconfig.{{ informix_server_name }}"
     owner: "{{ informix_service_user }}"
     group: "{{ informix_service_group }}"
@@ -101,7 +101,7 @@
 
 - name: "{{ informix_server_name }} : Create Informix event alarms script"
   template:
-    src: "{{ application_configs_path }}/alarmprogram.sh.j2"
+    src: "{{ informix_config_templates_path }}/alarmprogram.sh.j2"
     dest: "{{ informix_install_path }}/etc/alarmprogram.sh.{{ informix_server_name }}"
     owner: "{{ informix_service_user }}"
     group: "{{ informix_service_group }}"
