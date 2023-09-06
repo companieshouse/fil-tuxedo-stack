@@ -12,7 +12,7 @@
 
 - name: "{{ informix_server_name }} : {{ dbspace.key }} : Check state of root dbspace initial chunk"
   stat:
-    path: "{{ initial_chunk_path }}"
+    path: initial_chunk_path.stdout
   register: initial_chunk_state
 
 - name: "{{ informix_server_name }} : {{ dbspace.key }} : Create cooked file root dbspace initial chunk"
@@ -22,7 +22,7 @@
     group: informix
     mode: 0660
     state: touch
-  when: root_chunk_result.stat.ischr is not defined or root_chunk_result.stat.ischr == False
+  when: not initial_chunk_state.stat.ischr
 
 - name: "{{ informix_server_name }} : {{ dbspace.key }} : Enable disk initialisation for dbspace provisioning"
   lineinfile:
