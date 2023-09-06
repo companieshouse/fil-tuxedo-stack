@@ -7,6 +7,7 @@
   assert:
     that:
       - informix_service_users is defined and informix_service_users | length > 0
+      - informix_config_templates_path is defined and informix_config_templates_path | trim | length > 0
     msg: "Required variable(s) empty or undefined"
 
 - name: Create Informix logs directory
