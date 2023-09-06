@@ -8,7 +8,7 @@
 
 - name: "{{ informix_server_name }} : {{ dbspace.key }} : Check state of initial dbspace chunk"
   stat:
-    path: chunk.path
+    path: "{{ dbspace.value.initial_chunk.path | realpath }}"
   register: initial_chunk_result
 
 - name: "{{ informix_server_name }} : {{ dbspace.key }} : Create cooked disk initial dbspace chunk"
