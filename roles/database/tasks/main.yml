@@ -7,6 +7,7 @@
   assert:
     that:
       - informix_service_users is defined and informix_service_users | length > 0
+      - informix_config_templates_path is defined and informix_config_templates_path | trim | length > 0
     msg: "Required variable(s) empty or undefined"
 
 - name: Create Informix logs directory
@@ -39,9 +40,9 @@
     group: "{{ informix_service_group }}"
     groups: ""
 
-- name: Retrieve Informix user configuration from Hashicorp Vault
+- name: Retrieve Informix configuration from Hashicorp Vault
   set_fact:
-    informix_user_config: "{{ lookup('community.hashi_vault.hashi_vault', vault_base_path + '/informix') | default('') }}"
+    informix_vault_config: "{{ lookup('community.hashi_vault.hashi_vault', vault_base_path + '/informix') | default('') }}"
 
 - include_tasks: users.yml
   loop: "{{ informix_service_users }}"
