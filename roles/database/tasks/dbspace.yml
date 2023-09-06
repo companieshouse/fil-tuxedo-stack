@@ -11,18 +11,10 @@
   command: "realpath {{ dbspace.value.initial_chunk.path }}"
   register: initial_chunk_path
 
-- name: "{{ informix_server_name }} : {{ dbspace.key }} : Print resolved path of initial dbspace chunk (debug info)"
-  debug:
-    var: initial_chunk_path
-
 - name: "{{ informix_server_name }} : {{ dbspace.key }} : Check state of initial dbspace chunk"
   stat:
     path: "{{ initial_chunk_path.stdout }}"
   register: initial_chunk_state
-
-- name: "{{ informix_server_name }} : {{ dbspace.key }} : Print state of initial dbspace chunk (debug info)"
-  debug:
-    var: initial_chunk_state
 
 - name: "{{ informix_server_name }} : {{ dbspace.key }} : Create cooked disk initial dbspace chunk"
   file:
