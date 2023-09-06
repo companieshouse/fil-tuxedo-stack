@@ -63,7 +63,6 @@ informix_service_config:
   prod:
     server_id: "{{ informix_server_id_start + (1 * informix_server_id_increment) | int }}"
     server_port: "{{ informix_server_port_start + (1 * informix_server_port_increment) | int }}"
-    event_alarms_enabled: true
     dbspaces:
       root:
         initial_chunk:
