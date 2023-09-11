@@ -8,3 +8,9 @@
   loop:
     - cups
     - colord
+
+- name: Restart Postfix service
+  systemd:
+    name: postfix
+    state: restarted
+    enabled: yes

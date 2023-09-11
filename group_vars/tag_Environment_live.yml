@@ -39,6 +39,7 @@ informix_service_config:
     server_id: "{{ informix_server_id_start + (0 * informix_server_id_increment) | int }}"
     server_port: "{{ informix_server_port_start + (0 * informix_server_port_increment) | int }}"
     server_aliases: "efliveadmin,efileliveadmin"
+    event_alarms_enabled: true
     dbspaces:
       root:
         initial_chunk:
@@ -75,29 +76,28 @@ informix_service_config:
           connection_type: onsoctcp
           host: instance-2.fil.tuxedo.live.heritage.aws.internal
           service_or_port: "{{ informix_server_port_start + (0 * informix_server_port_increment) | int }}"
+    users:
+      - name: efadmin
   prod:
     server_id: "{{ informix_server_id_start + (1 * informix_server_id_increment) | int }}"
     server_port: "{{ informix_server_port_start + (1 * informix_server_port_increment) | int }}"
+    event_alarms_enabled: true
     dbspaces:
       root:
         initial_chunk:
-          path: "{{ informix_chunk_store_path }}/prod/prod_root_dbs_1"
+          path: "/dev/prod"
           offset_in_kb: 0
-          size_in_kb: 2097152
+          size_in_kb: 2000000
       prod_data_dbs:
         initial_chunk:
-          path: "{{ informix_chunk_store_path }}/prod/prod_data_dbs_1"
-          offset_in_kb: 0
-          size_in_kb: 4194304
-        additional_chunks:
-          - path: "{{ informix_chunk_store_path }}/prod/prod_data_dbs_2"
-            offset_in_kb: 0
-            size_in_kb: 4194304
+          path: "/dev/prod"
+          offset_in_kb: 2000000
+          size_in_kb: 7500000
       prod_log_dbs:
         initial_chunk:
-          path: "{{ informix_chunk_store_path }}/prod/prod_log_dbs_1"
-          offset_in_kb: 0
-          size_in_kb: 2097152
+          path: "/dev/prod"
+          offset_in_kb: 9500000
+          size_in_kb: 500000
     server_connections:
         - server_name: prod
           connection_type: onipcshm
@@ -115,6 +115,7 @@ informix_service_config:
     server_id: "{{ informix_server_id_start + (2 * informix_server_id_increment) | int }}"
     server_port: "{{ informix_server_port_start + (2 * informix_server_port_increment) | int }}"
     server_aliases: "scud_win_svr"
+    event_alarms_enabled: true
     dbspaces:
       root:
         initial_chunk:
@@ -148,20 +149,24 @@ informix_service_config:
           connection_type: onsoctcp
           host: instance-2.fil.tuxedo.live.heritage.aws.internal
           service_or_port: "{{ informix_server_port_start + (2 * informix_server_port_increment) | int }}"
+    users:
+      - name: scudadmin
 
 nfsmounts:
   - path: "/home/scud/downloadchd/email"
-    src: "192.168.255.35:chd_image"
+    src: "192.168.255.35:/chd_image"
   - path: "/home/scud/downloadceu/email"
-    src: "192.168.255.35:chcc_email"
+    src: "192.168.255.35:/chcc_email"
   - path: "/home/scud/downloadwck/email"
-    src: "192.168.255.35:wck_image"
+    src: "192.168.255.35:/wck_image"
   - path: "/home/scud/downloadceu/post"
-    src: "192.168.255.35:chcc_post"
+    src: "192.168.255.35:/chcc_post"
   - path: "/home/scud/batenvp1"
-    src: "192.168.255.35:batenvp1"
+    src: "192.168.255.35:/batenvp1"
+  - path: "/home/ef/wlenvp1letteroutput"
+    src: "192.168.255.35:/wlenvp1letteroutput"
   - path: "/data1/apps/scud"
-    src: "ipo-file-svm-lif-be1.internal.ch:scanning"
+    src: "192.168.255.35:/scanning"
     symlink: "/scanning"
   - path: "/data1/home/scanning"
     src: "/data1/apps/scud/tiffexport"
@@ -169,3 +174,33 @@ nfsmounts:
   - path: "/data1/image/scud"
     src: "/data1/apps/scud/tiffexport"
     opts: "bind"
+  - path: "/DBshare"
+    src: "192.168.255.35:/DBshare"
+  - path: "/mnt/nfs/oltp/input/scud_trans"
+    src: "192.168.255.35:/batenvp1/input/scud_trans"
+  - path: "/mnt/nfs/oltp/input/scud_pre95"
+    src: "192.168.255.35:/batenvp1/input/scud_pre95"
+  - path: "/mnt/nfs/oltp/input/shuttle_process"
+    src: "192.168.255.35:/batenvp1/input/shuttle_process"
+  - path: "/mnt/nfs/oltp/archive/scud_trans"
+    src: "192.168.255.35:/batenvp1/archive/scud_trans"
+  - path: "/mnt/nfs/oltp/archive/scud_pre95"
+    src: "192.168.255.35:/batenvp1/archive/scud_pre95"
+  - path: "/mnt/nfs/oltp/archive/shuttle_process"
+    src: "192.168.255.35:/batenvp1/archive/shuttle_process"
+  - path: "/mnt/nfs/oltp/output/shuttle_process"
+    src: "192.168.255.35:/batenvp1/output/shuttle_process"
+  - path: "/mnt/nfs/oltp/output/eshuttle_process"
+    src: "192.168.255.35:/batenvp1/output/eshuttle_process"
+
+iscsi_devices:
+  - alias: db_dump
+    filesystem:
+      type: xfs
+      mount_path: /db_dump
+  - alias: scud
+    raw_character_device_path: /dev/raw/raw1
+  - alias: prod
+    raw_character_device_path: /dev/raw/raw2
+  - alias: ef
+    raw_character_device_path: /dev/raw/raw3

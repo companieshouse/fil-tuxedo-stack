@@ -94,10 +94,31 @@ maintenance_jobs:
     - name: Insert auth letter records into EF database
       day_of_week: "*"
       day_of_month: "*"
-      minute: "50"
+      minute: "45"
       hour: "04"
       month: "*"
-      script: "auth_letter_insert"
+      script: "auth_letters_insert"
+    - name: Process shuttle files and update auth code database entries
+      day_of_week: "*"
+      day_of_month: "*"
+      minute: "05"
+      hour: "05"
+      month: "*"
+      script: "auth_letters_eshuttle"
+    - name: Update status of auth change entries with missing auth codes
+      day_of_week: "*"
+      day_of_month: "*"
+      minute: "*/10"
+      hour: "*"
+      month: "*"
+      script: "auth_letters_status"
+    - name: Auth code letter generation processing
+      day_of_week: "*"
+      day_of_month: "*"
+      minute: "30"
+      hour: "04"
+      month: "*"
+      script: "aps_letter_run"
   scud:
     - name: Generate weekly statistics for SCUD service
       day_of_week: "5"
@@ -162,6 +183,27 @@ maintenance_jobs:
       hour: "07-19"
       month: "*"
       script: "qsp_check"
+    - name: Export pre-95 mortgage documents from database
+      day_of_week: "2-6"
+      day_of_month: "*"
+      minute: "05"
+      hour: "00"
+      month: "*"
+      script: "pre95_mortgages"
+    - name: Generate SCUD extract file and export TIFF images for the day
+      day_of_week: "1-5"
+      day_of_month: "*"
+      minute: "30"
+      hour: "21"
+      month: "*"
+      script: "scud_extract"
+    - name: Purge outdated scanning files and directories
+      day_of_week: "1-5"
+      day_of_month: "*"
+      minute: "00"
+      hour: "06"
+      month: "*"
+      script: "scanning_clean"
   prod:
     - name: Check for database update failures
       day_of_week: "*"
@@ -270,6 +312,13 @@ informix_maintenance_jobs:
     hour: "05"
     month: "*"
     script: "ois_stats_production daily"
+  - name: Check status of logical log backup processes
+    day_of_week: "*"
+    day_of_month: "*"
+    minute: "0"
+    hour: "7,14"
+    month: "*"
+    script: "check_continuous_backups"
 
 informix_host: instance-1.fil.tuxedo.live.heritage.aws.internal
 

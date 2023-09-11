@@ -11,6 +11,7 @@
   createolddir 0755 root root
   lastaction
     /bin/find {{ tuxedo_logs_path }}/ef -maxdepth 1 -name 'EFFE_SYNC_*.log' -not -name "EFFE_SYNC_$(date +%Y%m%d).log" -size 0 -delete
+    /bin/find {{ tuxedo_logs_path }}/ef -maxdepth 1 -name 'auth_letters_*.log' ! \( -name "auth_letters_$(date +%Y%m%d).log" -o -regex '.*auth_letters_\(status\|insert\|eshuttle\).log$' \) -size 0 -delete
   endscript
 }
 

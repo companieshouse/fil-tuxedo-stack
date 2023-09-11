@@ -92,6 +92,13 @@
     job: "logrotate {{ tuxedo_log_rotation_config_path }}"
     cron_file: /etc/crontab
 
+- name: Create maintenance job for periodic mail spool truncation
+  cron:
+    name: Peridic mail spool truncation
+    special_time: weekly
+    user: root
+    job: truncate -s 0 /var/spool/mail/*
+
 - name: Allow logrotate to modify CloudWatch log
   community.general.sefcontext:
     target: "{{ item }}"
