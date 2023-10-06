@@ -181,6 +181,10 @@ nfsmounts:
     src: "192.168.255.35:/batenvp1/output/shuttle_process"
   - path: "/mnt/nfs/oltp/output/eshuttle_process"
     src: "192.168.255.35:/batenvp1/output/eshuttle_process"
+  - path: "/mnt/nfs/image_team_tools"
+    src: "192.168.255.35:/image_team_tools"
+  - path: "/mnt/nfs/image_team_sql"
+    src: "192.168.255.35:/image_team_sql"
 
 iscsi_devices:
   - alias: db_dump
