@@ -123,9 +123,6 @@
     path: /etc/hosts
     line: "127.0.0.1   {{ ansible_facts.hostname }}"
 
-- include_tasks: nfs.yml
-  when: nfsmounts is defined and nfsmounts | length > 0
-
 - include_tasks: deploy.yml
   loop: "{{ tuxedo_service_users }}"
   loop_control:
