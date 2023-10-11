@@ -92,6 +92,15 @@
     job: "logrotate {{ tuxedo_log_rotation_config_path }}"
     cron_file: /etc/crontab
 
+- name: Disable cron job output emails
+  cronvar:
+    name: MAILTO
+    value: ""
+    cron_file: "{{ item }}"
+  loop:
+    - /etc/crontab
+    - /etc/cron.d/clamav-update
+
 - name: Create maintenance job for periodic mail spool truncation
   cron:
     name: Peridic mail spool truncation
