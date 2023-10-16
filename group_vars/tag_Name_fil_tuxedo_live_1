@@ -99,7 +99,7 @@ maintenance_jobs:
       month: "*"
       script: "auth_letters_insert"
     - name: Process shuttle files and update auth code database entries
-      day_of_week: "*"
+      day_of_week: "2-6"
       day_of_month: "*"
       minute: "05"
       hour: "05"
