@@ -110,7 +110,7 @@ maintenance_jobs:
       script: "auth_letters_insert"
       disabled: true
     - name: Process shuttle files and update auth code database entries
-      day_of_week: "*"
+      day_of_week: "2-6"
       day_of_month: "*"
       minute: "05"
       hour: "05"
