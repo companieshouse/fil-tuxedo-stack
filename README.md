@@ -7,7 +7,7 @@ This project encapsulates the infrastructure and deployment code for FIL Tuxedo 
 
 The remainder of this document contains information that is specific to the branch in which it appears.
 
-## Infrastructure
+## Deployment
 
 This branch (i.e. `deployment`) contains the deployment code responsible for deploying FIL Tuxedo services and is composed of multiple Ansible roles which are used primarily in CI to provision Informix database servers and deploy groups of FIL Tuxedo services to a given environment.
 
