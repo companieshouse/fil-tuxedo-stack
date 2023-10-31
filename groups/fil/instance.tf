@@ -5,8 +5,11 @@ data "aws_vpc" "heritage" {
   }
 }
 
-data "aws_subnet_ids" "application" {
-  vpc_id = data.aws_vpc.heritage.id
+data "aws_subnets" "application" {
+  filter {
+    name   = "vpc-id"
+    values = [data.aws_vpc.heritage.id]
+  }
 
   filter {
     name   = "tag:Name"
@@ -15,8 +18,8 @@ data "aws_subnet_ids" "application" {
 }
 
 data "aws_subnet" "application" {
-  count = length(data.aws_subnet_ids.application.ids)
-  id    = tolist(data.aws_subnet_ids.application.ids)[count.index]
+  count = length(data.aws_subnets.application.ids)
+  id    = tolist(data.aws_subnets.application.ids)[count.index]
 }
 
 data "aws_ami" "fil_tuxedo" {
