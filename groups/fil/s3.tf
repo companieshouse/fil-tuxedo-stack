@@ -2,17 +2,6 @@ resource "aws_s3_bucket" "ef_presenter_data" {
   count = var.ef_presenter_data_bucket_enabled ? 1 : 0
 
   bucket = local.ef_presenter_data_bucket_name
-
-  # TODO Remove lifecycle block after migration to version 4.x of the Terraform
-  # AWS provider; this currently stops plan/apply operations from flip-flopping
-  # between adding/removing configuration; see the GitHub issue link for context:
-  # https://github.com/hashicorp/terraform-provider-aws/issues/23758
-  lifecycle {
-    ignore_changes = [
-      lifecycle_rule,
-      server_side_encryption_configuration
-    ]
-  }
 }
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "ef_presenter_data" {
