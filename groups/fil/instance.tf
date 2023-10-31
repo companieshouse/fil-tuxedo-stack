@@ -99,7 +99,7 @@ resource "aws_security_group" "common" {
       from_port   = service.value
       to_port     = service.value
       protocol    = "TCP"
-      cidr_blocks = data.aws_subnet.application.*.cidr_block
+      cidr_blocks = data.aws_subnet.application[*].cidr_block
     }
   }
 
@@ -111,7 +111,7 @@ resource "aws_security_group" "common" {
       from_port   = service.value
       to_port     = service.value
       protocol    = "TCP"
-      cidr_blocks = data.aws_subnet.application.*.cidr_block
+      cidr_blocks = data.aws_subnet.application[*].cidr_block
     }
   }
 
@@ -152,7 +152,7 @@ resource "aws_instance" "fil" {
       encrypted   = block_device.value.ebs.encrypted
       iops        = block_device.value.ebs.iops
       snapshot_id = block_device.value.ebs.snapshot_id
-      volume_size = var.lvm_block_devices[index(var.lvm_block_devices.*.lvm_physical_volume_device_node, block_device.value.device_name)].aws_volume_size_gb
+      volume_size = var.lvm_block_devices[index(var.lvm_block_devices[*].lvm_physical_volume_device_node, block_device.value.device_name)].aws_volume_size_gb
       volume_type = block_device.value.ebs.volume_type
     }
   }
