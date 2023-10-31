@@ -144,7 +144,7 @@ resource "aws_instance" "fil" {
   dynamic "ebs_block_device" {
     for_each = [
       for block_device in data.aws_ami.fil_tuxedo.block_device_mappings :
-        block_device if block_device.device_name != data.aws_ami.fil_tuxedo.root_device_name
+      block_device if block_device.device_name != data.aws_ami.fil_tuxedo.root_device_name
     ]
     iterator = block_device
     content {

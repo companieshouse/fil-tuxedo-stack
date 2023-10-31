@@ -6,16 +6,16 @@ data "cloudinit_config" "config" {
 
   part {
     content_type = "text/cloud-config"
-    content = templatefile("${path.module}/cloud-init/templates/system-config.yml.tpl", {})
+    content      = templatefile("${path.module}/cloud-init/templates/system-config.yml.tpl", {})
   }
 
   part {
-      content_type = "text/cloud-config"
-      content = templatefile("${path.module}/cloud-init/templates/tnsnames.ora.tpl", {
-        tnsnames = jsondecode(data.vault_generic_secret.tns_names.data.tnsnames)
-      })
-      merge_type = var.user_data_merge_strategy
-    }
+    content_type = "text/cloud-config"
+    content = templatefile("${path.module}/cloud-init/templates/tnsnames.ora.tpl", {
+      tnsnames = jsondecode(data.vault_generic_secret.tns_names.data.tnsnames)
+    })
+    merge_type = var.user_data_merge_strategy
+  }
 
   part {
     content_type = "text/cloud-config"

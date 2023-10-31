@@ -73,13 +73,13 @@ variable "instance_type" {
 
 variable "lvm_block_devices" {
   type = list(object({
-    aws_volume_size_gb: string,
-    filesystem_resize_tool: string,
-    lvm_logical_volume_device_node: string,
-    lvm_physical_volume_device_node: string,
+    aws_volume_size_gb              = string
+    filesystem_resize_tool          = string
+    lvm_logical_volume_device_node  = string
+    lvm_physical_volume_device_node = string
   }))
   description = "A list of objects representing LVM block devices; each LVM volume group is assumed to contain a single physical volume and each logical volume is assumed to belong to a single volume group; the filesystem for each logical volume will be expanded to use all available space within the volume group using the filesystem resize tool specified; block device configuration applies only on resource creation. Set the 'filesystem_resize_tool' and 'lvm_logical_volume_device_node' fields to empty strings if the block device contains no filesystem and should be excluded from the automatic filesystem resizing, such as when the block device represents a swap volume"
-  default = []
+  default     = []
 }
 
 variable "region" {
@@ -106,37 +106,43 @@ variable "service_subtype" {
 }
 
 variable "tuxedo_logs" {
-  type        = map(list(any))
+  type = map(list(
+    object({
+      name                  = string
+      log_retention_in_days = optional(string)
+      kms_key_id            = optional(string)
+    })
+  ))
   description = "A map whose keys represent server-side Tuxedo server groups with lists of objects representing individual log files for each server group. Each object is expected to have at a minimum a 'name' key. A single CloudWatch log group will be created for each object. Optional 'log_retention_in_days' and 'kms_key_id' attributes can be set per-file to override the default values."
   default = {
     ef = [
-      { name: "domain" },
-      { name: "domaudit" },
-      { name: "effesync-stderr" },
-      { name: "effesync-stdout" },
-      { name: "EFFESYNC" },
-      { name: "ULOG" }
+      { name = "domain" },
+      { name = "domaudit" },
+      { name = "effesync-stderr" },
+      { name = "effesync-stdout" },
+      { name = "EFFESYNC" },
+      { name = "ULOG" }
     ]
     prod = [
-      { name: "domain" },
-      { name: "domaudit" },
-      { name: "prod" },
-      { name: "ULOG" }
+      { name = "domain" },
+      { name = "domaudit" },
+      { name = "prod" },
+      { name = "ULOG" }
     ]
     scud = [
-      { name: "domain" },
-      { name: "domaudit" },
-      { name: "sms" },
-      { name: "sms-stderr" },
-      { name: "sms-stdout" },
-      { name: "smspoll" },
-      { name: "ULOG" }
+      { name = "domain" },
+      { name = "domaudit" },
+      { name = "sms" },
+      { name = "sms-stderr" },
+      { name = "sms-stdout" },
+      { name = "smspoll" },
+      { name = "ULOG" }
     ]
     cabs = [
-      { name: "domain" },
-      { name: "domaudit" },
-      { name: "cabs" },
-      { name: "ULOG" }
+      { name = "domain" },
+      { name = "domaudit" },
+      { name = "cabs" },
+      { name = "ULOG" }
     ]
   }
 }
@@ -145,10 +151,10 @@ variable "tuxedo_services" {
   type        = map(number)
   description = "A map whose key-value pairs represent server-side Tuxedo server groups and associated port numbers"
   default = {
-    ef    = 38000,
-    prod  = 38100,
-    scud  = 38200,
-    cabs  = 38300,
+    ef   = 38000
+    prod = 38100
+    scud = 38200
+    cabs = 38300
   }
 }
 
@@ -156,9 +162,9 @@ variable "informix_services" {
   type        = map(number)
   description = "A map whose key-value pairs represent Informix servers and associated port numbers"
   default = {
-    ef    = 6000,
-    prod  = 7000,
-    scud  = 8000,
+    ef   = 6000
+    prod = 7000
+    scud = 8000
   }
 }
 
