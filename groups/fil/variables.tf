@@ -44,18 +44,18 @@ variable "dns_zone_suffix" {
 
 variable "environment" {
   type        = string
-  description = "The environment name to be used when creating AWS resources"
+  description = "The environment name to be used when creating AWS resources."
 }
 
-variable "ef_presenter_data_bucket_enabled" {
+variable "ef_presenter_data_enabled" {
   type        = bool
-  description = "A boolean value representing whether to create an S3 bucket and associated resources for EF presenter data"
+  description = "A boolean value representing whether to enable the EF presenter data S3 bucket or not."
   default     = false
 }
 
 variable "ef_presenter_data_read_only_principals" {
   type        = list(string)
-  description = "An optional list of principal ARNs which will be granted read-only access to the EF preseter data bucket and use of the decryption key, applicable only when 'ef_presenter_data_bucket_enabled' is true"
+  description = "An optional list of principal ARNs which will be granted read-only access to the EF preseter data bucket and use of the decryption key, applicable only when 'ef_presenter_data_enabled' is true."
   default     = []
 }
 

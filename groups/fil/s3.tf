@@ -1,11 +1,11 @@
 resource "aws_s3_bucket" "ef_presenter_data" {
-  count = var.ef_presenter_data_bucket_enabled ? 1 : 0
+  count = local.ef_presenter_data_count
 
   bucket = local.ef_presenter_data_bucket_name
 }
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "ef_presenter_data" {
-  count = var.ef_presenter_data_bucket_enabled ? 1 : 0
+  count = local.ef_presenter_data_count
 
   bucket = aws_s3_bucket.ef_presenter_data[0].id
 
@@ -18,14 +18,14 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "ef_presenter_data
 }
 
 resource "aws_s3_bucket_policy" "ef_presenter_data" {
-  count = var.ef_presenter_data_bucket_enabled ? 1 : 0
+  count = local.ef_presenter_data_count
 
   bucket = aws_s3_bucket.ef_presenter_data[0].id
   policy = data.aws_iam_policy_document.ef_presenter_data_bucket[0].json
 }
 
 resource "aws_s3_bucket_lifecycle_configuration" "ef_presenter_data" {
-  count = var.ef_presenter_data_bucket_enabled ? 1 : 0
+  count = local.ef_presenter_data_count
 
   bucket = aws_s3_bucket.ef_presenter_data[0].id
 
@@ -43,7 +43,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "ef_presenter_data" {
 }
 
 resource "aws_s3_bucket_public_access_block" "ef_presenter_data" {
-  count = var.ef_presenter_data_bucket_enabled ? 1 : 0
+  count = local.ef_presenter_data_count
 
   bucket = aws_s3_bucket.ef_presenter_data[0].id
 

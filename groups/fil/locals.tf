@@ -37,21 +37,22 @@ locals {
     : log_group.arn
   ]
 
+  ef_presenter_data_count       = var.ef_presenter_data_enabled ? 1 : 0
   ef_presenter_data_bucket_name = "ef-presenter-data.${var.service_subtype}.${var.service}.${var.aws_account}.ch.gov.uk"
   ef_presenter_data_bucket_read_only_principals = (
-    var.ef_presenter_data_bucket_enabled ?
+    var.ef_presenter_data_enabled ?
     jsondecode(data.vault_generic_secret.ef_presenter[0].data.s3_bucket_read_only_principals) :
     []
   )
 
   instance_profile_writable_buckets = flatten([
     local.session_manager_bucket_name,
-    var.ef_presenter_data_bucket_enabled ? [local.ef_presenter_data_bucket_name] : []
+    var.ef_presenter_data_enabled ? [local.ef_presenter_data_bucket_name] : []
   ])
 
   instance_profile_kms_key_access_ids = flatten([
     local.ssm_kms_key_id,
-    var.ef_presenter_data_bucket_enabled ? [aws_kms_key.fil[0].key_id] : []
+    var.ef_presenter_data_enabled ? [aws_kms_key.fil[0].key_id] : []
   ])
 
   logs_kms_key_id            = data.vault_generic_secret.kms_keys.data["logs"]
