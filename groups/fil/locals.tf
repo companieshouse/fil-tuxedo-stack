@@ -18,12 +18,12 @@ locals {
   ssm_kms_key_id         = local.security_kms_keys_data.session-manager-kms-key-arn
 
   tuxedo_log_groups = merge([
-    for tuxedo_service_key, tuxedo_logs_list in var.tuxedo_logs : {
-      for tuxedo_log in tuxedo_logs_list : "${var.service_subtype}-${var.service}-${tuxedo_service_key}-${lower(tuxedo_log.name)}" => {
-        log_retention_in_days = tuxedo_log.log_retention_in_days != null ? tuxedo_log.log_retention_in_days : var.default_log_retention_in_days
-        kms_key_id            = tuxedo_log.kms_key_id != null ? tuxedo_log.kms_key_id : local.logs_kms_key_id
-        tuxedo_service        = tuxedo_service_key
-        log_name              = tuxedo_log.name
+    for tuxedo_service_group, log_groups in var.tuxedo_log_groups : {
+      for log_group in log_groups : "${var.service_subtype}-${var.service}-${tuxedo_service_group}-${lower(log_group.name)}" => {
+        log_retention_in_days = log_group.log_retention_in_days != null ? log_group.log_retention_in_days : var.default_log_retention_in_days
+        kms_key_id            = log_group.kms_key_id != null ? log_group.kms_key_id : local.logs_kms_key_id
+        tuxedo_service        = tuxedo_service_group
+        log_name              = log_group.name
         log_type              = "individual"
       }
     }
