@@ -17,13 +17,6 @@ locals {
   security_kms_keys_data = data.vault_generic_secret.security_kms_keys.data
   ssm_kms_key_id         = local.security_kms_keys_data.session-manager-kms-key-arn
 
-  tuxedo_services = flatten([
-    for tuxedo_server_type_key, tuxedo_service_port in var.tuxedo_services : {
-      tuxedo_server_type_key = tuxedo_server_type_key
-      tuxedo_service_port    = tuxedo_service_port
-    }
-  ])
-
   tuxedo_log_groups = merge([
     for tuxedo_service_key, tuxedo_logs_list in var.tuxedo_logs : {
       for tuxedo_log in tuxedo_logs_list : "${var.service_subtype}-${var.service}-${tuxedo_service_key}-${lower(tuxedo_log.name)}" => {
