@@ -26,7 +26,7 @@ variable "chips_cidr" {
 }
 
 variable "default_log_retention_in_days" {
-  type        = string
+  type        = number
   description = "The default log retention period in days for CloudWatch log groups"
   default     = 7
 }
@@ -109,11 +109,11 @@ variable "tuxedo_logs" {
   type = map(list(
     object({
       name                  = string
-      log_retention_in_days = optional(string)
+      log_retention_in_days = optional(number)
       kms_key_id            = optional(string)
     })
   ))
-  description = "A map whose keys represent server-side Tuxedo server groups with lists of objects representing individual log files for each server group. Each object is expected to have at a minimum a 'name' key. A single CloudWatch log group will be created for each object. Optional 'log_retention_in_days' and 'kms_key_id' attributes can be set per-file to override the default values."
+  description = "A map whose keys represent server-side Tuxedo server groups with lists of objects representing individual log files for each server group. Each object is expected to have at a minimum a 'name' key. A single CloudWatch log group will be created for each object. Optional 'log_retention_in_days' and 'kms_key_id' attributes can be set per-file to override the default values ('log_retention_in_days' defaults to the value of the 'default_log_retention_in_days' variable, and 'kms_key_id' defaults to a value sourced from Hashicorp Vault)."
   default = {
     ef = [
       { name = "domain" },
