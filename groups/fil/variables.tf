@@ -50,7 +50,7 @@ variable "environment" {
 variable "ef_presenter_data_enabled" {
   type        = bool
   description = "A boolean value representing whether to enable the EF presenter data bucket or not."
-  default     = true
+  default     = false
 }
 
 variable "ef_presenter_data_read_only_principals" {
