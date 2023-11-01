@@ -17,7 +17,7 @@ variable "application_subnet_pattern" {
 
 variable "aws_account" {
   type        = string
-  description = "The name of the AWS account in which resources are being provisined."
+  description = "The name of the AWS account in which resources will be provisioned."
 }
 
 variable "chips_cidr" {
@@ -50,13 +50,23 @@ variable "environment" {
 variable "ef_presenter_data_enabled" {
   type        = bool
   description = "A boolean value representing whether to enable the EF presenter data bucket or not."
-  default     = false
+  default     = true
 }
 
 variable "ef_presenter_data_read_only_principals" {
   type        = list(string)
-  description = "An optional list of principal ARNs which will be granted read-only access to the EF preseter data bucket and use of the KMS key for object decryption. Applicable only when 'ef_presenter_data_enabled' is true."
+  description = "An optional list of principal ARNs which will be granted read-only access to the EF presenter data bucket and usage of the KMS key for object decryption. Applicable only when 'ef_presenter_data_enabled' is true."
   default     = []
+}
+
+variable "informix_services" {
+  type        = map(number)
+  description = "A map whose key-value pairs represent Informix servers and associated port numbers."
+  default = {
+    ef   = 6000
+    prod = 7000
+    scud = 8000
+  }
 }
 
 variable "instance_count" {
@@ -105,6 +115,11 @@ variable "service_subtype" {
   default     = "fil"
 }
 
+variable "ssh_master_public_key" {
+  type        = string
+  description = "The SSH master public key; EC2 instance connect should be used for regular connectivity."
+}
+
 variable "tuxedo_log_groups" {
   type = map(list(
     object({
@@ -149,28 +164,13 @@ variable "tuxedo_log_groups" {
 
 variable "tuxedo_services" {
   type        = map(number)
-  description = "A map whose key-value pairs represent server-side Tuxedo server groups and associated port numbers."
+  description = "A map whose key-value pairs represent Tuxedo service groups and associated port numbers."
   default = {
     ef   = 38000
     prod = 38100
     scud = 38200
     cabs = 38300
   }
-}
-
-variable "informix_services" {
-  type        = map(number)
-  description = "A map whose key-value pairs represent Informix servers and associated port numbers."
-  default = {
-    ef   = 6000
-    prod = 7000
-    scud = 8000
-  }
-}
-
-variable "ssh_master_public_key" {
-  type        = string
-  description = "The SSH master public key; EC2 instance connect should be used for regular connectivity."
 }
 
 variable "team" {
