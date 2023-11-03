@@ -1,38 +1,3 @@
-data "aws_vpc" "heritage" {
-  filter {
-    name   = "tag:Name"
-    values = ["vpc-heritage-${var.environment}"]
-  }
-}
-
-data "aws_subnets" "application" {
-  filter {
-    name   = "vpc-id"
-    values = [data.aws_vpc.heritage.id]
-  }
-
-  filter {
-    name   = "tag:Name"
-    values = [var.application_subnet_pattern]
-  }
-}
-
-data "aws_subnet" "application" {
-  count = length(data.aws_subnets.application.ids)
-  id    = tolist(data.aws_subnets.application.ids)[count.index]
-}
-
-data "aws_ami" "fil_tuxedo" {
-  owners      = [var.ami_owner_id]
-  most_recent = true
-  name_regex  = "^${var.service_subtype}-${var.service}-ami-\\d.\\d.\\d"
-
-  filter {
-    name   = "name"
-    values = ["${var.service_subtype}-${var.service}-ami-${var.ami_version_pattern}"]
-  }
-}
-
 resource "aws_placement_group" "fil" {
   name     = local.common_resource_name
   strategy = "spread"
@@ -99,7 +64,7 @@ resource "aws_security_group" "common" {
       from_port   = service.value
       to_port     = service.value
       protocol    = "TCP"
-      cidr_blocks = data.aws_subnet.application.*.cidr_block
+      cidr_blocks = data.aws_subnet.application[*].cidr_block
     }
   }
 
@@ -111,7 +76,7 @@ resource "aws_security_group" "common" {
       from_port   = service.value
       to_port     = service.value
       protocol    = "TCP"
-      cidr_blocks = data.aws_subnet.application.*.cidr_block
+      cidr_blocks = data.aws_subnet.application[*].cidr_block
     }
   }
 
@@ -144,7 +109,7 @@ resource "aws_instance" "fil" {
   dynamic "ebs_block_device" {
     for_each = [
       for block_device in data.aws_ami.fil_tuxedo.block_device_mappings :
-        block_device if block_device.device_name != data.aws_ami.fil_tuxedo.root_device_name
+      block_device if block_device.device_name != data.aws_ami.fil_tuxedo.root_device_name
     ]
     iterator = block_device
     content {
@@ -152,7 +117,7 @@ resource "aws_instance" "fil" {
       encrypted   = block_device.value.ebs.encrypted
       iops        = block_device.value.ebs.iops
       snapshot_id = block_device.value.ebs.snapshot_id
-      volume_size = var.lvm_block_devices[index(var.lvm_block_devices.*.lvm_physical_volume_device_node, block_device.value.device_name)].aws_volume_size_gb
+      volume_size = var.lvm_block_devices[index(var.lvm_block_devices[*].lvm_physical_volume_device_node, block_device.value.device_name)].aws_volume_size_gb
       volume_type = block_device.value.ebs.volume_type
     }
   }

@@ -1,8 +1,3 @@
-data "aws_route53_zone" "fil" {
-  name     = local.dns_zone
-  vpc_id   = data.aws_vpc.heritage.id
-}
-
 resource "aws_route53_record" "instance" {
   count = var.instance_count
 

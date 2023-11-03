@@ -8,4 +8,4 @@ instance_type = "m5.large"
 
 root_volume_size = 100
 
-ef_presenter_data_bucket_enabled = true
+ef_presenter_data_enabled = true
