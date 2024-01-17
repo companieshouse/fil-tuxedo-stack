@@ -95,7 +95,7 @@
 - name: Disable cron job output emails
   cronvar:
     name: MAILTO
-    value: ""
+    value: root@localhost
     cron_file: "{{ item }}"
   loop:
     - /etc/crontab
