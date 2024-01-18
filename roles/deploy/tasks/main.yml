@@ -82,31 +82,7 @@
     src: templates/logrotate.tuxedo.conf.j2
     dest: "{{ tuxedo_log_rotation_config_path }}"
 
-- name: Create system cron job for log rotation
-  cron:
-    name: Log rotation for Tuxedo services
-    weekday: "*"
-    minute: "*/15"
-    hour: "*"
-    user: "root"
-    job: "logrotate {{ tuxedo_log_rotation_config_path }}"
-    cron_file: /etc/crontab
-
-- name: Configure recipient address for system cron job emails
-  cronvar:
-    name: MAILTO
-    value: root@localhost
-    cron_file: "{{ item }}"
-  loop:
-    - /etc/crontab
-    - /etc/cron.d/clamav-update
-
-- name: Create maintenance job for periodic mail spool truncation
-  cron:
-    name: Periodic mail spool truncation
-    special_time: weekly
-    cron_file: /etc/crontab
-    job: truncate -s 0 /var/spool/mail/*
+- import_tasks: cron.yml
 
 - name: Allow logrotate to modify CloudWatch log
   community.general.sefcontext:
