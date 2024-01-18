@@ -58,6 +58,12 @@
     disabled: "{{ item.disabled | default(false) }}"
   loop: "{{ informix_maintenance_jobs | default([]) }}"
 
+- name: Configure recipient address for Informix cron jobs
+  cronvar:
+    name: MAILTO
+    value: root@localhost
+    user: "{{ informix_user }}"
+
 - name: Install additional tools for Informix maintenance scripts
   yum:
     name:
