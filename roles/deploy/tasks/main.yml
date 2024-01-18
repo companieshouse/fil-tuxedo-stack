@@ -92,7 +92,7 @@
     job: "logrotate {{ tuxedo_log_rotation_config_path }}"
     cron_file: /etc/crontab
 
-- name: Disable cron job output emails
+- name: Configure recipient address for system cron job emails
   cronvar:
     name: MAILTO
     value: root@localhost
@@ -103,9 +103,9 @@
 
 - name: Create maintenance job for periodic mail spool truncation
   cron:
-    name: Peridic mail spool truncation
+    name: Periodic mail spool truncation
     special_time: weekly
-    user: root
+    cron_file: /etc/crontab
     job: truncate -s 0 /var/spool/mail/*
 
 - name: Allow logrotate to modify CloudWatch log
