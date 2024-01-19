@@ -24,6 +24,13 @@
     cron_file: "{{ item }}"
   loop:
     - /etc/crontab
+    - /etc/cron.d/0hourly
     - /etc/cron.d/clamav-update
     - /etc/cron.d/log-rotation
     - /etc/cron.d/mail-spool
+
+- name: Configure recipient addresses for system anacron jobs
+  lineinfile:
+    path: /etc/anacrontab
+    regexp: '^MAILTO='
+    line: MAILTO=root@localhost
