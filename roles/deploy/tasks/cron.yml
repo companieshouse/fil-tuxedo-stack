@@ -6,7 +6,7 @@
     minute: "*/15"
     hour: "*"
     user: "root"
-    job: "logrotate {{ tuxedo_log_rotation_config_path }}"
+    job: "/sbin/logrotate {{ tuxedo_log_rotation_config_path }}"
     cron_file: /etc/cron.d/log-rotation
 
 - name: Create maintenance job for periodic mail spool truncation
@@ -14,7 +14,7 @@
     name: Periodic mail spool truncation
     special_time: weekly
     user: root
-    job: truncate -s 0 /var/spool/mail/*
+    job: /bin/truncate -s 0 /var/spool/mail/*
     cron_file: /etc/cron.d/mail-spool
 
 - name: Configure recipient addresses for system cron jobs
