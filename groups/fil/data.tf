@@ -1,5 +1,9 @@
 data "aws_caller_identity" "current" {}
 
+data "aws_ec2_managed_prefix_list" "shared_services_management" {
+  name = "shared-services-management-cidrs"
+}
+
 data "aws_iam_roles" "sso_administrator" {
   name_regex  = "AWSReservedSSO_AdministratorAccess.*"
   path_prefix = "/aws-reserved/sso.amazonaws.com/${var.region}"
