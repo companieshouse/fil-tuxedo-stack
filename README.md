@@ -17,3 +17,4 @@ Refer to the documentation for each of the following roles for more information:
 * [deploy](roles/deploy/README.md) - for deploying FIL Tuxedo applications
 * [devices](roles/devices/README.md) - for database storage iSCSI device discovery and configuration
 * [management](roles/management/README.md) - for deploying Informix cron jobs and management tools
+* [nfs](roles/nfs/README.md) - for configuring and mounting NFS shares
