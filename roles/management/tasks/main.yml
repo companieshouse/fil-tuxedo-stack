@@ -30,8 +30,8 @@
 - name: "Create Informix maintenance jobs log directory"
   file:
     path: "{{ informix_logs_path }}/common"
-    owner: "{{ informix_service_user }}"
-    group: "{{ informix_service_group }}"
+    owner: "{{ informix_user }}"
+    group: "{{ informix_group }}"
     mode: 0755
     state: directory
 

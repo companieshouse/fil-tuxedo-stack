@@ -108,5 +108,18 @@ tuxedo_service_config:
     ipc_key: "{{ tuxedo_service_ipc_key_start + (3 * tuxedo_service_ipc_key_increment) | int }}"
     local_domain_port: "{{ tuxedo_service_domain_port_start + (3 * tuxedo_service_domain_port_increment) | int }}"
 
+data_directories:
+  scud:
+    - path: /home/scud/txt
+    - path: /home/scud/fiche
+  ef:
+    - path: /data1/redtitan/lettbak
+    - path: /data1/redtitan/lettemp
+    - path: /data1/redtitan/lettin
+    - path: /data1/redtitan/printbak
+    - path: /data1/redtitan/printout
+
+informix_install_path: /opt/informix/14.10
+
 deployment_dir: deployment
 rollback_dir: rollback
