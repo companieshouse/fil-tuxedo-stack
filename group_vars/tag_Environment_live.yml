@@ -185,15 +185,3 @@ nfs_mounts_config:
     src: "192.168.255.35:/image_team_tools"
   - path: "/mnt/nfs/image_team_sql"
     src: "192.168.255.35:/image_team_sql"
-
-iscsi_devices:
-  - alias: db_dump
-    filesystem:
-      type: xfs
-      mount_path: /db_dump
-  - alias: scud
-    raw_character_device_path: /dev/raw/raw1
-  - alias: prod
-    raw_character_device_path: /dev/raw/raw2
-  - alias: ef
-    raw_character_device_path: /dev/raw/raw3
