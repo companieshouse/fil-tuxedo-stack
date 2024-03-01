@@ -128,7 +128,7 @@ informix_service_config:
     users:
       - name: scudadmin
 
-nfsmounts:
+nfs_mounts_config:
   - path: "/DBshare"
     src: "192.168.255.20:/DBshare"
 
