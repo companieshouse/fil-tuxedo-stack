@@ -1,3 +1,27 @@
 ---
 
+iscsi_devices_config:
+  - alias: db_dump
+    filesystem:
+      type: xfs
+      path: /db_dump
+      mode: "770"
+      owner: informix
+      group: informix
+  - alias: scud
+    raw_character_device:
+      path: /dev/raw/raw1
+      owner: informix
+      group: informix
+  - alias: prod
+    raw_character_device:
+      path: /dev/raw/raw2
+      owner: informix
+      group: informix
+  - alias: ef
+    raw_character_device:
+      path: /dev/raw/raw3
+      owner: informix
+      group: informix
+
 vault_base_path: /applications/heritage-{{ environment_name }}-eu-west-2/fil-tuxedo
