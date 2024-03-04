@@ -9,12 +9,10 @@ The remainder of this document contains information that is specific to the bran
 
 ## Deployment
 
-This branch (i.e. `deployment`) contains the deployment code responsible for deploying FIL Tuxedo services and is composed of multiple Ansible roles which are used primarily in CI to provision Informix database servers and deploy groups of FIL Tuxedo services to a given environment.
+This branch (i.e. `deployment`) contains the deployment code responsible for deploying FIL Tuxedo services and contains several Ansible playbooks which are used in CI/CD pipelines to provision servers in AWS:
 
-Refer to the documentation for each of the following roles for more information:
-
-* [database](roles/database/README.md) - for provisioning Informix database server(s), dbspaces, chunks
-* [deploy](roles/deploy/README.md) - for deploying FIL Tuxedo applications
-* [devices](roles/devices/README.md) - for database storage iSCSI device discovery and configuration
-* [management](roles/management/README.md) - for deploying Informix cron jobs and management tools
-* [nfs](roles/nfs/README.md) - for configuring and mounting NFS shares
+- [database.yml](database.yml) - provision Informix database server(s), dbspaces, and chunks
+- [deploy.yml](deploy.yml) - deploy application services and configs
+- [devices.yml](devices.yml) - discover and configure iSCSI devices
+- [management.yml](management.yml) - deploy Informix cron jobs and management tools
+- [nfs.yml](nfs.yml) - configure and mount persistent NFS shares
