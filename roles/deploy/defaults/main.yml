@@ -119,5 +119,7 @@ data_directories:
     - path: /data1/redtitan/printbak
     - path: /data1/redtitan/printout
 
+informix_install_path: /opt/informix/14.10
+
 deployment_dir: deployment
 rollback_dir: rollback
