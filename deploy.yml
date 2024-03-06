@@ -3,10 +3,10 @@
 # Provision Ansible controller with SSH key for remote
 - hosts: localhost
   roles:
-    - ssh-key
-  vars:
-    ssh_key_name: ansible_remote
-    hashicorp_vault_private_key_path: "/applications/heritage-{{ environment_name }}-eu-west-2/fil-tuxedo/aws"
+    - role: ssh-key
+      vars:
+        ssh_key_name: ansible_remote
+        hashicorp_vault_private_key_path: "{{ vault_base_path }}/aws"
 
 # Deploy Tuxedo services
 - hosts: aws_ec2
@@ -16,5 +16,5 @@
   roles:
     - role: aws-cli
       vars:
-        temp_dir: "/home/{{ ansible_user }}"
+        aws_cli_temp_dir: "/home/{{ ansible_user }}"
     - role: deploy
