@@ -248,7 +248,7 @@ maintenance_jobs:
       script: "sage_extract"
       disabled: true
 
-informix_maintenance_jobs:
+informix_management_cron_jobs:
   - name: Stop all logical log continuous backup processes
     day_of_week: "*"
     day_of_month: "*"
