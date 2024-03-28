@@ -1,5 +1,7 @@
 ---
 
+informix_logs_path: /var/log/informix
+
 iscsi_devices_config:
   - alias: db_dump
     filesystem:

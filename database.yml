@@ -17,3 +17,4 @@
     - role: informix-db
       vars:
         informix_db_vault_path: "{{ vault_base_path }}/informix"
+        informix_db_logs_path: "{{ informix_logs_path }}"
