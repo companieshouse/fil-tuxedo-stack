@@ -1,6 +1,6 @@
 ---
 
-informix_db_server_name_suffix: _secondary
+informix_server_name_suffix: _secondary
 
 informix_management_cron_jobs:
   - name: Stop all logical log continuous backup processes
