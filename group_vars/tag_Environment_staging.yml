@@ -130,4 +130,4 @@ informix_db_config:
 
 nfs_mounts_config:
   - path: "/DBshare"
-    src: "192.168.255.20:/DBshare"
+    src: "cvonfs.staging.heritage.aws.internal:/DBshare"
