@@ -91,3 +91,13 @@ informix_host_specific_server_connections:
       connection_type: onsoctcp
       host: "{{ informix_host }}"
       service_or_port: 3005
+
+maintenance_jobs:
+  ef:
+    - name: Update status of auth change entries with missing auth codes
+      day_of_week: "*"
+      day_of_month: "*"
+      minute: "*/10"
+      hour: "*"
+      month: "*"
+      script: "auth_letters_status"
