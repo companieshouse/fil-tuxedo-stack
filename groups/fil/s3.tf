@@ -52,11 +52,3 @@ resource "aws_s3_bucket_public_access_block" "ef_presenter_data" {
   ignore_public_acls      = true
   restrict_public_buckets = true
 }
-
-module "s3_access_logging" {
-  source = "git@github.com:companieshouse/terraform-modules//aws/s3_access_logging?ref=tags/1.0.262"
-
-  aws_account         = var.aws_account
-  aws_region          = var.region
-  source_s3_bucket_id = aws_s3_bucket.ef_presenter_data.id
-}
