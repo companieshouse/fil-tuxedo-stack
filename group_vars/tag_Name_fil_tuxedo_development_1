@@ -1,0 +1,77 @@
+---
+
+informix_server_name_suffix: _primary
+
+informix_management_cron_jobs:
+  - name: Stop all logical log continuous backup processes
+    day_of_week: "*"
+    day_of_month: "*"
+    minute: "05"
+    hour: "00"
+    month: "*"
+    script: "stop_all_logicals"
+  - name: Informix EF database logical log archive
+    day_of_week: "*"
+    day_of_month: "*"
+    minute: "10"
+    hour: "00"
+    month: "*"
+    script: "logical_log_archive ef"
+  - name: Informix EF database level zero backup
+    day_of_week: "*"
+    day_of_month: "*"
+    minute: "20"
+    hour: "00"
+    month: "*"
+    script: "level_zero_backup ef"
+  - name: Informix EF database statistics update
+    day_of_week: "*"
+    day_of_month: "*"
+    minute: "30"
+    hour: "00"
+    month: "*"
+    script: "update_statistics ef"
+  - name: Informix PROD database logical log archive
+    day_of_week: "*"
+    day_of_month: "*"
+    minute: "11"
+    hour: "01"
+    month: "*"
+    script: "logical_log_archive prod"
+  - name: Informix PROD database level zero backup
+    day_of_week: "*"
+    day_of_month: "*"
+    minute: "21"
+    hour: "01"
+    month: "*"
+    script: "level_zero_backup prod"
+  - name: Informix PROD database statistics update
+    day_of_week: "*"
+    day_of_month: "*"
+    minute: "31"
+    hour: "01"
+    month: "*"
+    script: "update_statistics prod"
+  - name: Informix SCUD database logical log archive
+    day_of_week: "*"
+    day_of_month: "*"
+    minute: "12"
+    hour: "02"
+    month: "*"
+    script: "logical_log_archive scud"
+  - name: Informix SCUD database level zero backup
+    day_of_week: "*"
+    day_of_month: "*"
+    minute: "22"
+    hour: "02"
+    month: "*"
+    script: "level_zero_backup scud"
+  - name: Informix SCUD database statistics update
+    day_of_week: "*"
+    day_of_month: "*"
+    minute: "32"
+    hour: "02"
+    month: "*"
+    script: "update_statistics scud"
+
+informix_host: instance-1.fil.tuxedo.development.heritage.aws.internal
