@@ -20,7 +20,7 @@ provider "aws" {
 ####################################################################################################
 
 module "s3_access_logging" {
-  source = "git@github.com:companieshouse/terraform-modules//aws/s3_access_logging?ref=tags/1.0.275"
+  source = "git@github.com:companieshouse/terraform-modules//aws/s3_access_logging?ref=tags/1.0.276"
 
   count = local.ef_presenter_data_count
 
