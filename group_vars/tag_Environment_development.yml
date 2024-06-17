@@ -12,6 +12,34 @@
 #   - prod 1 (primary/secondary)
 #   - scud 2 (primary/secondary)
 
+iscsi_devices_config:
+  - alias: db_dump
+    multipath: no
+    filesystem:
+      type: xfs
+      path: /db_dump
+      mode: "770"
+      owner: informix
+      group: informix
+  - alias: scud
+    multipath: no
+    raw_character_device:
+      path: /dev/raw/raw1
+      owner: informix
+      group: informix
+  - alias: prod
+    multipath: no
+    raw_character_device:
+      path: /dev/raw/raw2
+      owner: informix
+      group: informix
+  - alias: ef
+    multipath: no
+    raw_character_device:
+      path: /dev/raw/raw3
+      owner: informix
+      group: informix
+
 informix_server_id_increment: 1
 informix_server_id_start: 0
 informix_server_port_increment: 1000
