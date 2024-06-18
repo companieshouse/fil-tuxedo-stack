@@ -1,6 +1,6 @@
 ---
 
-# Staging environment
+# Development environment
 #
 # Server port mappings:
 #   - ef   6000 (primary/secondary)
@@ -14,7 +14,7 @@
 
 iscsi_devices_config:
   - alias: db_dump
-    multipath: yes
+    multipath: no
     filesystem:
       type: xfs
       path: /db_dump
@@ -22,19 +22,19 @@ iscsi_devices_config:
       owner: informix
       group: informix
   - alias: scud
-    multipath: yes
+    multipath: no
     raw_character_device:
       path: /dev/raw/raw1
       owner: informix
       group: informix
   - alias: prod
-    multipath: yes
+    multipath: no
     raw_character_device:
       path: /dev/raw/raw2
       owner: informix
       group: informix
   - alias: ef
-    multipath: yes
+    multipath: no
     raw_character_device:
       path: /dev/raw/raw3
       owner: informix
@@ -45,10 +45,6 @@ informix_server_id_start: 0
 informix_server_port_increment: 1000
 informix_server_port_start: 6000
 
-ef_presenter_data:
-  enabled: yes
-  vault_path: "{{ vault_base_path }}/ef-presenter"
-
 cloudwatch_agent_overrides:
   metrics_enabled: true
 
@@ -56,7 +52,6 @@ informix_db_config:
   ef:
     server_id: "{{ informix_server_id_start + (0 * informix_server_id_increment) | int }}"
     server_port: "{{ informix_server_port_start + (0 * informix_server_port_increment) | int }}"
-    server_aliases: "efstgadmin,efilestgadmin"
     dbspaces:
       root:
         initial_chunk:
@@ -80,11 +75,11 @@ informix_db_config:
           service_or_port: localhost
         - server_name: ef_primary
           connection_type: onsoctcp
-          host: instance-1.fil.tuxedo.staging.heritage.aws.internal
+          host: instance-1.fil.tuxedo.development.heritage.aws.internal
           service_or_port: "{{ informix_server_port_start + (0 * informix_server_port_increment) | int }}"
         - server_name: ef_secondary
           connection_type: onsoctcp
-          host: instance-2.fil.tuxedo.staging.heritage.aws.internal
+          host: instance-2.fil.tuxedo.development.heritage.aws.internal
           service_or_port: "{{ informix_server_port_start + (0 * informix_server_port_increment) | int }}"
     users:
       - name: efadmin
@@ -114,16 +109,15 @@ informix_db_config:
           service_or_port: localhost
         - server_name: prod_primary
           connection_type: onsoctcp
-          host: instance-1.fil.tuxedo.staging.heritage.aws.internal
+          host: instance-1.fil.tuxedo.development.heritage.aws.internal
           service_or_port: "{{ informix_server_port_start + (1 * informix_server_port_increment) | int }}"
         - server_name: prod_secondary
           connection_type: onsoctcp
-          host: instance-2.fil.tuxedo.staging.heritage.aws.internal
+          host: instance-2.fil.tuxedo.development.heritage.aws.internal
           service_or_port: "{{ informix_server_port_start + (1 * informix_server_port_increment) | int }}"
   scud:
     server_id: "{{ informix_server_id_start + (2 * informix_server_id_increment) | int }}"
     server_port: "{{ informix_server_port_start + (2 * informix_server_port_increment) | int }}"
-    server_aliases: "scud_stg_svr"
     dbspaces:
       root:
         initial_chunk:
@@ -147,15 +141,9 @@ informix_db_config:
           service_or_port: localhost
         - server_name: scud_primary
           connection_type: onsoctcp
-          host: instance-1.fil.tuxedo.staging.heritage.aws.internal
+          host: instance-1.fil.tuxedo.development.heritage.aws.internal
           service_or_port: "{{ informix_server_port_start + (2 * informix_server_port_increment) | int }}"
         - server_name: scud_secondary
           connection_type: onsoctcp
-          host: instance-2.fil.tuxedo.staging.heritage.aws.internal
+          host: instance-2.fil.tuxedo.development.heritage.aws.internal
           service_or_port: "{{ informix_server_port_start + (2 * informix_server_port_increment) | int }}"
-    users:
-      - name: scudadmin
-
-nfs_mounts_config:
-  - path: "/DBshare"
-    src: "192.168.255.24:/DBshare"
