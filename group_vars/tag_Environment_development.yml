@@ -81,8 +81,6 @@ informix_db_config:
           connection_type: onsoctcp
           host: instance-2.fil.tuxedo.development.heritage.aws.internal
           service_or_port: "{{ informix_server_port_start + (0 * informix_server_port_increment) | int }}"
-    users:
-      - name: efadmin
   prod:
     server_id: "{{ informix_server_id_start + (1 * informix_server_id_increment) | int }}"
     server_port: "{{ informix_server_port_start + (1 * informix_server_port_increment) | int }}"
