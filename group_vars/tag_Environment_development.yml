@@ -12,6 +12,9 @@
 #   - prod 1 (primary/secondary)
 #   - scud 2 (primary/secondary)
 
+informix_management_alerts_enabled: no
+informix_management_stats_enabled: no
+
 iscsi_devices_config:
   - alias: db_dump
     multipath: no
