@@ -64,7 +64,7 @@
   unarchive:
     src: "{{ application_artifact_path }}"
     dest: "{{ application_artifact_files.path }}"
-    remote_src: no
+    remote_src: false
     owner: root
     group: "{{ tuxedo_service_group }}"
     mode: 0755

@@ -1,13 +1,13 @@
 ---
 
 alerts:
-  enabled: no
+  enabled: false
 
 stats:
-  enabled: no
+  enabled: false
 
 ef_presenter_data:
-  enabled: no
+  enabled: false
 
 sms_poll_daemon_enabled: false
 
