@@ -137,5 +137,5 @@ Configuration of the printer device used by SMS services is controlled by the va
 > [!NOTE] Note
 > The following caveats apply to hosts that have already been provisioned by this role and therefore contain existing printer configuration:
 >
-> -  Changing the `sms_printer_enabled` value from `true` to `false` will remove the printer configuration and disable the `cups` and `colord` services
-> - Modifying any of the variables above (excluding `sms_printer_enabled`) will not result in changes being made to an existing printer configuration; instead, remove the printer from the host by running `lpadmin -x <printer-name>` first and then execute this role against the host
+> - Changing the `sms_printer_enabled` value from `true` to `false` will remove the printer configuration and disable the `cups` and `colord` services
+> - Modifying any of the variables above (excluding `sms_printer_enabled`) will not result in changes being made to an existing printer configuration; instead, remove the printer from the host by running `lpadmin -x <printer-name>` first and then execute this role against the host to enact the new configuration
