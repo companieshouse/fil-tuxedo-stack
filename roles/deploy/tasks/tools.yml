@@ -23,7 +23,7 @@
   ignore_errors: yes
 
 - name: Add SMS printer configuration
-  shell: "lpadmin -p {{ sms_printer_name }} -E -v {{ sms_printer_uri }} -m {{ sms_printer_model }} && touch /etc/fil-tuxedo-stack-deploy-provisioned-sms-printer"
+  shell: "lpadmin -p {{ sms_printer_name }} -E -v {{ sms_printer_uri }} -m {{ sms_printer_model }}"
   args:
     creates: /etc/fil-tuxedo-stack-deploy-provisioned-sms-printer
   when: sms_printer_enabled and sms_printer_exists is failed
