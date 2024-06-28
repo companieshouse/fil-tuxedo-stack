@@ -9,6 +9,15 @@
     - cups
     - colord
 
+- name: Stop printer support services
+  systemd:
+    name: "{{ item }}"
+    state: stopped
+    enabled: no
+  loop:
+    - cups
+    - colord
+
 - name: Restart Postfix service
   systemd:
     name: postfix
