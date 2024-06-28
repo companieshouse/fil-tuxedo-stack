@@ -124,7 +124,7 @@ The resulting directory will be created at the path `/home/scud/fiche` with `scu
 
 ### SMS printer configuration
 
-The following variables control the configuration of a printer for SMS services: 
+Configuration of the printer device used by SMS services is controlled by the variables listed below. The default configuration is suitable for use in development environments where no physical printer is used (i.e. on-disk PDF files will be generated instead). Override the `sms_printer_uri` and `sms_printer_model` variables for other environments that require actual printer support.
 
 | Name                  | Default        | Description                          |
 |-----------------------|----------------|--------------------------------------|
@@ -135,4 +135,7 @@ The following variables control the configuration of a printer for SMS services:
 | `sms_printer_pdf_output_dir` | `/var/spool/cups-pdf/${USER}` | The output directory for PDF files generated when using the CUPS PDF printer. |
 
 > [!NOTE] Note
-> The default configuration is suitable for use in development environments where no physical printer is used (i.e. on-disk PDF files will be generated instead). Override the `sms_printer_uri` and `sms_printer_model` variables for other environments that require actual printer support.
+> The following caveats apply to hosts that have already been provisioned by this role and therefore contain existing printer configuration:
+>
+> -  Changing the `sms_printer_enabled` value from `true` to `false` will remove the printer configuration and disable the `cups` and `colord` services
+> - Modifying any of the variables above (excluding `sms_printer_enabled`) will not result in changes being made to an existing printer configuration; instead, remove the printer from the host by running `lpadmin -x <printer-name>` first and then execute this role against the host
