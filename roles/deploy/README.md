@@ -134,7 +134,7 @@ Configuration of the printer device used by SMS services is controlled by the va
 | `sms_printer_model`   | `CUPS-PDF.ppd` | The path to a PostScript Printer Description (PPD) file. |
 | `sms_printer_pdf_output_dir` | `/var/spool/cups-pdf/${USER}` | The output directory for PDF files generated when using the CUPS PDF printer. |
 
-> [!NOTE] Note
+> [!NOTE]
 > The following caveats apply to hosts that have already been provisioned by this role and therefore contain existing printer configuration:
 >
 > - Changing the `sms_printer_enabled` value from `true` to `false` will remove the printer configuration and disable the `cups` and `colord` services
