@@ -76,7 +76,7 @@ informix_management_cron_jobs:
 
 informix_host: instance-1.fil.tuxedo.staging.heritage.aws.internal
 
-informix_host_specific_server_connections:
+informix_db_host_connections:
   ef:
     - server_name: efstgadmin
       connection_type: onsoctcp
