@@ -11,6 +11,7 @@ This role implements a sequence of tasks required to deploy Tuxedo FIL services 
     * [Logging][5]
     * [Maintenance jobs][6]
     * [Data directories][7]
+    * [SMS printer configuration][8]
 
 [1]: #overview
 [2]: #configuration
@@ -19,6 +20,7 @@ This role implements a sequence of tasks required to deploy Tuxedo FIL services 
 [5]: #logging
 [6]: #maintenance-jobs
 [7]: #data-directories
+[8]: #sms-printer-configuration
 
 ## Overview
 
@@ -119,3 +121,21 @@ data_directories:
 ```
 
 The resulting directory will be created at the path `/home/scud/fiche` with `scud` user and group ownership, and default `0755` permissions.
+
+### SMS printer configuration
+
+Configuration of the printer device used by SMS services is controlled by the variables listed below. The default configuration is suitable for use in development environments where no physical printer is used (i.e. on-disk PDF files will be generated instead). Override the `sms_printer_uri` and `sms_printer_model` variables for other environments that require actual printer support.
+
+| Name                  | Default        | Description                          |
+|-----------------------|----------------|--------------------------------------|
+| `sms_printer_enabled` | `true`         | A boolean value specifying whether to enable the SMS printer configuration or not. |
+| `sms_printer_name`    | `sms-printer`  | The name to be used when adding the CUPS printer configuration. |
+| `sms_printer_uri`     | `cups-pdf:/`   | The device URI of the printer queue. |
+| `sms_printer_model`   | `CUPS-PDF.ppd` | The path to a PostScript Printer Description (PPD) file. |
+| `sms_printer_pdf_output_dir` | `/var/spool/cups-pdf/${USER}` | The output directory for PDF files generated when using the CUPS PDF printer. |
+
+> [!NOTE]
+> The following caveats apply to hosts that have already been provisioned by this role and therefore contain existing printer configuration:
+>
+> - Changing the `sms_printer_enabled` value from `true` to `false` will remove the printer configuration and disable the `cups` and `colord` services
+> - Modifying any of the variables above (excluding `sms_printer_enabled`) will not result in changes being made to an existing printer configuration; instead, remove the printer from the host by running `lpadmin -x <printer-name>` first and then execute this role against the host to enact the new configuration

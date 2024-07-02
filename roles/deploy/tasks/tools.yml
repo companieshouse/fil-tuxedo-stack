@@ -6,15 +6,37 @@
     name:
       - ftp
       - mailx
+
+- name: Install printing support tools
+  yum:
+    state: present
+    name:
       - cups
+      - cups-pdf
       - colord
   notify:
     - Start printer support services
 
-- name: Configure SMS printer
-  shell: "lpadmin -p {{ sms_printer_name }} -E -v {{ sms_printer_uri }} -m {{ sms_printer_model }} && touch /etc/fil-tuxedo-stack-deploy-provisioned-sms-printer"
-  args:
-    creates: /etc/fil-tuxedo-stack-deploy-provisioned-sms-printer
+- name: Check printer configuration exists
+  shell: "lpstat -p {{ sms_printer_name }}"
+  register: sms_printer_exists
+  ignore_errors: yes
+
+- name: Add SMS printer configuration
+  shell: "lpadmin -p {{ sms_printer_name }} -E -v {{ sms_printer_uri }} -m {{ sms_printer_model }}"
+  when: sms_printer_enabled and sms_printer_exists is failed
+
+- name: Set output path for SMS printer PDF files
+  lineinfile:
+    path: /etc/cups/cups-pdf.conf
+    regexp: '^Out '
+    line: "Out {{ sms_printer_pdf_output_dir }}"
+
+- name: Remove SMS printer configuration
+  shell: "lpadmin -x {{ sms_printer_name }}"
+  notify:
+    - Stop printer support services
+  when: not sms_printer_enabled and sms_printer_exists is succeeded
 
 - name: Disable mailx inbuilt SMTP relay
   replace:

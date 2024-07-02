@@ -11,9 +11,11 @@ ef_presenter_data:
 
 sms_poll_daemon_enabled: false
 
+sms_printer_enabled: true
 sms_printer_name: sms-printer
-sms_printer_uri: socket://172.19.12.18
-sms_printer_model: drv:///sample.drv/generic.ppd
+sms_printer_uri: cups-pdf:/
+sms_printer_model: CUPS-PDF.ppd
+sms_printer_pdf_output_dir: /var/spool/cups-pdf/${USER}
 
 cloudwatch_agent_defaults:
   path: /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl
