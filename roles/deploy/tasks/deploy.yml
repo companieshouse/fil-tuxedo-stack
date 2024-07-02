@@ -16,7 +16,7 @@
     tuxedo_logical_machine_id: "{{ tuxedo_user | upper }}_{{ tuxedo_logical_machine_id_suffix }}"
     tuxedo_machine_name: "{{ ansible_facts.hostname }}"
     tuxedo_user_id: "{{ getent_passwd[tuxedo_user][getent_uid_index] }}"
-  no_log: True
+  no_log: true
 
 - name: Retrieve alerts config from Hashicorp Vault
   set_fact:
@@ -82,7 +82,7 @@
     mode: 0644
   with_fileglob:
     - "{{ application_configs_path }}/{{ tuxedo_user }}/*.j2"
-  no_log: True
+  no_log: true
 
 - name: "{{ tuxedo_user }} : Create scripts directory"
   file:
@@ -205,7 +205,7 @@
   template:
     src: templates/cloudwatch-config-service.json.j2
     dest: "{{ cloudwatch_agent.config_dir }}/cloudwatch-config-{{ tuxedo_user }}.json"
-    trim_blocks: False
+    trim_blocks: false
 
 - name: "{{ tuxedo_user }} : Start Tuxedo services"
   become_user: "{{ tuxedo_user }}"
@@ -229,7 +229,7 @@
     group: "{{ tuxedo_user }}"
     mode: 0400
   when: stats.enabled
-  no_log: True
+  no_log: true
 
 - name: "{{ tuxedo_user }} : Create maintenance jobs"
   cron:
