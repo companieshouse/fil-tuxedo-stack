@@ -12,9 +12,9 @@
 #   - prod 1 (primary/secondary)
 #   - scud 2 (primary/secondary)
 
-informix_management_alerts_enabled: yes
+informix_management_alerts_enabled: true
 informix_management_alerts_vault_path: "{{ vault_base_path }}/alerts"
-informix_management_stats_enabled: yes
+informix_management_stats_enabled: true
 informix_management_stats_vault_path:  "{{ vault_base_path }}/stats"
 
 sms_printer_uri: socket://172.19.12.18
@@ -22,7 +22,7 @@ sms_printer_model: drv:///sample.drv/generic.ppd
 
 iscsi_devices_config:
   - alias: db_dump
-    multipath: yes
+    multipath: true
     filesystem:
       type: xfs
       path: /db_dump
@@ -30,19 +30,19 @@ iscsi_devices_config:
       owner: informix
       group: informix
   - alias: scud
-    multipath: yes
+    multipath: true
     raw_character_device:
       path: /dev/raw/raw1
       owner: informix
       group: informix
   - alias: prod
-    multipath: yes
+    multipath: true
     raw_character_device:
       path: /dev/raw/raw2
       owner: informix
       group: informix
   - alias: ef
-    multipath: yes
+    multipath: true
     raw_character_device:
       path: /dev/raw/raw3
       owner: informix
@@ -56,15 +56,15 @@ informix_server_port_increment: 1000
 informix_server_port_start: 6000
 
 alerts:
-  enabled: yes
+  enabled: true
   vault_path: "{{ vault_base_path }}/alerts"
 
 stats:
-  enabled: yes
+  enabled: true
   vault_path: "{{ vault_base_path }}/stats"
 
 ef_presenter_data:
-  enabled: yes
+  enabled: true
   vault_path: "{{ vault_base_path }}/ef-presenter"
 
 cloudwatch_agent_overrides:

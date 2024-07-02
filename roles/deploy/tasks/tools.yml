@@ -20,7 +20,7 @@
 - name: Check printer configuration exists
   shell: "lpstat -p {{ sms_printer_name }}"
   register: sms_printer_exists
-  ignore_errors: yes
+  ignore_errors: true
 
 - name: Add SMS printer configuration
   shell: "lpadmin -p {{ sms_printer_name }} -E -v {{ sms_printer_uri }} -m {{ sms_printer_model }}"

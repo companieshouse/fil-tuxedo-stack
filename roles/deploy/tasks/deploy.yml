@@ -16,7 +16,7 @@
     tuxedo_logical_machine_id: "{{ tuxedo_user | upper }}_{{ tuxedo_logical_machine_id_suffix }}"
     tuxedo_machine_name: "{{ ansible_facts.hostname }}"
     tuxedo_user_id: "{{ getent_passwd[tuxedo_user][getent_uid_index] }}"
-  no_log: True
+  no_log: true
 
 - name: Retrieve alerts config from Hashicorp Vault
   set_fact:
@@ -82,7 +82,7 @@
     mode: 0644
   with_fileglob:
     - "{{ application_configs_path }}/{{ tuxedo_user }}/*.j2"
-  no_log: True
+  no_log: true
 
 - name: "{{ tuxedo_user }} : Create scripts directory"
   file:
@@ -107,7 +107,7 @@
     path: "{{ new_deployment_files.path }}"
     owner: "{{ tuxedo_user }}"
     group: "{{ tuxedo_user }}"
-    recurse: yes
+    recurse: true
 
 - name: "{{ tuxedo_user }} : Check state of {{ tuxedo_user }} current deployment directory"
   stat:
@@ -119,7 +119,7 @@
   shell: "source {{ tuxedo_env_file_path }} && /home/{{ tuxedo_user }}/{{ deployment_dir }}/scripts/sms_poll_stop"
   args:
     executable: /bin/bash
-  ignore_errors: yes
+  ignore_errors: true
   when: sms_poll_daemon_enabled and tuxedo_user == "scud"
 
 - name: "{{ tuxedo_user }} : Stop Tuxedo services"
@@ -127,7 +127,7 @@
   shell: "source {{ tuxedo_env_file_path }} && timeout -s 9 20 tmshutdown -y"
   args:
     executable: /bin/bash
-  ignore_errors: yes
+  ignore_errors: true
   when: current_deployment_files.stat.exists
 
 - name: "{{ tuxedo_user }} : Clear IPC facilities"
@@ -205,7 +205,7 @@
   template:
     src: templates/cloudwatch-config-service.json.j2
     dest: "{{ cloudwatch_agent.config_dir }}/cloudwatch-config-{{ tuxedo_user }}.json"
-    trim_blocks: False
+    trim_blocks: false
 
 - name: "{{ tuxedo_user }} : Start Tuxedo services"
   become_user: "{{ tuxedo_user }}"
@@ -218,7 +218,7 @@
   shell: "source {{ tuxedo_env_file_path }} && /home/{{ tuxedo_user }}/{{ deployment_dir }}/scripts/sms_poll_start"
   args:
     executable: /bin/bash
-  ignore_errors: yes
+  ignore_errors: true
   when: sms_poll_daemon_enabled and tuxedo_user == "scud"
 
 - name: Create autologin configuration for FTP client
@@ -229,7 +229,7 @@
     group: "{{ tuxedo_user }}"
     mode: 0400
   when: stats.enabled
-  no_log: True
+  no_log: true
 
 - name: "{{ tuxedo_user }} : Create maintenance jobs"
   cron:

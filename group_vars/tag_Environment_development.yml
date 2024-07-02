@@ -12,12 +12,12 @@
 #   - prod 1 (primary/secondary)
 #   - scud 2 (primary/secondary)
 
-informix_management_alerts_enabled: no
-informix_management_stats_enabled: no
+informix_management_alerts_enabled: false
+informix_management_stats_enabled: false
 
 iscsi_devices_config:
   - alias: db_dump
-    multipath: no
+    multipath: false
     filesystem:
       type: xfs
       path: /db_dump
@@ -25,19 +25,19 @@ iscsi_devices_config:
       owner: informix
       group: informix
   - alias: scud
-    multipath: no
+    multipath: false
     raw_character_device:
       path: /dev/raw/raw1
       owner: informix
       group: informix
   - alias: prod
-    multipath: no
+    multipath: false
     raw_character_device:
       path: /dev/raw/raw2
       owner: informix
       group: informix
   - alias: ef
-    multipath: no
+    multipath: false
     raw_character_device:
       path: /dev/raw/raw3
       owner: informix

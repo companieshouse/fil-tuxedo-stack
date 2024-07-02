@@ -35,7 +35,7 @@
   template:
     src: templates/cloudwatch-config.json.j2
     dest: "{{ cloudwatch_agent.config_dir }}/cloudwatch-config.json"
-    trim_blocks: False
+    trim_blocks: false
 
 - name: Start CloudWatch agent using primary configuration file
   command:
@@ -65,7 +65,7 @@
   unarchive:
     src: "{{ application_artifact_path }}"
     dest: "{{ application_artifact_files.path }}"
-    remote_src: no
+    remote_src: false
     owner: root
     group: "{{ tuxedo_service_group }}"
     mode: 0755
