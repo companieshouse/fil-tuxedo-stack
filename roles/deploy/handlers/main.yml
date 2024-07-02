@@ -13,7 +13,7 @@
   systemd:
     name: "{{ item }}"
     state: stopped
-    enabled: no
+    enabled: false
   loop:
     - cups
     - colord
