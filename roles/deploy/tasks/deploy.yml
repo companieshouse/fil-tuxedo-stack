@@ -1,6 +1,6 @@
 ---
 
-- name: Set additional variables for template population
+- name: "{{ tuxedo_user }} : Set additional variables for template population"
   set_fact:
     private_host_address: "{{ inventory_hostname }}"
     private_host_local_domain_port: "{{ tuxedo_service_config[tuxedo_user].local_domain_port }}"
@@ -18,17 +18,17 @@
     tuxedo_user_id: "{{ getent_passwd[tuxedo_user][getent_uid_index] }}"
   no_log: true
 
-- name: Retrieve alerts config from Hashicorp Vault
+- name: "{{ tuxedo_user }} : Retrieve alerts config from Hashicorp Vault"
   set_fact:
     alerts_config: "{{ lookup('community.hashi_vault.hashi_vault', alerts.vault_path) }}"
   when: alerts.enabled
 
-- name: Retrieve stats config from Hashicorp Vault
+- name: "{{ tuxedo_user }} : Retrieve stats config from Hashicorp Vault"
   set_fact:
     stats_config: "{{ lookup('community.hashi_vault.hashi_vault', stats.vault_path) }}"
   when: stats.enabled
 
-- name: Retrieve EF presenter data config from Hashicorp Vault
+- name: "{{ tuxedo_user }} : Retrieve EF presenter data config from Hashicorp Vault"
   set_fact:
     ef_presenter_config: "{{ lookup('community.hashi_vault.hashi_vault', ef_presenter_data.vault_path) }}"
   when: ef_presenter_data.enabled
@@ -221,7 +221,7 @@
   ignore_errors: true
   when: sms_poll_daemon_enabled and tuxedo_user == "scud"
 
-- name: Create autologin configuration for FTP client
+- name: "{{ tuxedo_user }} : Create autologin configuration for FTP client"
   template:
     src: templates/netrc.j2
     dest: "/home/{{ tuxedo_user }}/.netrc"

@@ -120,7 +120,7 @@
     patterns: 'cloudwatch-config-*.json'
   register: cloudwatch_configs
 
-- name: "{{ tuxedo_user }} : Add configuration for Tuxedo service group to CloudWatch agent"
+- name: Add configuration for Tuxedo service group to CloudWatch agent
   command:
     cmd: "{{ cloudwatch_agent.path }} -a append-config -m ec2 -s -c file:{{ item.path }}"
   loop: "{{ cloudwatch_configs.files }}"
