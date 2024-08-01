@@ -23,3 +23,9 @@
     name: postfix
     state: restarted
     enabled: true
+
+- name: Restart systemd-journald service
+  systemd:
+    name: systemd-journald
+    state: restarted
+    enabled: true

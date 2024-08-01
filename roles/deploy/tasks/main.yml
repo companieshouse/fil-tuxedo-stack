@@ -49,6 +49,35 @@
     - tuxedo_logical_machine_id_suffix
     - tuxedo_local_domain_suffix
 
+- name: Check state of systemd journal log directory
+  stat:
+    path: /var/log/journal
+  register: journal_log_directory
+
+- debug:
+    var: journal_log_directory
+
+- name: Create systemd journal log directory
+  file:
+    path: /var/log/journal
+    mode: '0755'
+    owner: root
+    group: root
+    state: directory
+  when: not journal_log_directory.stat.exists
+
+- name: Apply ACL to systemd journal log directory
+  command: systemd-tmpfiles --create --prefix /var/log/journal
+  when: not journal_log_directory.stat.exists
+
+- name: Enable persistent systemd journal logs
+  lineinfile:
+    path: /etc/systemd/journald.conf
+    regexp: '^#Storage='
+    line: Storage=persistent
+  notify:
+    - Restart systemd-journald service
+
 - name: Create temporary directory for application artifact files
   tempfile:
     state: directory
