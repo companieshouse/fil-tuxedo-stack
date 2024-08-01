@@ -73,5 +73,47 @@ informix_management_cron_jobs:
     hour: "02"
     month: "*"
     script: "update_statistics scud"
+  - name: Stop EF database server (weekdays)
+    day_of_week: "1-5"
+    day_of_month: "*"
+    minute: "55"
+    hour: "19"
+    month: "*"
+    script: "informixctl stop ef"
+  - name: Start EF database server (weekdays)
+    day_of_week: "1-5"
+    day_of_month: "*"
+    minute: "06"
+    hour: "05"
+    month: "*"
+    script: "informixctl start ef"
+  - name: Stop PROD database server (weekdays)
+    day_of_week: "1-5"
+    day_of_month: "*"
+    minute: "55"
+    hour: "19"
+    month: "*"
+    script: "informixctl stop prod"
+  - name: Start PROD database server (weekdays)
+    day_of_week: "1-5"
+    day_of_month: "*"
+    minute: "06"
+    hour: "05"
+    month: "*"
+    script: "informixctl start prod"
+  - name: Stop SCUD database server (weekdays)
+    day_of_week: "1-5"
+    day_of_month: "*"
+    minute: "55"
+    hour: "19"
+    month: "*"
+    script: "informixctl stop scud"
+  - name: Start SCUD database server (weekdays)
+    day_of_week: "1-5"
+    day_of_month: "*"
+    minute: "06"
+    hour: "05"
+    month: "*"
+    script: "informixctl start scud"
 
 informix_host: instance-1.fil.tuxedo.development.heritage.aws.internal
