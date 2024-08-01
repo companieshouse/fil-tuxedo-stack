@@ -54,9 +54,6 @@
     path: /var/log/journal
   register: journal_log_directory
 
-- debug:
-    var: journal_log_directory
-
 - name: Create systemd journal log directory
   file:
     path: /var/log/journal
