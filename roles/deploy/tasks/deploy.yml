@@ -1,7 +1,7 @@
 ---
 
-- name: "{{ tuxedo_user }} : Set additional variables for template population"
-  set_fact:
+- name: "Set additional variables for template population : {{ tuxedo_user }}"
+  ansible.builtin.set_fact:
     private_host_address: "{{ inventory_hostname }}"
     private_host_local_domain_port: "{{ tuxedo_service_config[tuxedo_user].local_domain_port }}"
     service_name: "{{ tuxedo_user }}"
@@ -18,23 +18,23 @@
     tuxedo_user_id: "{{ getent_passwd[tuxedo_user][getent_uid_index] }}"
   no_log: true
 
-- name: "{{ tuxedo_user }} : Retrieve alerts config from Hashicorp Vault"
-  set_fact:
+- name: "Retrieve alerts config from Hashicorp Vault : {{ tuxedo_user }}"
+  ansible.builtin.set_fact:
     alerts_config: "{{ lookup('community.hashi_vault.hashi_vault', alerts.vault_path) }}"
   when: alerts.enabled
 
-- name: "{{ tuxedo_user }} : Retrieve stats config from Hashicorp Vault"
-  set_fact:
+- name: "Retrieve stats config from Hashicorp Vault : {{ tuxedo_user }}"
+  ansible.builtin.set_fact:
     stats_config: "{{ lookup('community.hashi_vault.hashi_vault', stats.vault_path) }}"
   when: stats.enabled
 
-- name: "{{ tuxedo_user }} : Retrieve EF presenter data config from Hashicorp Vault"
-  set_fact:
+- name: "Retrieve EF presenter data config from Hashicorp Vault : {{ tuxedo_user }}"
+  ansible.builtin.set_fact:
     ef_presenter_config: "{{ lookup('community.hashi_vault.hashi_vault', ef_presenter_data.vault_path) }}"
   when: ef_presenter_data.enabled
 
-- name: "{{ tuxedo_user }} : Create additional data directories for {{ tuxedo_user }} services"
-  file:
+- name: "Create additional data directories for services : {{ tuxedo_user }}"
+  ansible.builtin.file:
     path: "{{ item.path }}"
     owner: "{{ tuxedo_user }}"
     group: "{{ tuxedo_user }}"
@@ -42,197 +42,228 @@
     state: directory
   loop: "{{ data_directories[tuxedo_user] | default([]) }}"
 
-- name: "{{ tuxedo_user }} : Remove maintenance jobs during deploy"
-  file:
+- name: "Remove maintenance jobs during deploy : {{ tuxedo_user }}"
+  ansible.builtin.file:
     path: "/var/spool/cron/{{ tuxedo_user }}"
     state: absent
 
-- name: "{{ tuxedo_user }} : Create temporary directory for new {{ tuxedo_user }} deployment"
+- name: "Create temporary directory for new deployment : {{ tuxedo_user }}"
+  become: true
   become_user: "{{ tuxedo_user }}"
-  tempfile:
+  ansible.builtin.tempfile:
     state: directory
   register: new_deployment_files
+  changed_when: true
 
-- name: "{{ tuxedo_user }} : Copy application artifact files to temporary {{ tuxedo_user }} deployment directory"
+- name: "Copy application artifact files to temporary deployment directory : {{ tuxedo_user }}"
+  become: true
   become_user: "{{ tuxedo_user }}"
-  command: "cp -r {{ application_artifact_files.path }}/. {{ new_deployment_files.path }}"
+  ansible.builtin.command: "cp -r {{ application_artifact_files.path }}/. {{ new_deployment_files.path }}"
+  changed_when: true
 
-- name: "{{ tuxedo_user }} : Create Tuxedo service logs directory"
-  file:
+- name: "Create Tuxedo service logs directory : {{ tuxedo_user }}"
+  ansible.builtin.file:
     path: "{{ tuxedo_logs_path }}/{{ tuxedo_user }}"
     owner: "{{ tuxedo_user }}"
     group: "{{ tuxedo_user }}"
-    mode: 0755
+    mode: '0755'
     state: directory
 
-- name: "{{ tuxedo_user }} : Create config directory"
-  file:
+- name: "Create config directory : {{ tuxedo_user }}"
+  ansible.builtin.file:
     path: "{{ new_deployment_files.path }}/config"
     owner: "{{ tuxedo_user }}"
     group: "{{ tuxedo_user }}"
-    mode: 0755
+    mode: '0755'
     state: directory
 
-- name: "{{ tuxedo_user }} : Populate Tuxedo template config files"
-  template:
+- name: "Populate Tuxedo template config files : {{ tuxedo_user }}"
+  ansible.builtin.template:
     src: "{{ item }}"
     dest: "{{ new_deployment_files.path }}/config/{{ item | basename | replace('.j2', '') }}"
     owner: "{{ tuxedo_user }}"
     group: "{{ tuxedo_user }}"
-    mode: 0644
+    mode: '0644'
   with_fileglob:
     - "{{ application_configs_path }}/{{ tuxedo_user }}/*.j2"
   no_log: true
 
-- name: "{{ tuxedo_user }} : Create scripts directory"
-  file:
+- name: "Create scripts directory : {{ tuxedo_user }}"
+  ansible.builtin.file:
     path: "{{ new_deployment_files.path }}/scripts"
     owner: "{{ tuxedo_user }}"
     group: "{{ tuxedo_user }}"
-    mode: 0755
+    mode: '0755'
     state: directory
 
-- name: "{{ tuxedo_user }} : Populate script template files"
-  template:
+- name: "Populate script template files : {{ tuxedo_user }}"
+  ansible.builtin.template:
     src: "{{ item }}"
     dest: "{{ new_deployment_files.path }}/scripts/{{ item | basename | replace('.j2', '') }}"
     owner: "{{ tuxedo_user }}"
     group: "{{ tuxedo_user }}"
-    mode: 0755
+    mode: '0755'
   with_fileglob:
     - "{{ scripts_artifact_path }}/{{ tuxedo_user }}/*.j2"
 
-- name: "{{ tuxedo_user }} : Set permissions for new deployment files"
-  file:
+- name: "Set permissions for new deployment files : {{ tuxedo_user }}"
+  ansible.builtin.file:
     path: "{{ new_deployment_files.path }}"
     owner: "{{ tuxedo_user }}"
     group: "{{ tuxedo_user }}"
     recurse: true
 
-- name: "{{ tuxedo_user }} : Check state of {{ tuxedo_user }} current deployment directory"
-  stat:
+- name: "Check state of current deployment directory : {{ tuxedo_user }}"
+  ansible.builtin.stat:
     path: "/home/{{ tuxedo_user }}/{{ deployment_dir }}"
   register: current_deployment_files
 
-- name: "{{ tuxedo_user }} : Stop SMS poll daemon processes"
+- name: "Stop SMS poll daemon processes : {{ tuxedo_user }}" # noqa ignore-errors
+  become: true
   become_user: "{{ tuxedo_user }}"
-  shell: "source {{ tuxedo_env_file_path }} && /home/{{ tuxedo_user }}/{{ deployment_dir }}/scripts/sms_poll_stop"
+  register: stop_sms_poll_daemon
+  ansible.builtin.shell: "source {{ tuxedo_env_file_path }} && /home/{{ tuxedo_user }}/{{ deployment_dir }}/scripts/sms_poll_stop"
   args:
     executable: /bin/bash
   ignore_errors: true
   when: sms_poll_daemon_enabled and tuxedo_user == "scud"
+  changed_when: "'SMS poll daemon not running' not in stop_sms_poll_daemon.stdout and stop_sms_poll_daemon.rc == 0"
 
-- name: "{{ tuxedo_user }} : Stop Tuxedo services"
+- name: "Stop Tuxedo services : {{ tuxedo_user }}" # noqa ignore-errors
+  become: true
   become_user: "{{ tuxedo_user }}"
-  shell: "source {{ tuxedo_env_file_path }} && timeout -s 9 20 tmshutdown -y"
+  ansible.builtin.shell: "source {{ tuxedo_env_file_path }} && timeout -s 9 20 tmshutdown -y"
   args:
     executable: /bin/bash
   ignore_errors: true
   when: current_deployment_files.stat.exists
+  changed_when: true
 
-- name: "{{ tuxedo_user }} : Clear IPC facilities"
+- name: "Clear IPC facilities : {{ tuxedo_user }}"
+  become: true
   become_user: "{{ tuxedo_user }}"
-  shell: "source {{ tuxedo_env_file_path }} && zapipc"
+  ansible.builtin.shell: "source {{ tuxedo_env_file_path }} && zapipc"
   args:
     executable: /bin/bash
   when: current_deployment_files.stat.exists
+  changed_when: true
 
-- name: "{{ tuxedo_user }} : Remove {{ tuxedo_user }} rollback directory if present"
-  file:
+- name: "Remove rollback directory if present : {{ tuxedo_user }}"
+  ansible.builtin.file:
     path: "/home/{{ tuxedo_user }}/{{ rollback_dir }}"
     state: absent
 
-- name: "{{ tuxedo_user }} : Backup {{ tuxedo_user }} current deployment directory if one exists"
+- name: "Backup current deployment directory if one exists : {{ tuxedo_user }}"
+  become: true
   become_user: "{{ tuxedo_user }}"
-  command: "mv /home/{{ tuxedo_user }}/{{ deployment_dir }} /home/{{ tuxedo_user }}/{{ rollback_dir }}"
+  ansible.builtin.command: "mv /home/{{ tuxedo_user }}/{{ deployment_dir }} /home/{{ tuxedo_user }}/{{ rollback_dir }}"
   when: current_deployment_files.stat.exists
+  changed_when: true
 
-- name: "{{ tuxedo_user }} : Install new deployment files"
+- name: "Install new deployment files : {{ tuxedo_user }}"
+  become: true
   become_user: "{{ tuxedo_user }}"
-  command: "mv {{ new_deployment_files.path }} /home/{{ tuxedo_user }}/{{ deployment_dir }}"
+  ansible.builtin.command: "mv {{ new_deployment_files.path }} /home/{{ tuxedo_user }}/{{ deployment_dir }}"
+  changed_when: true
 
-- name: "{{ tuxedo_user }} : Lint Tuxedo ubbconfig file after variable population"
+- name: "Lint Tuxedo ubbconfig file after variable population : {{ tuxedo_user }}"
+  become: true
   become_user: "{{ tuxedo_user }}"
-  shell: "source {{ tuxedo_env_file_path }} && tmloadcf -n ubbconfig"
+  ansible.builtin.shell: "source {{ tuxedo_env_file_path }} && tmloadcf -n ubbconfig"
   args:
     chdir: "/home/{{ tuxedo_user }}/{{ deployment_dir }}/config"
     executable: /bin/bash
   register: ubbconfig_lint
+  changed_when: false
 
-- name: "{{ tuxedo_user }} : Assert Tuxedo ubbconfig lint success"
-  assert:
+- name: "Assert Tuxedo ubbconfig lint success : {{ tuxedo_user }}"
+  ansible.builtin.assert:
     that:
       - ubbconfig_lint.rc == 0
     fail_msg: "Tuxedo ubbconfig file failed lint check"
     success_msg: "Tuxedo ubbconfig file passed lint check"
 
-- name: "{{ tuxedo_user }} : Generate Tuxedo binary tuxconfig file"
+- name: "Generate Tuxedo binary tuxconfig file : {{ tuxedo_user }}"
+  become: true
   become_user: "{{ tuxedo_user }}"
-  shell: "source {{ tuxedo_env_file_path }} && tmloadcf -y ubbconfig"
+  ansible.builtin.shell: "source {{ tuxedo_env_file_path }} && tmloadcf -y ubbconfig"
   args:
     chdir: "/home/{{ tuxedo_user }}/{{ deployment_dir }}/config"
     executable: /bin/bash
+  changed_when: true
 
-- name: "{{ tuxedo_user }} : Lint Tuxedo dmconfig file after variable population"
+- name: "Lint Tuxedo dmconfig file after variable population : {{ tuxedo_user }}"
+  become: true
   become_user: "{{ tuxedo_user }}"
-  shell: "source {{ tuxedo_env_file_path }} && dmloadcf -n dmconfig"
+  ansible.builtin.shell: "source {{ tuxedo_env_file_path }} && dmloadcf -n dmconfig"
   args:
     chdir: "/home/{{ tuxedo_user }}/{{ deployment_dir }}/config"
     executable: /bin/bash
   register: dmconfig_lint
+  changed_when: false
 
-- name: "{{ tuxedo_user }} : Assert Tuxedo dmconfig lint success"
-  assert:
+- name: "Assert Tuxedo dmconfig lint success : {{ tuxedo_user }}"
+  ansible.builtin.assert:
     that:
       - dmconfig_lint.rc == 0
     fail_msg: "Tuxedo dmconfig file failed lint check"
     success_msg: "Tuxedo dmconfig file passed lint check"
 
-- name: "{{ tuxedo_user }} : Generate Tuxedo binary bdmconfig file"
+- name: "Generate Tuxedo binary bdmconfig file : {{ tuxedo_user }}"
+  become: true
   become_user: "{{ tuxedo_user }}"
-  shell: "source {{ tuxedo_env_file_path }} && dmloadcf -y dmconfig"
+  ansible.builtin.shell: "source {{ tuxedo_env_file_path }} && dmloadcf -y dmconfig"
   args:
     chdir: "/home/{{ tuxedo_user }}/{{ deployment_dir }}/config"
     executable: /bin/bash
+  changed_when: true
 
-- name: "{{ tuxedo_user }} : Configure recipient address for user-specific cron job emails"
-  cronvar:
+- name: "Configure recipient address for user-specific cron job emails : {{ tuxedo_user }}"
+  community.general.cronvar:
     name: MAILTO
     value: root@localhost
     user: "{{ tuxedo_user }}"
 
-- name: "{{ tuxedo_user }} : Create CloudWatch agent configuration file for Tuxedo service group"
-  template:
+- name: "Create CloudWatch agent configuration file for Tuxedo service group : {{ tuxedo_user }}"
+  ansible.builtin.template:
     src: templates/cloudwatch-config-service.json.j2
     dest: "{{ cloudwatch_agent.config_dir }}/cloudwatch-config-{{ tuxedo_user }}.json"
+    owner: cwagent
+    group: cwagent
+    mode: '0644'
     trim_blocks: false
 
-- name: "{{ tuxedo_user }} : Start Tuxedo services"
+- name: "Start Tuxedo services : {{ tuxedo_user }}"
+  become: true
   become_user: "{{ tuxedo_user }}"
-  shell: "source $HOME/deployment/config/envfile && tmboot -y"
+  ansible.builtin.shell: "source $HOME/deployment/config/envfile && tmboot -y"
   args:
     executable: /bin/bash
+  changed_when: true
 
-- name: "{{ tuxedo_user }} : Start SMS poll daemon processes"
+- name: "Start SMS poll daemon processes : {{ tuxedo_user }}" # noqa ignore-errors
+  become: true
   become_user: "{{ tuxedo_user }}"
-  shell: "source {{ tuxedo_env_file_path }} && /home/{{ tuxedo_user }}/{{ deployment_dir }}/scripts/sms_poll_start"
+  register: start_sms_poll_daemon
+  ansible.builtin.shell: "source {{ tuxedo_env_file_path }} && /home/{{ tuxedo_user }}/{{ deployment_dir }}/scripts/sms_poll_start"
   args:
     executable: /bin/bash
   ignore_errors: true
   when: sms_poll_daemon_enabled and tuxedo_user == "scud"
+  changed_when: "'SMS poll daemon is already running' not in start_sms_poll_daemon.stdout and start_sms_poll_daemon.rc == 0"
 
-- name: "{{ tuxedo_user }} : Create autologin configuration for FTP client"
-  template:
+- name: "Create autologin configuration for FTP client : {{ tuxedo_user }}"
+  ansible.builtin.template:
     src: templates/netrc.j2
     dest: "/home/{{ tuxedo_user }}/.netrc"
     owner: "{{ tuxedo_user }}"
     group: "{{ tuxedo_user }}"
-    mode: 0400
+    mode: '0400'
   when: stats.enabled
   no_log: true
 
-- name: "{{ tuxedo_user }} : Create maintenance jobs"
-  cron:
+- name: "Create maintenance jobs : {{ tuxedo_user }}"
+  ansible.builtin.cron:
     name: "{{ item.name }}"
     day: "{{ item.day_of_month }}"
     weekday: "{{ item.day_of_week }}"

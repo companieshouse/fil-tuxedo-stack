@@ -10,6 +10,7 @@ ef_presenter_data:
   enabled: false
 
 sms_poll_daemon_enabled: false
+sms_poll_daemon_executable: SMS_poll
 
 sms_printer_enabled: true
 sms_printer_name: sms-printer

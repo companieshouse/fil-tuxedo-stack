@@ -4,11 +4,11 @@
   amazon.aws.ec2_metadata_facts:
 
 - name: Set host facts for passwd database
-  getent:
+  ansible.builtin.getent:
     database: passwd
 
 - name: Check required variables are set
-  assert:
+  ansible.builtin.assert:
     that:
       - tuxedo_service_users is defined and tuxedo_service_users | length > 0
       - environment_name is defined and environment_name | trim | length > 0
@@ -17,29 +17,40 @@
       - scripts_artifact_path is defined and scripts_artifact_path | trim | length > 0
     msg: "Required variable(s) empty or undefined"
 
+- name: Set common Tuxedo fact for domain suffix
+  ansible.builtin.set_fact:
+    tuxedo_common_suffix: "{{ ansible_facts.hostname
+      | regex_replace('development', 'dev')
+      | regex_replace('^fil-tuxedo-([A-Za-z]+)-(\\d+)$', 'FIL_\\2_\\1')
+      | upper }}"
+
 # The hostname is assumed to be in the format: fil-tuxedo-<environment>-<instance-index>; the environment
 # name 'development' is abbreviated to 'dev' to avoid exceeding the domain character limit
 - name: Set Tuxedo facts for config population
-  set_fact:
-     tuxedo_domain_id_suffix: "{{ ansible_facts.hostname | regex_replace('development', 'dev') | regex_replace('^fil-tuxedo-([A-Za-z].*)-(\\d+)$', 'FIL_\\2_\\1_DOM') | upper }}"
-     tuxedo_logical_machine_id_suffix: "{{ ansible_facts.hostname | regex_replace('development', 'dev') | regex_replace('^fil-tuxedo-([A-Za-z].*)-(\\d+)$', 'FIL_\\2_\\1_SRV') | upper }}"
-     tuxedo_local_domain_suffix: "{{ ansible_facts.hostname | regex_replace('development', 'dev') | regex_replace('^fil-tuxedo-([A-Za-z].*)-(\\d+)$', 'FIL_\\2_\\1_LOD') | upper }}"
+  ansible.builtin.set_fact:
+    tuxedo_domain_id_suffix: "{{ tuxedo_common_suffix + '_DOM' }}"
+    tuxedo_logical_machine_id_suffix: "{{ tuxedo_common_suffix + '_SRV' }}"
+    tuxedo_local_domain_suffix: "{{ tuxedo_common_suffix + '_LOD' }}"
 
 - name: Set CloudWatch agent facts for config population
-  set_fact:
+  ansible.builtin.set_fact:
     cloudwatch_agent: "{{ cloudwatch_agent_defaults | combine(cloudwatch_agent_overrides | default({})) }}"
     cloudwatch_log_stream_name: "{{ ansible_ec2_instance_id }}_{{ ansible_ec2_hostname }}"
     region: "{{ ansible_ec2_instance_identity_document_region }}"
 
 - name: Create CloudWatch agent primary configuration file
-  template:
+  ansible.builtin.template:
     src: templates/cloudwatch-config.json.j2
     dest: "{{ cloudwatch_agent.config_dir }}/cloudwatch-config.json"
+    owner: cwagent
+    group: cwagent
+    mode: '0644'
     trim_blocks: false
 
 - name: Start CloudWatch agent using primary configuration file
-  command:
+  ansible.builtin.command:
     cmd: "{{ cloudwatch_agent.path }} -a fetch-config -m ec2 -s -c file:{{ cloudwatch_agent.config_dir }}/cloudwatch-config.json"
+  changed_when: true
 
 - name: Using constructed variable suffixes
   ansible.builtin.debug:
@@ -50,82 +61,83 @@
     - tuxedo_local_domain_suffix
 
 - name: Create temporary directory for application artifact files
-  tempfile:
+  ansible.builtin.tempfile:
     state: directory
   register: application_artifact_files
 
 - name: Set permissions to allow service users to read from temporary directory
-  file:
+  ansible.builtin.file:
     path: "{{ application_artifact_files.path }}"
     owner: root
     group: "{{ tuxedo_service_group }}"
-    mode: 0755
+    mode: '0755'
 
 - name: Deploy and extract application artefact
-  unarchive:
+  ansible.builtin.unarchive:
     src: "{{ application_artifact_path }}"
     dest: "{{ application_artifact_files.path }}"
     remote_src: false
     owner: root
     group: "{{ tuxedo_service_group }}"
-    mode: 0755
+    mode: '0755'
 
 - name: Create Tuxedo logs directory
-  file:
+  ansible.builtin.file:
     path: "{{ tuxedo_logs_path }}"
     owner: root
     group: "{{ tuxedo_service_group }}"
-    mode: 0755
+    mode: '0755'
     state: directory
 
 - name: Create shared log rotation configuration for Tuxedo services
-  template:
+  ansible.builtin.template:
     src: templates/logrotate.tuxedo.conf.j2
     dest: "{{ tuxedo_log_rotation_config_path }}"
+    owner: root
+    group: root
+    mode: '0644'
 
-- import_tasks: cron.yml
+- name: Configure cron jobs
+  ansible.builtin.import_tasks: cron.yml
 
-- name: Allow logrotate to modify CloudWatch log
+- name: Allow logrotate to modify CloudWatch logs
   community.general.sefcontext:
-    target: "{{ item }}"
+    target: '/opt/aws/amazon-cloudwatch-agent/logs(/.*)?'
     setype: var_log_t
     state: present
-  loop:
-    - /opt/aws/amazon-cloudwatch-agent/logs
-    - /opt/aws/amazon-cloudwatch-agent/logs/amazon-cloudwatch-agent.log
-  register: selinux_context
 
-- name: Apply SELinux file context for CloudWatch log
-  command: "restorecon {{ item }}"
-  loop:
-    - /opt/aws/amazon-cloudwatch-agent/logs
-    - /opt/aws/amazon-cloudwatch-agent/logs/amazon-cloudwatch-agent.log
-  when: selinux_context.changed
+- name: Update SELinux security context
+  ansible.builtin.command: "restorecon -irv /opt/aws/amazon-cloudwatch-agent/logs"
+  register: cloudwatch_logs_selinux_context
+  changed_when: cloudwatch_logs_selinux_context.stdout != ""
 
-- import_tasks: tools.yml
+- name: Install additional tooling
+  ansible.builtin.import_tasks: tools.yml
 
 - name: Add host entry for SQL client connectivity
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /etc/hosts
     line: "127.0.0.1   {{ ansible_facts.hostname }}"
 
-- include_tasks: deploy.yml
+- name: Deploy Tuxedo services
+  ansible.builtin.include_tasks: deploy.yml
   loop: "{{ tuxedo_service_users }}"
   loop_control:
     loop_var: tuxedo_user
 
 - name: Find application-specific CloudWatch configuration files
-  find:
+  ansible.builtin.find:
     paths: "{{ cloudwatch_agent.config_dir }}"
     patterns: 'cloudwatch-config-*.json'
   register: cloudwatch_configs
 
 - name: Add configuration for Tuxedo service group to CloudWatch agent
-  command:
+  ansible.builtin.command:
     cmd: "{{ cloudwatch_agent.path }} -a append-config -m ec2 -s -c file:{{ item.path }}"
   loop: "{{ cloudwatch_configs.files }}"
+  changed_when: true
 
 - name: Remove temporary directories
-  file:
+  ansible.builtin.file:
     path: "{{ application_artifact_files.path }}"
     state: absent

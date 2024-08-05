@@ -1,14 +1,14 @@
 ---
 
 - name: Install additional tools for service maintenance scripts
-  yum:
+  ansible.builtin.dnf:
     state: present
     name:
       - ftp
       - mailx
 
 - name: Install printing support tools
-  yum:
+  ansible.builtin.dnf:
     state: present
     name:
       - cups
@@ -17,42 +17,46 @@
   notify:
     - Start printer support services
 
-- name: Check printer configuration exists
-  shell: "lpstat -p {{ sms_printer_name }}"
+- name: Check printer configuration exists # noqa ignore-errors
+  ansible.builtin.command: "lpstat -p {{ sms_printer_name }}"
   register: sms_printer_exists
   ignore_errors: true
+  changed_when: false
 
 - name: Add SMS printer configuration
-  shell: "lpadmin -p {{ sms_printer_name }} -E -v {{ sms_printer_uri }} -m {{ sms_printer_model }}"
+  ansible.builtin.command: "lpadmin -p {{ sms_printer_name }} -E -v {{ sms_printer_uri }} -m {{ sms_printer_model }}"
   when: sms_printer_enabled and sms_printer_exists is failed
+  changed_when: true
 
 - name: Set output path for SMS printer PDF files
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /etc/cups/cups-pdf.conf
     regexp: '^Out '
     line: "Out {{ sms_printer_pdf_output_dir }}"
 
 - name: Remove SMS printer configuration
-  shell: "lpadmin -x {{ sms_printer_name }}"
+  ansible.builtin.command: "lpadmin -x {{ sms_printer_name }}"
   notify:
     - Stop printer support services
+  register: sms_printer_deleted
   when: not sms_printer_enabled and sms_printer_exists is succeeded
+  changed_when: sms_printer_deleted.rc == 0
 
 - name: Disable mailx inbuilt SMTP relay
-  replace:
+  ansible.builtin.replace:
     path: /etc/mail.rc
     regexp: '^(set smtp=.*)'
     replace: '#\1'
 
 - name: Configure Postfix mail transfer agent
-  template:
+  ansible.builtin.template:
     src: main.cf.j2
     dest: "{{ postfix_config_path }}"
     owner: root
     group: root
-    mode: 0644
+    mode: '0644'
   notify:
     - Restart Postfix service
 
 - name: Flush handlers
-  meta: flush_handlers
+  ansible.builtin.meta: flush_handlers
