@@ -52,12 +52,13 @@ ansible-playbook -i inventory --extra-vars='{"tuxedo_service_users": ["cabs"]}'
 
 The following variables are used by the `SMS` service and `SMS_poll` daemon that are deployed for the `scud` user:
 
-| Name                      | Default | Description                                                                           |
-|---------------------------|---------|---------------------------------------------------------------------------------------|
-| `sms_poll_daemon_enabled` | `false` | _Optional_. A boolean value indicating whether the `SMS_poll` daemon should be stopped before deployment and started again after deployment. |
-| `sms_printer_name`        | `sms-printer` | The name of the printer to be used by the `SMS` service. A corresponding `SMS_PRINTER` environment variable should be set to the same value in the environment file for `scud` user services (see [fil-tuxedo-configs](https://github.com/companieshouse/fil-tuxedo-configs)). |
-| `sms_printer_uri`         | `socket://172.19.12.18` | The URI of the printer to be used by the `SMS` service.              |
-| `sms_printer_model`       | `drv:///sample.drv/generic.ppd` | A standard System V interface script or PPD file for the printer from the model directory or one of the driver interfaces. Use the `-m` option with the `lpinfo(8)` command to get a list of supported models. |
+| Name                         | Default    | Description                                                                           |
+|------------------------------|------------|---------------------------------------------------------------------------------------|
+| `sms_poll_daemon_enabled`    | `false`    | _Optional_. A boolean value indicating whether the `SMS_poll` daemon should be stopped before deployment and started again after deployment. |
+| `sms_poll_daemon_executable` | `SMS_poll` | _Optional_. The executable name of the SMS poll daemon process.                       |
+| `sms_printer_name`           | `sms-printer` | The name of the printer to be used by the `SMS` service. A corresponding `SMS_PRINTER` environment variable should be set to the same value in the environment file for `scud` user services (see [fil-tuxedo-configs](https://github.com/companieshouse/fil-tuxedo-configs)). |
+| `sms_printer_uri`            | `socket://172.19.12.18` | The URI of the printer to be used by the `SMS` service.                  |
+| `sms_printer_model`          | `drv:///sample.drv/generic.ppd` | A standard System V interface script or PPD file for the printer from the model directory or one of the driver interfaces. Use the `-m` option with the `lpinfo(8)` command to get a list of supported models. |
 
 ### Logging
 

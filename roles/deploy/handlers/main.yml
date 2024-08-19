@@ -1,7 +1,7 @@
 ---
 
 - name: Start printer support services
-  systemd:
+  ansible.builtin.systemd:
     name: "{{ item }}"
     state: started
     enabled: true
@@ -10,7 +10,7 @@
     - colord
 
 - name: Stop printer support services
-  systemd:
+  ansible.builtin.systemd:
     name: "{{ item }}"
     state: stopped
     enabled: false
@@ -19,7 +19,7 @@
     - colord
 
 - name: Restart Postfix service
-  systemd:
+  ansible.builtin.systemd:
     name: postfix
     state: restarted
     enabled: true
