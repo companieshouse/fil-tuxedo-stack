@@ -1,14 +1,14 @@
 ---
 
 - name: Install additional tools for service maintenance scripts
-  ansible.builtin.dnf:
+  ansible.builtin.yum:
     state: present
     name:
       - ftp
       - mailx
 
 - name: Install printing support tools
-  ansible.builtin.dnf:
+  ansible.builtin.yum:
     state: present
     name:
       - cups
