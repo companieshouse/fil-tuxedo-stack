@@ -3,10 +3,10 @@
 - name: Provision Ansible controller with SSH key for remote
   hosts: localhost
   roles:
-    - role: ssh-key
+    - role: companieshouse.general.ssh_key
       vars:
         ssh_key_name: ansible_remote
-        hashicorp_vault_private_key_path: "{{ vault_base_path }}/aws"
+        ssh_key_vault_path: "{{ vault_base_path }}/aws"
 
 - name: Provision Informix dbspaces and chunks
   hosts: aws_ec2
