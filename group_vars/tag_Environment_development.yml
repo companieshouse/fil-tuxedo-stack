@@ -72,18 +72,18 @@ informix_db_config:
           offset_in_kb: 19500000
           size_in_kb: 500000
     server_connections:
-        - server_name: ef
-          connection_type: onipcshm
-          host: localhost
-          service_or_port: localhost
-        - server_name: ef_primary
-          connection_type: onsoctcp
-          host: instance-1.fil.tuxedo.development.heritage.aws.internal
-          service_or_port: "{{ informix_server_port_start + (0 * informix_server_port_increment) | int }}"
-        - server_name: ef_secondary
-          connection_type: onsoctcp
-          host: instance-2.fil.tuxedo.development.heritage.aws.internal
-          service_or_port: "{{ informix_server_port_start + (0 * informix_server_port_increment) | int }}"
+      - server_name: ef
+        connection_type: onipcshm
+        host: localhost
+        service_or_port: localhost
+      - server_name: ef_primary
+        connection_type: onsoctcp
+        host: instance-1.fil.tuxedo.development.heritage.aws.internal
+        service_or_port: "{{ informix_server_port_start + (0 * informix_server_port_increment) | int }}"
+      - server_name: ef_secondary
+        connection_type: onsoctcp
+        host: instance-2.fil.tuxedo.development.heritage.aws.internal
+        service_or_port: "{{ informix_server_port_start + (0 * informix_server_port_increment) | int }}"
   prod:
     server_id: "{{ informix_server_id_start + (1 * informix_server_id_increment) | int }}"
     server_port: "{{ informix_server_port_start + (1 * informix_server_port_increment) | int }}"
@@ -104,18 +104,18 @@ informix_db_config:
           offset_in_kb: 9500000
           size_in_kb: 500000
     server_connections:
-        - server_name: prod
-          connection_type: onipcshm
-          host: localhost
-          service_or_port: localhost
-        - server_name: prod_primary
-          connection_type: onsoctcp
-          host: instance-1.fil.tuxedo.development.heritage.aws.internal
-          service_or_port: "{{ informix_server_port_start + (1 * informix_server_port_increment) | int }}"
-        - server_name: prod_secondary
-          connection_type: onsoctcp
-          host: instance-2.fil.tuxedo.development.heritage.aws.internal
-          service_or_port: "{{ informix_server_port_start + (1 * informix_server_port_increment) | int }}"
+      - server_name: prod
+        connection_type: onipcshm
+        host: localhost
+        service_or_port: localhost
+      - server_name: prod_primary
+        connection_type: onsoctcp
+        host: instance-1.fil.tuxedo.development.heritage.aws.internal
+        service_or_port: "{{ informix_server_port_start + (1 * informix_server_port_increment) | int }}"
+      - server_name: prod_secondary
+        connection_type: onsoctcp
+        host: instance-2.fil.tuxedo.development.heritage.aws.internal
+        service_or_port: "{{ informix_server_port_start + (1 * informix_server_port_increment) | int }}"
   scud:
     server_id: "{{ informix_server_id_start + (2 * informix_server_id_increment) | int }}"
     server_port: "{{ informix_server_port_start + (2 * informix_server_port_increment) | int }}"
@@ -136,16 +136,15 @@ informix_db_config:
           offset_in_kb: 9500000
           size_in_kb: 500000
     server_connections:
-        - server_name: scud
-          connection_type: onipcshm
-          host: localhost
-          service_or_port: localhost
-        - server_name: scud_primary
-          connection_type: onsoctcp
-          host: instance-1.fil.tuxedo.development.heritage.aws.internal
-          service_or_port: "{{ informix_server_port_start + (2 * informix_server_port_increment) | int }}"
-        - server_name: scud_secondary
-          connection_type: onsoctcp
-          host: instance-2.fil.tuxedo.development.heritage.aws.internal
-          service_or_port: "{{ informix_server_port_start + (2 * informix_server_port_increment) | int }}"
-
+      - server_name: scud
+        connection_type: onipcshm
+        host: localhost
+        service_or_port: localhost
+      - server_name: scud_primary
+        connection_type: onsoctcp
+        host: instance-1.fil.tuxedo.development.heritage.aws.internal
+        service_or_port: "{{ informix_server_port_start + (2 * informix_server_port_increment) | int }}"
+      - server_name: scud_secondary
+        connection_type: onsoctcp
+        host: instance-2.fil.tuxedo.development.heritage.aws.internal
+        service_or_port: "{{ informix_server_port_start + (2 * informix_server_port_increment) | int }}"
