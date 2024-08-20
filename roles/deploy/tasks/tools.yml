@@ -1,13 +1,13 @@
 ---
 
-- name: Install additional tools for service maintenance scripts
+- name: Install additional tools for service maintenance scripts # noqa fqcn[action-core]
   ansible.builtin.yum:
     state: present
     name:
       - ftp
       - mailx
 
-- name: Install printing support tools
+- name: Install printing support tools # noqa fqcn[action-core]
   ansible.builtin.yum:
     state: present
     name:
