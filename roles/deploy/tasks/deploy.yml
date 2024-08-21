@@ -233,10 +233,6 @@
     mode: '0644'
     trim_blocks: false
 
-
-
-
-
 - name: "Start Tuxedo services : {{ tuxedo_user }}"
   become: true
   become_user: "{{ tuxedo_user }}"
