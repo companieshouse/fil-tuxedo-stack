@@ -236,7 +236,7 @@
 - name: "Start Tuxedo services : {{ tuxedo_user }}"
   become: true
   become_user: "{{ tuxedo_user }}"
-  ansible.builtin.shell: "source $HOME/deployment/config/envfile && tmboot -y"
+  ansible.builtin.shell: "source {{ tuxedo_env_file_path }} && tmboot -y"
   args:
     executable: /bin/bash
   changed_when: true
@@ -271,6 +271,6 @@
     hour: "{{ item.hour }}"
     month: "{{ item.month }}"
     user: "{{ tuxedo_user }}"
-    job: "source {{ tuxedo_env_file_path }} && /home/{{ tuxedo_user }}/deployment/scripts/{{ item.script }}"
+    job: "source {{ tuxedo_env_file_path }} && /home/{{ tuxedo_user }}/{{ deployment_dir }}/scripts/{{ item.script }}"
     disabled: "{{ item.disabled | default(false) }}"
   loop: "{{ maintenance_jobs[tuxedo_user] | default([]) }}"
