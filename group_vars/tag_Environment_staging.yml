@@ -163,7 +163,3 @@ informix_db_config:
         service_or_port: "{{ informix_server_port_start + (2 * informix_server_port_increment) | int }}"
     users:
       - name: scudadmin
-
-nfs_mounts_config:
-  - path: "/DBshare"
-    src: "192.168.255.24:/DBshare"
