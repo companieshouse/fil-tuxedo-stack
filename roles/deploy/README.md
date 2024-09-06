@@ -151,6 +151,6 @@ Oracle DB credentials for the `CABS` service are read from Hashicorp Vault using
 {
   "host": "<host>",
   "username": "<username>",
-  "password": "<password>",
+  "password": "<password>"
 }
 ```
