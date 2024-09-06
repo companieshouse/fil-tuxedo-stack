@@ -9,6 +9,8 @@ stats:
 ef_presenter_data:
   enabled: false
 
+cabs_oracle_db_credentials_vault_path: "{{ vault_base_path }}/oracle"
+
 sms_poll_daemon_enabled: false
 sms_poll_daemon_executable: SMS_poll
 

@@ -12,6 +12,7 @@ This role implements a sequence of tasks required to deploy Tuxedo FIL services 
     * [Maintenance jobs][6]
     * [Data directories][7]
     * [SMS printer configuration][8]
+    * [CABS service Oracle DB credentials][9]
 
 [1]: #overview
 [2]: #configuration
@@ -21,6 +22,7 @@ This role implements a sequence of tasks required to deploy Tuxedo FIL services 
 [6]: #maintenance-jobs
 [7]: #data-directories
 [8]: #sms-printer-configuration
+[9]: #cabs-service-oracle-db-credentials
 
 ## Overview
 
@@ -140,3 +142,15 @@ Configuration of the printer device used by SMS services is controlled by the va
 >
 > - Changing the `sms_printer_enabled` value from `true` to `false` will remove the printer configuration and disable the `cups` and `colord` services
 > - Modifying any of the variables above (excluding `sms_printer_enabled`) will not result in changes being made to an existing printer configuration; instead, remove the printer from the host by running `lpadmin -x <printer-name>` first and then execute this role against the host to enact the new configuration
+
+### CABS service Oracle DB credentials
+
+Oracle DB credentials for the `CABS` service are read from Hashicorp Vault using the path specified by the `cabs_oracle_db_credentials_vault_path` role variable. The secret is expected to contain a JSON object with the following three key-pair values:
+
+```json
+{
+  "host": "<host>",
+  "username": "<username>",
+  "password": "<password>",
+}
+```
