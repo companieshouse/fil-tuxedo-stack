@@ -36,6 +36,7 @@
 - name: "Retrieve CABS service Oracle DB credentials from Hashicorp Vault : {{ tuxedo_user }}"
   ansible.builtin.set_fact:
     cabs_oracle_db_credentials: "{{ lookup('community.hashi_vault.hashi_vault', cabs_oracle_db_credentials_vault_path) }}"
+  when: tuxedo_user == "cabs"
 
 - name: "Create additional data directories for services : {{ tuxedo_user }}"
   ansible.builtin.file:
