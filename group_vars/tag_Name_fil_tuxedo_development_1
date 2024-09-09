@@ -34,15 +34,15 @@ informix_management_cron_jobs:
   - name: Stop EF database server (weekdays)
     day_of_week: "1-5"
     day_of_month: "*"
-    minute: "45"
+    minute: "00"
     hour: "19"
     month: "*"
     script: "informixctl stop ef"
   - name: Start EF database server (weekdays)
     day_of_week: "1-5"
     day_of_month: "*"
-    minute: "08"
-    hour: "15"
+    minute: "00"
+    hour: "08"
     month: "*"
     script: "informixctl start ef"
   - name: Informix PROD database logical log archive
@@ -69,15 +69,15 @@ informix_management_cron_jobs:
   - name: Stop PROD database server (weekdays)
     day_of_week: "1-5"
     day_of_month: "*"
-    minute: "45"
+    minute: "00"
     hour: "19"
     month: "*"
     script: "informixctl stop prod"
   - name: Start PROD database server (weekdays)
     day_of_week: "1-5"
     day_of_month: "*"
-    minute: "08"
-    hour: "15"
+    minute: "00"
+    hour: "08"
     month: "*"
     script: "informixctl start prod"
   - name: Informix SCUD database logical log archive
@@ -104,15 +104,15 @@ informix_management_cron_jobs:
   - name: Stop SCUD database server (weekdays)
     day_of_week: "1-5"
     day_of_month: "*"
-    minute: "45"
+    minute: "00"
     hour: "19"
     month: "*"
     script: "informixctl stop scud"
   - name: Start SCUD database server (weekdays)
     day_of_week: "1-5"
     day_of_month: "*"
-    minute: "08"
-    hour: "15"
+    minute: "00"
+    hour: "08"
     month: "*"
     script: "informixctl start scud"
 
