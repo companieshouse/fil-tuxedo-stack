@@ -14,4 +14,4 @@
   remote_user: centos
   become: true
   roles:
-    - informix-management
+    - role: companieshouse.middleware.informix_management
