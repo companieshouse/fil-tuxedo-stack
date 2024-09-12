@@ -360,7 +360,7 @@ informix_management_cron_jobs:
     minute: "0"
     hour: "7,14"
     month: "*"
-    script: "check_continuous_backups"
+    script: "check_continuous_backups 3"
     disabled: true
 
 informix_host: instance-2.fil.tuxedo.live.heritage.aws.internal
