@@ -10,7 +10,7 @@
 - name: Check required variables are set
   ansible.builtin.assert:
     that:
-      - tuxedo_service_users is defined and tuxedo_service_users | length > 0
+      - tuxedo_service is defined and tuxedo_service | length > 0
       - environment_name is defined and environment_name | trim | length > 0
       - application_artifact_path is defined and application_artifact_path | trim | length > 0
       - application_configs_path is defined and application_configs_path | trim | length > 0
@@ -121,9 +121,6 @@
 
 - name: Deploy Tuxedo services
   ansible.builtin.include_tasks: deploy.yml
-  loop: "{{ tuxedo_service_users }}"
-  loop_control:
-    loop_var: tuxedo_user
 
 - name: Find application-specific CloudWatch configuration files
   ansible.builtin.find:

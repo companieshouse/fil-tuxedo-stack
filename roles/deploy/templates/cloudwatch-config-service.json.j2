@@ -3,10 +3,10 @@
     "logs_collected": {
       "files": {
         "collect_list": [
-          {% if tuxedo_user in tuxedo_log_files -%}
-          {%+ for log in tuxedo_log_files[tuxedo_user] -%}
+          {% if tuxedo_service in tuxedo_log_files -%}
+          {%+ for log in tuxedo_log_files[tuxedo_service] -%}
           {
-            "file_path": "{{ tuxedo_logs_path }}/{{ tuxedo_user }}/{{ log.file_pattern }}",
+            "file_path": "{{ tuxedo_logs_path }}/{{ tuxedo_service }}/{{ log.file_pattern }}",
             "log_group_name": "{{ log.cloudwatch_log_group_name }}",
             "log_stream_name": "{{ cloudwatch_log_stream_name }}"
           }{%- if not loop.last -%},{%- endif -%}
