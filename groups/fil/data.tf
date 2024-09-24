@@ -190,6 +190,32 @@ data "aws_iam_policy_document" "ef_presenter_data_bucket" {
       values   = ["true"]
     }
   }
+
+  statement {
+    sid = "allow_ssl_requests_only"
+
+    effect = "Deny"
+
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
+
+    actions = [
+      "s3:*"
+    ]
+
+    resources = [
+      "${aws_s3_bucket.ef_presenter_data[0].arn}",
+      "${aws_s3_bucket.ef_presenter_data[0].arn}/*"
+    ]
+
+    condition {
+      test     = "Bool"
+      variable = "aws:SecureTransport"
+      values   = ["false"]
+    }
+  }
 }
 
 data "aws_route53_zone" "fil" {
