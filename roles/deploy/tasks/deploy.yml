@@ -36,7 +36,7 @@
 - name: "Retrieve CABS service Oracle DB credentials from Hashicorp Vault : {{ tuxedo_service }}"
   ansible.builtin.set_fact:
     cabs_oracle_db_credentials: "{{ lookup('community.hashi_vault.hashi_vault', cabs_oracle_db_credentials_vault_path) }}"
-  when: tuxedo_user == "cabs"
+  when: tuxedo_service == "cabs"
 
 - name: "Create additional data directories for services : {{ tuxedo_service }}"
   ansible.builtin.file:
@@ -131,7 +131,7 @@
   args:
     executable: /bin/bash
   ignore_errors: true
-  when: sms_poll_daemon_enabled and tuxedo_user == "scud"
+  when: sms_poll_daemon_enabled and tuxedo_service == "scud"
   changed_when: "'SMS poll daemon not running' not in stop_sms_poll_daemon.stdout and stop_sms_poll_daemon.rc == 0"
 
 - name: "Stop Tuxedo services : {{ tuxedo_service }}" # noqa ignore-errors
@@ -254,7 +254,7 @@
   args:
     executable: /bin/bash
   ignore_errors: true
-  when: sms_poll_daemon_enabled and tuxedo_user == "scud"
+  when: sms_poll_daemon_enabled and tuxedo_service == "scud"
   changed_when: "'SMS poll daemon is already running' not in start_sms_poll_daemon.stdout and start_sms_poll_daemon.rc == 0"
 
 - name: "Create autologin configuration for FTP client : {{ tuxedo_service }}"
