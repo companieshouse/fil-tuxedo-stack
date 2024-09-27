@@ -44,12 +44,6 @@ Each dictionary must include the following parameters unless marked _optional_:
 | `local_domain_port`     |         | The port number to use for the local Tuxedo domain.                                   |
 | `informix_server_name`  |         | _Optional_. The name of the Informix server that services will access.                |
 
-A `tuxedo_service_users` variable is required when running this role and can be provided using the `-e|--extra-vars` option to the `ansible-playbook` command. This variable should be defined as a list of group names to be deployed, where each group name corresponds to a key in the `tuxedo_service_config` configuration variable discussed above. For example, to deploy only services belonging to the `cabs` group:
-
-```shell
-ansible-playbook -i inventory --extra-vars='{"tuxedo_service_users": ["cabs"]}'
-```
-
 ### SMS service
 
 The following variables are used by the `SMS` service and `SMS_poll` daemon that are deployed for the `scud` user:
