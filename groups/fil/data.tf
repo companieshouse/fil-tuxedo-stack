@@ -192,7 +192,7 @@ data "aws_iam_policy_document" "ef_presenter_data_bucket" {
   }
 
   statement {
-    sid = "allow_ssl_requests_only"
+    sid = "DenyNonSSLRequests"
 
     effect = "Deny"
 
@@ -206,7 +206,7 @@ data "aws_iam_policy_document" "ef_presenter_data_bucket" {
     ]
 
     resources = [
-      "${aws_s3_bucket.ef_presenter_data[0].arn}",
+      aws_s3_bucket.ef_presenter_data[0].arn,
       "${aws_s3_bucket.ef_presenter_data[0].arn}/*"
     ]
 
