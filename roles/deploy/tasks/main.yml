@@ -111,6 +111,9 @@
   register: cloudwatch_logs_selinux_context
   changed_when: cloudwatch_logs_selinux_context.stdout != ""
 
+- name: Configure system-wide settings
+  ansible.builtin.import_tasks: system.yml
+
 - name: Install additional tooling
   ansible.builtin.import_tasks: tools.yml
 
