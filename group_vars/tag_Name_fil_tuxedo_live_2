@@ -25,7 +25,7 @@ maintenance_jobs:
       day_of_week: "*"
       day_of_month: "*"
       minute: "*/5"
-      hour: "00"
+      hour: "*"
       month: "*"
       script: "forward_check"
       disabled: true
@@ -113,7 +113,7 @@ maintenance_jobs:
       day_of_week: "2-6"
       day_of_month: "*"
       minute: "05"
-      hour: "05"
+      hour: "07"
       month: "*"
       script: "auth_letters_eshuttle"
       disabled: true
