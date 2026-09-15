@@ -101,3 +101,10 @@ maintenance_jobs:
       hour: "*"
       month: "*"
       script: "auth_letters_status"
+    - name: Copy presenter data to S3 for XML backend instances to process
+      day_of_week: "*"
+      day_of_month: "*"
+      minute: "00"
+      hour: "19"
+      month: "*"
+      script: "presenter_data_transfer"
