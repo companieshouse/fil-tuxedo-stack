@@ -17,7 +17,7 @@ informix_management_stats_enabled: false
 
 iscsi_devices_config:
   - alias: db_dump
-    multipath: false
+    multipath: true
     filesystem:
       type: xfs
       path: /db_dump
@@ -25,19 +25,19 @@ iscsi_devices_config:
       owner: informix
       group: informix
   - alias: scud
-    multipath: false
+    multipath: true
     raw_character_device:
       path: /dev/raw/raw1
       owner: informix
       group: informix
   - alias: prod
-    multipath: false
+    multipath: true
     raw_character_device:
       path: /dev/raw/raw2
       owner: informix
       group: informix
   - alias: ef
-    multipath: false
+    multipath: true
     raw_character_device:
       path: /dev/raw/raw3
       owner: informix
